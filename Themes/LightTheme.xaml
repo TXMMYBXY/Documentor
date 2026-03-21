@@ -1,0 +1,25 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <SolidColorBrush x:Key="Brush.WindowBackground" Color="#F5F7FB"/>
+    <SolidColorBrush x:Key="Brush.Surface" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="Brush.SurfaceAlt" Color="#F9FAFB"/>
+    <SolidColorBrush x:Key="Brush.Border" Color="#D6DCE5"/>
+
+    <SolidColorBrush x:Key="Brush.TextPrimary" Color="#111827"/>
+    <SolidColorBrush x:Key="Brush.TextSecondary" Color="#6B7280"/>
+    <SolidColorBrush x:Key="Brush.TextOnAccent" Color="#FFFFFF"/>
+
+    <SolidColorBrush x:Key="Brush.Accent" Color="#2563EB"/>
+    <SolidColorBrush x:Key="Brush.AccentHover" Color="#1D4ED8"/>
+    <SolidColorBrush x:Key="Brush.AccentPressed" Color="#1E40AF"/>
+
+    <SolidColorBrush x:Key="Brush.SidebarBackground" Color="#1F2937"/>
+    <SolidColorBrush x:Key="Brush.SidebarItemHover" Color="#374151"/>
+    <SolidColorBrush x:Key="Brush.SidebarItemSelected" Color="#2563EB"/>
+    <SolidColorBrush x:Key="Brush.SidebarText" Color="#F9FAFB"/>
+    <SolidColorBrush x:Key="Brush.SidebarTextMuted" Color="#9CA3AF"/>
+
+    <SolidColorBrush x:Key="Brush.Error" Color="#DC2626"/>
+
+</ResourceDictionary>

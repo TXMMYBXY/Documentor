@@ -1,0 +1,345 @@
+﻿using AutoMapper;
+using DocumentFlowing.Client.Authorization.Dtos;
+using Documentor.Application.Api.Authorization;
+using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Services;
+using Microsoft.Win32;
+
+namespace Documentor.Infrastructure.Services;
+
+public class TokenService : ITokenService
+{
+    private const string RegistryPath = @"Software\DocumentFlowing\Tokens";
+    
+    private readonly IDpapiService _dpapiService;
+    private readonly IAuthorizationClient _authorizationClient;
+    private readonly IMapper _mapper;
+
+    public TokenService(
+        IDpapiService dpapiService, 
+        IAuthorizationClient authorizationClient,
+        IMapper mapper)
+    {
+        _dpapiService = dpapiService;
+        _authorizationClient = authorizationClient;
+        _mapper = mapper;
+    }
+    
+    public void SaveTokens(LoginResponseDto loginResponseDto)
+    {
+        try
+        {
+            if (loginResponseDto == null) return;
+
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath))
+            {
+                if (key == null)
+                {
+                    return;
+                }
+
+                if (!string.IsNullOrEmpty(loginResponseDto.AccessToken))
+                {
+                    var encryptedAccessToken = _dpapiService.Encrypt(loginResponseDto.AccessToken);
+                    
+                    key.SetValue("AccessToken", encryptedAccessToken);
+                    key.SetValue("AccessTokenExpires", loginResponseDto.ExpiresAt);
+                }
+
+                if (loginResponseDto.RefreshTokenDto != null && !string.IsNullOrEmpty(loginResponseDto.RefreshTokenDto.Token))
+                {
+                    var encryptedRefreshToken = _dpapiService.Encrypt(loginResponseDto.RefreshTokenDto.Token);
+                    
+                    key.SetValue("RefreshToken", encryptedRefreshToken);
+                    key.SetValue("RefreshTokenExpires", loginResponseDto.RefreshTokenDto.ExpiresAt);
+                }
+
+                if (loginResponseDto.UserInfo != null)
+                {
+                    key.SetValue("UserEmail", loginResponseDto.UserInfo.Email);
+                    key.SetValue("UserFullName", loginResponseDto.UserInfo.FullName);
+                    key.SetValue("RoleId", loginResponseDto.UserInfo.RoleId);
+                    key.SetValue("DepartmentId", loginResponseDto.UserInfo.DepartmentId);
+
+                    if (loginResponseDto.RefreshTokenDto != null)
+                    {
+                        key.SetValue("UserId", loginResponseDto.RefreshTokenDto.UserId);
+                    }
+                }
+
+                key.SetValue("TokenType", loginResponseDto.TokenType);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving tokens: {ex.Message}");
+        }
+    }
+
+    public void SaveRefreshToken(RefreshTokenResponseDto refreshTokenResponse)
+    {
+        try
+        {
+            if (refreshTokenResponse == null) return;
+
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath))
+            {
+                if (key == null)
+                {
+                    return;
+                }
+                
+                if (refreshTokenResponse.Token != null && !string.IsNullOrEmpty(refreshTokenResponse.Token))
+                {
+                    var encryptedRefreshToken = _dpapiService.Encrypt(refreshTokenResponse.Token);
+                    key.SetValue("RefreshToken", encryptedRefreshToken);
+                    key.SetValue("RefreshTokenExpires", refreshTokenResponse.ExpiresAt);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error saving tokens: {ex.Message}");
+        }
+    }
+
+    public string ReturnAccessToken()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null)
+                {
+                    return null;
+                }
+
+                var encryptedToken = key.GetValue("AccessToken") as string;
+                
+                if (string.IsNullOrEmpty(encryptedToken)) return null;
+
+                return _dpapiService.Decrypt(encryptedToken);
+            }
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public string ReturnRefreshToken()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null)
+                {
+                    return null;
+                }
+
+                var encryptedToken = key.GetValue("RefreshToken") as string;
+                if (string.IsNullOrEmpty(encryptedToken)) return null;
+
+                return _dpapiService.Decrypt(encryptedToken);
+            }
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public UserInfoDto GetUserInfo()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null)
+                {
+                    return null;
+                }
+
+                var roleId = key.GetValue("RoleId") as int?;
+                if (!roleId.HasValue) return null;
+
+                return new UserInfoDto
+                {
+                    FullName = key.GetValue("UserFullName") as string,
+                    Email = key.GetValue("UserEmail") as string,
+                    RoleId = roleId.Value,
+                    DepartmentId = key.GetValue("DepartmentId") as int? ?? 0
+                };
+            }
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<string> GetNewAccessTokenAsync()
+    {
+        var request = new AccessTokenRequestDto
+        {
+            RefreshToken = ReturnRefreshToken(),
+            UserId = _GetUserId()
+        };
+
+        if (string.IsNullOrEmpty(request.RefreshToken))
+        {
+            throw new NullReferenceException("Refresh token is out");
+        }
+        
+        var token = await _authorizationClient.GetNewAccessTokenAsync(request, "authorization/access");
+
+        if (token == null)
+        {
+            throw new NullReferenceException("Access token is not got");
+        }
+        
+        SaveTokens(_mapper.Map<LoginResponseDto>(token));
+
+        return token.AccessToken;
+    }
+
+    public async Task GetNewRefreshTokenAsync()
+    {
+        var request = new RefreshTokenRequestDto
+        {
+            UserId = _GetUserId(),
+            Token = ReturnRefreshToken()
+        };
+
+        if (request.UserId == null && string.IsNullOrEmpty(request.Token))
+        {
+            throw new NullReferenceException("Refresh token is out");
+        }
+        
+        var token = await _authorizationClient.GetNewRefreshTokenAsync(request, "authorization/refresh");
+        
+        SaveRefreshToken(token);
+    }
+
+    public bool IsRefreshTokenExpires()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null)
+                {
+                    return false;
+                }
+
+                var expiresAtStr = key.GetValue("RefreshTokenExpires") as string;
+                
+                if (!string.IsNullOrEmpty(expiresAtStr) &&
+                    DateTime.TryParse(expiresAtStr, out DateTime expiresAt))
+                {
+                    return expiresAt - DateTime.UtcNow < TimeSpan.FromDays(1);
+                }
+
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public void ClearTokens()
+    {
+        try
+        {
+            Registry.CurrentUser.DeleteSubKeyTree(RegistryPath, false);
+        }
+        catch
+        {
+            // Ошибки игнорируются, если ключ не существует
+        }
+    }
+
+    public bool IsAccessTokenValid()
+    {
+        try
+        {
+            var token = ReturnAccessToken();
+            if (string.IsNullOrEmpty(token)) return false;
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null) return false;
+
+                // Проверяем срок действия токена
+                var expiresAtStr = key.GetValue("AccessTokenExpires") as string;
+                if (!string.IsNullOrEmpty(expiresAtStr))
+                {
+                    // Парсим дату в формате "dd.MM.yyyy HH:mm:ss"
+                    if (DateTime.TryParseExact(expiresAtStr, "dd.MM.yyyy HH:mm:ss",
+                            System.Globalization.CultureInfo.InvariantCulture,
+                            System.Globalization.DateTimeStyles.None, out DateTime expiresAt))
+                    {
+                        return expiresAt > DateTime.Now;
+                    }
+                    else
+                    {
+                        if (DateTime.TryParse(expiresAtStr, out expiresAt))
+                        {
+                            return expiresAt > DateTime.Now.AddMinutes(5);
+                        }
+                    }
+                }
+
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
+    public bool IsRefreshTokenValid()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null) return false;
+
+                var expiresAtStr = key.GetValue("RefreshTokenExpires") as string;
+                if (!string.IsNullOrEmpty(expiresAtStr) &&
+                    DateTime.TryParse(expiresAtStr, out DateTime expiresAt))
+                {
+                    return expiresAt > DateTime.UtcNow;
+                }
+
+                return false;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
+    
+    private int? _GetUserId()
+    {
+        try
+        {
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
+            {
+                if (key == null) return null;
+
+                return key.GetValue("UserId") as int?;
+            }
+        }
+        catch
+        {
+            return null;
+        }
+    }
+}

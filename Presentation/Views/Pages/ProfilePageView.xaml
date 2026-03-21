@@ -1,0 +1,55 @@
+<UserControl x:Class="Documentor.Presentation.Views.Pages.ProfilePageView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+
+            <TextBlock Text="{Binding Title}"
+                       FontSize="28"
+                       FontWeight="Bold"
+                       Margin="0,0,0,20"/>
+
+            <GroupBox Header="Информация о пользователе" Margin="0,0,0,20">
+                <StackPanel Margin="10">
+                    <TextBlock Text="{Binding FullName}" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding Email}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{Binding Department}" Margin="0,8,0,0"/>
+                    <TextBlock Text="{Binding Role}" Margin="0,8,0,0"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Смена пароля" Margin="0,0,0,20">
+                <StackPanel Margin="10">
+                    <TextBox Text="{Binding CurrentPassword, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding NewPassword, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,8"/>
+                    <TextBox Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,8"/>
+                    <Button Content="Сменить пароль"
+                            Command="{Binding ChangePasswordCommand}"
+                            Width="160"
+                            Height="32"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="История входов">
+                <DataGrid ItemsSource="{Binding LoginHistory}"
+                          AutoGenerateColumns="False"
+                          IsReadOnly="True"
+                          Height="250">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Дата и время входа"
+                                            Binding="{Binding LoginTimeFormatted}"
+                                            Width="*"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </GroupBox>
+
+            <TextBlock Text="{Binding ErrorMessage}"
+                       Foreground="Red"
+                       Margin="0,15,0,0"
+                       TextWrapping="Wrap"/>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

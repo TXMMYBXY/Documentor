@@ -1,0 +1,70 @@
+<Window x:Class="Documentor.Presentation.Views.Windows.MainShellWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Documentor"
+        Width="1280"
+        Height="800"
+        Background="{StaticResource Brush.WindowBackground}"
+        WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="280"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0"
+                Background="{StaticResource Brush.SidebarBackground}">
+            <Grid Margin="16">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- User block -->
+                <StackPanel Grid.Row="0">
+                    <TextBlock Text="{Binding UserFullName}"
+                               Foreground="{StaticResource Brush.SidebarText}"
+                               FontSize="24"
+                               FontWeight="Bold"
+                               TextWrapping="Wrap"/>
+                    <TextBlock Text="{Binding RoleTitle}"
+                               Foreground="{StaticResource Brush.SidebarTextMuted}"
+                               Margin="0,8,0,0"/>
+                    <TextBlock Text="{Binding Department}"
+                               Foreground="{StaticResource Brush.SidebarTextMuted}"
+                               Margin="0,4,0,0"/>
+                </StackPanel>
+
+                <!-- Menu -->
+                <ItemsControl Grid.Row="2"
+                              ItemsSource="{Binding MenuItems}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Button Content="{Binding Title}"
+                                    Command="{Binding Command}"
+                                    Style="{StaticResource SidebarMenuButtonStyle}"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <!-- Logout -->
+                <Button Grid.Row="5"
+                        Content="Выйти"
+                        Command="{Binding LogoutCommand}"
+                        Style="{StaticResource SecondaryButtonStyle}"
+                        HorizontalAlignment="Stretch"
+                        Margin="0"/>
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Column="1" Margin="20">
+            <ContentControl Content="{Binding CurrentPage}"/>
+        </Grid>
+    </Grid>
+</Window>
