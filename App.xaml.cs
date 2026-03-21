@@ -18,13 +18,16 @@ public partial class App : System.Windows.Application
         {
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(AppContext.BaseDirectory)
-                // .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
 
             var services = new ServiceCollection();
             services.AddApplicationServices(configuration);
 
             _serviceProvider = services.BuildServiceProvider();
+
+            var themeService = _serviceProvider.GetRequiredService<IThemeService>();
+            themeService.LoadSavedTheme();
 
             var startupService = _serviceProvider.GetRequiredService<IAppStartupService>();
             await startupService.StartAsync();

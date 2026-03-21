@@ -37,8 +37,16 @@ public class LoginWindowViewModel : ViewModelBase
     public string ErrorMessage
     {
         get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
+        set
+        {
+            if (SetProperty(ref _errorMessage, value))
+            {
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
     }
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
 
     public bool IsBusy
     {
@@ -61,7 +69,7 @@ public class LoginWindowViewModel : ViewModelBase
         _applicationNavigationService = applicationNavigationService;
         _mapper = mapper;
 
-        LoginCommand = new AsyncRelayCommand(LoginAsync);
+        LoginCommand = new AsyncRelayCommand(LoginAsync, () => !IsBusy);
     }
 
     private async Task LoginAsync()
@@ -104,6 +112,11 @@ public class LoginWindowViewModel : ViewModelBase
         finally
         {
             IsBusy = false;
+
+            if (LoginCommand is AsyncRelayCommand command)
+            {
+                command.RaiseCanExecuteChanged();
+            }
         }
     }
 }

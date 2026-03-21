@@ -9,7 +9,14 @@ public class ThemeService : IThemeService
     private const string LightThemePath = "Themes/LightTheme.xaml";
     private const string DarkThemePath = "Themes/DarkTheme.xaml";
 
+    private readonly IAppSettingsService _appSettingsService;
+
     public AppTheme CurrentTheme { get; private set; } = AppTheme.Light;
+
+    public ThemeService(IAppSettingsService appSettingsService)
+    {
+        _appSettingsService = appSettingsService;
+    }
 
     public void ApplyTheme(AppTheme theme)
     {
@@ -42,5 +49,12 @@ public class ThemeService : IThemeService
         dictionaries.Insert(0, newTheme);
 
         CurrentTheme = theme;
+        _appSettingsService.SaveTheme(theme);
+    }
+
+    public void LoadSavedTheme()
+    {
+        var savedTheme = _appSettingsService.GetTheme();
+        ApplyTheme(savedTheme);
     }
 }

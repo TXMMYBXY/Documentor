@@ -28,7 +28,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // services.Configure<DocumentFlowApi>(configuration.GetSection("DocumentFlowApi"));
+        services.Configure<DocumentFlowApi>(configuration.GetSection("DocumentFlowApi"));
 
         services.AddHttpClient<IGeneralClient, GeneralClient>();
         services.AddHttpClient<IAuthorizationClient, AuthorizationClient>();
@@ -78,6 +78,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<AuthorizationHandler>();
         
         services.AddTransient<SettingsPageViewModel>();
+        services.AddSingleton<IAppSettingsService, RegistryAppSettingsService>();
 
         return services;
     }
