@@ -46,4 +46,34 @@ public class UserManagementService : IUserManagementService
     {
         await _adminClient.DeleteUserByIdAsync(userId);
     }
+
+    public async Task<IReadOnlyList<LookupItemModel>> GetDepartmentsAsync()
+    {
+        var result = await _adminClient.GetAllDepartmentsAsync();
+        return result == null
+            ? Array.Empty<LookupItemModel>()
+            : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
+    }
+
+    public async Task<IReadOnlyList<LookupItemModel>> GetRolesAsync()
+    {
+        var result = await _adminClient.GetAllRolesAsync();
+        return result == null
+            ? Array.Empty<LookupItemModel>()
+            : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
+    }
+
+    public async Task UpdateUserAsync(int userId, EditUserModel model)
+    {
+        var dto = _mapper.Map<UpdateUserDto>(model);
+        await _adminClient.UpdateUserAsync(userId, dto);
+    }
+
+    public async Task ResetPasswordAsync(int userId, string password)
+    {
+        await _adminClient.ChangePasswordByIdAsync(userId, new ResetPasswordDto
+        {
+            Password = password
+        });
+    }
 }

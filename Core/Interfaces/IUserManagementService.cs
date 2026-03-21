@@ -7,4 +7,10 @@ public interface IUserManagementService
     Task<PagedResult<UserListItemModel>> GetUsersAsync(UserFilterModel filter);
     Task<bool> ChangeStatusAsync(int userId);
     Task DeleteUserAsync(int userId);
+
+    Task<IReadOnlyList<LookupItemModel>> GetDepartmentsAsync();
+    Task<IReadOnlyList<LookupItemModel>> GetRolesAsync();
+
+    Task UpdateUserAsync(int userId, EditUserModel model);
+    Task ResetPasswordAsync(int userId, string password);
 }

@@ -74,12 +74,14 @@ public static class ServiceCollectionExtensions
         
         services.AddTransient<UserFilterDialogWindow>();
         services.AddTransient<UserFilterDialogViewModel>();
+        services.AddTransient<EditUserDialogWindow>();
+        services.AddTransient<ResetPasswordDialogWindow>();
         
         services.AddTransient<AuthorizationHandler>();
         
         services.AddTransient<SettingsPageViewModel>();
         services.AddSingleton<IAppSettingsService, RegistryAppSettingsService>();
-
+        
         return services;
     }
 }

@@ -5,7 +5,6 @@ using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
-using Documentor.Core.Services;
 using Documentor.Presentation.ViewModels.Dialogs;
 using Documentor.Presentation.Views.Dialogs;
 
@@ -33,7 +32,13 @@ public class UsersPageViewModel : ViewModelBase
     public UserListItemModel? SelectedUser
     {
         get => _selectedUser;
-        set => SetProperty(ref _selectedUser, value);
+        set
+        {
+            if (SetProperty(ref _selectedUser, value))
+            {
+                _RaiseSelectionCommands();
+            }
+        }
     }
 
     public string ErrorMessage
@@ -76,12 +81,13 @@ public class UsersPageViewModel : ViewModelBase
     public bool CanGoPrevious => CurrentPage > 1;
     public bool CanGoNext => CurrentPage < TotalPages;
 
-    public string ActiveFilterSummary =>
-        BuildFilterSummary();
+    public string ActiveFilterSummary => _BuildFilterSummary();
 
     public ICommand RefreshCommand { get; }
     public ICommand OpenFilterCommand { get; }
     public ICommand ClearFilterCommand { get; }
+    public ICommand EditUserCommand { get; }
+    public ICommand ResetPasswordCommand { get; }
     public ICommand ChangeStatusCommand { get; }
     public ICommand DeleteUserCommand { get; }
     public ICommand NextPageCommand { get; }
@@ -91,18 +97,20 @@ public class UsersPageViewModel : ViewModelBase
     {
         _userManagementService = userManagementService;
 
-        RefreshCommand = new AsyncRelayCommand(LoadAsync);
-        OpenFilterCommand = new RelayCommand(OpenFilter);
-        ClearFilterCommand = new AsyncRelayCommand(ClearFilterAsync);
-        ChangeStatusCommand = new AsyncRelayCommand(ChangeStatusAsync, () => SelectedUser != null);
-        DeleteUserCommand = new AsyncRelayCommand(DeleteUserAsync, () => SelectedUser != null);
-        NextPageCommand = new AsyncRelayCommand(NextPageAsync, () => CanGoNext);
-        PreviousPageCommand = new AsyncRelayCommand(PreviousPageAsync, () => CanGoPrevious);
+        RefreshCommand = new AsyncRelayCommand(_LoadAsync);
+        OpenFilterCommand = new RelayCommand(_OpenFilter);
+        ClearFilterCommand = new AsyncRelayCommand(_ClearFilterAsync);
+        EditUserCommand = new RelayCommand(_EditUser, () => SelectedUser != null);
+        ResetPasswordCommand = new RelayCommand(_OpenResetPasswordDialog, () => SelectedUser != null);
+        ChangeStatusCommand = new AsyncRelayCommand(_ChangeStatusAsync, () => SelectedUser != null);
+        DeleteUserCommand = new AsyncRelayCommand(_DeleteUserAsync, () => SelectedUser != null);
+        NextPageCommand = new AsyncRelayCommand(_NextPageAsync, () => CanGoNext);
+        PreviousPageCommand = new AsyncRelayCommand(_PreviousPageAsync, () => CanGoPrevious);
 
-        _ = LoadAsync();
+        _ = _LoadAsync();
     }
 
-    private async Task LoadAsync()
+    private async Task _LoadAsync()
     {
         try
         {
@@ -127,7 +135,7 @@ public class UsersPageViewModel : ViewModelBase
 
             OnPropertyChanged(nameof(IsEmpty));
             OnPropertyChanged(nameof(ActiveFilterSummary));
-            RaisePagingStateChanged();
+            _RaisePagingStateChanged();
         }
         catch (Exception ex)
         {
@@ -139,7 +147,7 @@ public class UsersPageViewModel : ViewModelBase
         }
     }
 
-    private void OpenFilter()
+    private void _OpenFilter()
     {
         var vm = new UserFilterDialogViewModel(new UserFilterModel
         {
@@ -162,11 +170,11 @@ public class UsersPageViewModel : ViewModelBase
             _currentFilter = vm.ResultFilter;
             CurrentPage = 1;
             PageSize = _currentFilter.PageSize;
-            _ = LoadAsync();
+            _ = _LoadAsync();
         }
     }
 
-    private async Task ClearFilterAsync()
+    private async Task _ClearFilterAsync()
     {
         _currentFilter = new UserFilterModel
         {
@@ -177,28 +185,68 @@ public class UsersPageViewModel : ViewModelBase
         CurrentPage = 1;
         PageSize = 10;
 
-        await LoadAsync();
+        await _LoadAsync();
     }
 
-    private async Task NextPageAsync()
+    private void _EditUser()
+    {
+        if (SelectedUser == null)
+            return;
+
+        var vm = new EditUserDialogViewModel(_userManagementService, SelectedUser.Id, SelectedUser);
+
+        var dialog = new EditUserDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+        {
+            _ = _LoadAsync();
+        }
+    }
+
+    private void _OpenResetPasswordDialog()
+    {
+        if (SelectedUser == null)
+            return;
+
+        var vm = new ResetPasswordDialogViewModel(_userManagementService, SelectedUser.Id);
+
+        var dialog = new ResetPasswordDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+        {
+            MessageBox.Show("Пароль успешно изменён.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+    }
+
+    private async Task _NextPageAsync()
     {
         if (!CanGoNext)
             return;
 
         CurrentPage++;
-        await LoadAsync();
+        await _LoadAsync();
     }
 
-    private async Task PreviousPageAsync()
+    private async Task _PreviousPageAsync()
     {
         if (!CanGoPrevious)
             return;
 
         CurrentPage--;
-        await LoadAsync();
+        await _LoadAsync();
     }
 
-    private async Task ChangeStatusAsync()
+    private async Task _ChangeStatusAsync()
     {
         if (SelectedUser == null)
             return;
@@ -221,7 +269,7 @@ public class UsersPageViewModel : ViewModelBase
         }
     }
 
-    private async Task DeleteUserAsync()
+    private async Task _DeleteUserAsync()
     {
         if (SelectedUser == null)
             return;
@@ -247,7 +295,7 @@ public class UsersPageViewModel : ViewModelBase
                 CurrentPage--;
             }
 
-            await LoadAsync();
+            await _LoadAsync();
         }
         catch (Exception ex)
         {
@@ -259,7 +307,7 @@ public class UsersPageViewModel : ViewModelBase
         }
     }
 
-    private string BuildFilterSummary()
+    private string _BuildFilterSummary()
     {
         var parts = new List<string>();
 
@@ -280,7 +328,7 @@ public class UsersPageViewModel : ViewModelBase
             : string.Join(" | ", parts);
     }
 
-    private void RaisePagingStateChanged()
+    private void _RaisePagingStateChanged()
     {
         OnPropertyChanged(nameof(CanGoPrevious));
         OnPropertyChanged(nameof(CanGoNext));
@@ -290,5 +338,20 @@ public class UsersPageViewModel : ViewModelBase
 
         if (PreviousPageCommand is AsyncRelayCommand prev)
             prev.RaiseCanExecuteChanged();
+    }
+    
+    private void _RaiseSelectionCommands()
+    {
+        if (EditUserCommand is RelayCommand edit)
+            edit.RaiseCanExecuteChanged();
+
+        if (ResetPasswordCommand is RelayCommand reset)
+            reset.RaiseCanExecuteChanged();
+
+        if (ChangeStatusCommand is AsyncRelayCommand changeStatus)
+            changeStatus.RaiseCanExecuteChanged();
+
+        if (DeleteUserCommand is AsyncRelayCommand delete)
+            delete.RaiseCanExecuteChanged();
     }
 }

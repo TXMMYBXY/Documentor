@@ -14,5 +14,13 @@ public class UserManagementMappingProfile : Profile
                 opt => opt.MapFrom(src => src.RoleEntity != null ? src.RoleEntity.Title : string.Empty));
 
         CreateMap<UserFilterModel, UserFilterDto>();
+
+        CreateMap<GetDepartmentDto, LookupItemModel>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+
+        CreateMap<GetRoleDto, LookupItemModel>()
+            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
+
+        CreateMap<EditUserModel, UpdateUserDto>();
     }
 }

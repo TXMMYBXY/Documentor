@@ -51,19 +51,37 @@ public class ProfilePageViewModel : ViewModelBase
     public string CurrentPassword
     {
         get => _currentPassword;
-        set => SetProperty(ref _currentPassword, value);
+        set
+        {
+            if (SetProperty(ref _currentPassword, value))
+            {
+                _RaisePasswordCommand();
+            }
+        }
     }
 
     public string NewPassword
     {
         get => _newPassword;
-        set => SetProperty(ref _newPassword, value);
+        set
+        {
+            if (SetProperty(ref _newPassword, value))
+            {
+                _RaisePasswordCommand();
+            }
+        }
     }
 
     public string ConfirmPassword
     {
         get => _confirmPassword;
-        set => SetProperty(ref _confirmPassword, value);
+        set
+        {
+            if (SetProperty(ref _confirmPassword, value))
+            {
+                _RaisePasswordCommand();
+            }
+        }
     }
 
     public string ErrorMessage
@@ -75,7 +93,13 @@ public class ProfilePageViewModel : ViewModelBase
     public bool IsLoading
     {
         get => _isLoading;
-        set => SetProperty(ref _isLoading, value);
+        set
+        {
+            if (SetProperty(ref _isLoading, value))
+            {
+                _RaisePasswordCommand();
+            }
+        }
     }
 
     public ObservableCollection<LoginHistoryItemModel> LoginHistory { get; } = new();
@@ -88,7 +112,8 @@ public class ProfilePageViewModel : ViewModelBase
         _personalAccountService = personalAccountService;
 
         RefreshCommand = new AsyncRelayCommand(LoadAsync);
-        ChangePasswordCommand = new AsyncRelayCommand(ChangePasswordAsync);
+        ChangePasswordCommand = new AsyncRelayCommand(ChangePasswordAsync, _CanChangePassword);
+        
 
         _ = LoadAsync();
     }
@@ -168,5 +193,19 @@ public class ProfilePageViewModel : ViewModelBase
         {
             IsLoading = false;
         }
+    }
+    
+    private bool _CanChangePassword()
+    {
+        return !IsLoading
+               && !string.IsNullOrWhiteSpace(CurrentPassword)
+               && !string.IsNullOrWhiteSpace(NewPassword)
+               && !string.IsNullOrWhiteSpace(ConfirmPassword);
+    }
+    
+    private void _RaisePasswordCommand()
+    {
+        if (ChangePasswordCommand is AsyncRelayCommand cmd)
+            cmd.RaiseCanExecuteChanged();
     }
 }
