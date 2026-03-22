@@ -21,44 +21,43 @@ public class MenuFactory : IMenuFactory
         switch (role)
         {
             case UserRole.Admin:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Пользователи", PageKey.Users));
-                items.Add(Create("Отделы", PageKey.Departments));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(_Create("Панель", PageKey.Dashboard));
+                items.Add(_Create("Пользователи", PageKey.Users));
+                items.Add(_Create("Отделы", PageKey.Departments));
+                items.Add(_Create("Профиль", PageKey.Profile));
+                items.Add(_Create("Настройки", PageKey.Settings));
                 break;
 
             case UserRole.Boss:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates));
-                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(_Create("Панель", PageKey.Dashboard));
+                items.Add(_Create("Шаблоны договоров", PageKey.ContractTemplates));
+                items.Add(_Create("Шаблоны заявлений", PageKey.StatementTemplates));
+                items.Add(_Create("Задачи", PageKey.Tasks));
+                items.Add(_Create("Профиль", PageKey.Profile));
+                items.Add(_Create("Настройки", PageKey.Settings));
                 break;
 
             case UserRole.Purchaser:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(_Create("Панель", PageKey.Dashboard));
+                items.Add(_Create("Шаблоны договоров", PageKey.ContractTemplates));
+                items.Add(_Create("Задачи", PageKey.Tasks));
+                items.Add(_Create("Профиль", PageKey.Profile));
+                items.Add(_Create("Настройки", PageKey.Settings));
                 break;
 
             case UserRole.User:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(_Create("Панель", PageKey.Dashboard));
+                items.Add(_Create("Шаблоны заявлений", PageKey.StatementTemplates));
+                items.Add(_Create("Задачи", PageKey.Tasks));
+                items.Add(_Create("Профиль", PageKey.Profile));
+                items.Add(_Create("Настройки", PageKey.Settings));
                 break;
         }
 
         return items;
     }
 
-    private NavigationMenuItem Create(string title, PageKey pageKey)
+    private NavigationMenuItem _Create(string title, PageKey pageKey)
     {
         return new NavigationMenuItem
         {

@@ -3,6 +3,9 @@ using Documentor.Core.Enums;
 
 namespace Documentor.Presentation.Navigation;
 
+/// <summary>
+/// Сервис для навигации страниц
+/// </summary>
 public interface INavigationService
 {
     ViewModelBase? CurrentPage { get; }

@@ -21,5 +21,12 @@
     <SolidColorBrush x:Key="Brush.SidebarTextMuted" Color="#94A3B8"/>
 
     <SolidColorBrush x:Key="Brush.Error" Color="#F87171"/>
+    
+    <SolidColorBrush x:Key="Brush.PopupBackground" Color="#1E293B"/>
+    <SolidColorBrush x:Key="Brush.PopupItemHover" Color="#334155"/>
+    <SolidColorBrush x:Key="Brush.PopupItemSelected" Color="#3B82F6"/>
+    <SolidColorBrush x:Key="Brush.ScrollThumb" Color="#64748B"/>
+    <SolidColorBrush x:Key="Brush.ScrollThumbHover" Color="#94A3B8"/>
+    <SolidColorBrush x:Key="Brush.ScrollTrack" Color="#0F172A"/>
 
 </ResourceDictionary>

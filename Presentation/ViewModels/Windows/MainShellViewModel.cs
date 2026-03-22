@@ -18,10 +18,15 @@ public class MainShellViewModel : ViewModelBase
 
     private ViewModelBase? _currentPage;
 
-    public string UserFullName => _userSession.FullName;
-    public string UserEmail => _userSession.Email;
-    public string Department => _userSession.Department;
-    public string RoleTitle => _userSession.RoleTitle;
+    public string Title => _userSession.Role switch
+    {
+        UserRole.Admin => "Админ панель",
+        UserRole.Boss => "Панель начальника",
+        UserRole.Purchaser => "Панель сотрудника отдела закупок",
+        UserRole.User => "Панель сотрудника",
+        _ => "ошибка"
+    };
+
 
     public ObservableCollection<NavigationMenuItem> MenuItems { get; } = new();
 

@@ -24,7 +24,8 @@
                            Style="{StaticResource PageTitleTextStyle}"/>
 
                 <ScrollViewer Grid.Row="2"
-                              VerticalScrollBarVisibility="Auto">
+                              VerticalScrollBarVisibility="Auto"
+                              Padding="10">
                     <StackPanel>
                         <TextBlock Text="ФИО" Style="{StaticResource FormLabelTextStyle}"/>
                         <TextBox Text="{Binding FullName, UpdateSourceTrigger=PropertyChanged}"

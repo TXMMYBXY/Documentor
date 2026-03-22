@@ -23,17 +23,11 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0">
-                    <TextBlock Text="{Binding UserFullName}"
+                    <TextBlock Text="{Binding Title}"
                                Foreground="{DynamicResource Brush.SidebarText}"
                                FontSize="24"
                                FontWeight="Bold"
                                TextWrapping="Wrap"/>
-                    <TextBlock Text="{Binding RoleTitle}"
-                               Foreground="{DynamicResource Brush.SidebarTextMuted}"
-                               Margin="0,8,0,0"/>
-                    <TextBlock Text="{Binding Department}"
-                               Foreground="{DynamicResource Brush.SidebarTextMuted}"
-                               Margin="0,4,0,0"/>
                 </StackPanel>
 
                 <ItemsControl Grid.Row="2"
