@@ -7,6 +7,7 @@ using Documentor.Core.Interfaces;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Menu;
 using Documentor.Presentation.Navigation;
+using Documentor.Presentation.ViewModels.Pages;
 
 namespace Documentor.Presentation.ViewModels.Windows;
 
@@ -26,7 +27,6 @@ public class MainShellViewModel : ViewModelBase
         UserRole.User => "Панель сотрудника",
         _ => "ошибка"
     };
-
 
     public ObservableCollection<NavigationMenuItem> MenuItems { get; } = new();
 
@@ -56,12 +56,43 @@ public class MainShellViewModel : ViewModelBase
         _navigationService.CurrentPageChanged += OnCurrentPageChanged;
 
         var defaultPage = GetDefaultPage(_userSession.Role);
+        SelectMenuItem(defaultPage);
         _navigationService.NavigateTo(defaultPage);
     }
 
     private void OnCurrentPageChanged(ViewModelBase viewModel)
     {
         CurrentPage = viewModel;
+
+        var pageKey = ResolvePageKey(viewModel);
+        if (pageKey.HasValue)
+        {
+            SelectMenuItem(pageKey.Value);
+        }
+    }
+
+    private void SelectMenuItem(PageKey pageKey)
+    {
+        foreach (var item in MenuItems)
+        {
+            item.IsSelected = item.PageKey == pageKey;
+        }
+    }
+
+    private static PageKey? ResolvePageKey(ViewModelBase viewModel)
+    {
+        return viewModel switch
+        {
+            DashboardPageViewModel => PageKey.Dashboard,
+            UsersPageViewModel => PageKey.Users,
+            DepartmentsPageViewModel => PageKey.Departments,
+            ContractTemplatesPageViewModel => PageKey.ContractTemplates,
+            StatementTemplatesPageViewModel => PageKey.StatementTemplates,
+            TasksPageViewModel => PageKey.Tasks,
+            ProfilePageViewModel => PageKey.Profile,
+            SettingsPageViewModel => PageKey.Settings,
+            _ => null
+        };
     }
 
     private static PageKey GetDefaultPage(UserRole role)

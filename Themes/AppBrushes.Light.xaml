@@ -2,10 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Base -->
-    <SolidColorBrush x:Key="Brush.WindowBackground" Color="#F5F7FB"/>
+    <SolidColorBrush x:Key="Brush.WindowBackground" Color="#EEF2F7"/>
     <SolidColorBrush x:Key="Brush.Surface" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="Brush.SurfaceAlt" Color="#F9FAFB"/>
-    <SolidColorBrush x:Key="Brush.Border" Color="#D6DCE5"/>
+    <SolidColorBrush x:Key="Brush.SurfaceAlt" Color="#F6F8FC"/>
+    <SolidColorBrush x:Key="Brush.Border" Color="#D9E1EC"/>
 
     <!-- Text -->
     <SolidColorBrush x:Key="Brush.TextPrimary" Color="#111827"/>
@@ -18,9 +18,9 @@
     <SolidColorBrush x:Key="Brush.AccentPressed" Color="#1E40AF"/>
 
     <!-- Sidebar -->
-    <SolidColorBrush x:Key="Brush.SidebarBackground" Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="Brush.SidebarItemHover" Color="#F5F7FB"/>
-    <SolidColorBrush x:Key="Brush.SidebarItemSelected" Color="#DBEAFE"/>
+    <SolidColorBrush x:Key="Brush.SidebarBackground" Color="#F7F9FC"/>
+    <SolidColorBrush x:Key="Brush.SidebarItemHover" Color="#EEF4FF"/>
+    <SolidColorBrush x:Key="Brush.SidebarItemSelected" Color="#2563EB"/>
     <SolidColorBrush x:Key="Brush.SidebarText" Color="#111827"/>
     <SolidColorBrush x:Key="Brush.SidebarTextMuted" Color="#6B7280"/>
 
