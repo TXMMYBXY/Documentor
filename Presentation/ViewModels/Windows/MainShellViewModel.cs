@@ -18,6 +18,7 @@ public class MainShellViewModel : ViewModelBase
     private readonly IApplicationNavigationService _applicationNavigationService;
 
     private ViewModelBase? _currentPage;
+    private bool _isNavigationPaneExpanded = true;
 
     public string Title => _userSession.Role switch
     {
@@ -36,7 +37,14 @@ public class MainShellViewModel : ViewModelBase
         set => SetProperty(ref _currentPage, value);
     }
 
+    public bool IsNavigationPaneExpanded
+    {
+        get => _isNavigationPaneExpanded;
+        set => SetProperty(ref _isNavigationPaneExpanded, value);
+    }
+
     public ICommand LogoutCommand { get; }
+    public ICommand ToggleNavigationPaneCommand { get; }
 
     public MainShellViewModel(
         IUserSession userSession,
@@ -49,6 +57,7 @@ public class MainShellViewModel : ViewModelBase
         _applicationNavigationService = applicationNavigationService;
 
         LogoutCommand = new RelayCommand(() => _applicationNavigationService.Logout());
+        ToggleNavigationPaneCommand = new RelayCommand(() => IsNavigationPaneExpanded = !IsNavigationPaneExpanded);
 
         foreach (var item in menuFactory.CreateForRole(_userSession.Role))
             MenuItems.Add(item);
