@@ -1,9 +1,10 @@
 using System.Windows;
 using Documentor.Presentation.ViewModels.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace Documentor.Presentation.Views.Dialogs
 {
-    public partial class AddUserDialogWindow : Window
+    public partial class AddUserDialogWindow : MetroWindow
     {
         public AddUserDialogWindow()
         {
@@ -21,6 +22,12 @@ namespace Documentor.Presentation.Views.Dialogs
                     Close();
                 };
             }
+        }
+        
+        private void PasswordInput_OnPasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is AddUserViewModel vm)
+                vm.Password = PasswordInput.Password;
         }
     }
 }

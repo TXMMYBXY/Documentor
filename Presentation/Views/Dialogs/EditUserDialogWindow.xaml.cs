@@ -1,9 +1,10 @@
 using System.Windows;
 using Documentor.Presentation.ViewModels.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace Documentor.Presentation.Views.Dialogs;
 
-public partial class EditUserDialogWindow : Window
+public partial class EditUserDialogWindow : MetroWindow
 {
     public EditUserDialogWindow()
     {

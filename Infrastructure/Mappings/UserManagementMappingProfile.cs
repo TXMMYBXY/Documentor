@@ -22,5 +22,7 @@ public class UserManagementMappingProfile : Profile
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
 
         CreateMap<EditUserModel, UpdateUserDto>();
+
+        CreateMap<CreateNewUserDto, CreateUserModel>().ReverseMap();
     }
 }

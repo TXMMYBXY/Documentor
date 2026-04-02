@@ -1,9 +1,10 @@
 using System.Windows;
 using Documentor.Presentation.ViewModels.Dialogs;
+using MahApps.Metro.Controls;
 
 namespace Documentor.Presentation.Views.Dialogs;
 
-public partial class ResetPasswordDialogWindow : Window
+public partial class ResetPasswordDialogWindow : MetroWindow
 {
     public ResetPasswordDialogWindow()
     {
@@ -21,5 +22,17 @@ public partial class ResetPasswordDialogWindow : Window
                 Close();
             };
         }
+    }
+    
+    private void PasswordInput_OnPasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ResetPasswordDialogViewModel vm)
+            vm.Password = PasswordInput.Password;
+    }
+
+    private void ConfirmPasswordInput_OnPasswordChanged(object sender, RoutedEventArgs e)
+    {
+        if (DataContext is ResetPasswordDialogViewModel vm)
+            vm.ConfirmPassword = ConfirmPasswordInput.Password;
     }
 }

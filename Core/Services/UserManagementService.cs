@@ -58,6 +58,7 @@ public class UserManagementService : IUserManagementService
     public async Task<IReadOnlyList<LookupItemModel>> GetRolesAsync()
     {
         var result = await _adminClient.GetAllRolesAsync();
+        
         return result == null
             ? Array.Empty<LookupItemModel>()
             : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
@@ -65,12 +66,15 @@ public class UserManagementService : IUserManagementService
 
     public async Task CreateUserAsync(CreateUserModel model)
     {
-        throw new NotImplementedException();
+        var dto = _mapper.Map<CreateNewUserDto>(model);
+
+        await _adminClient.CreateNewUserAsync(dto);
     }
 
     public async Task UpdateUserAsync(int userId, EditUserModel model)
     {
         var dto = _mapper.Map<UpdateUserDto>(model);
+        
         await _adminClient.UpdateUserAsync(userId, dto);
     }
 

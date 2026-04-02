@@ -60,21 +60,24 @@
 
                     <TextBlock Text="Текущий пароль"
                                Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding CurrentPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Margin="0,0,0,12"/>
+                    <PasswordBox x:Name="CurrentPasswordInput"
+                                 PasswordChanged="CurrentPasswordInput_OnPasswordChanged"
+                                 Style="{StaticResource InputPasswordBoxStyle}"
+                                 Margin="0,0,0,12"/>
 
                     <TextBlock Text="Новый пароль"
                                Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding NewPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Margin="0,0,0,12"/>
+                    <PasswordBox x:Name="NewPasswordInput"
+                                 PasswordChanged="NewPasswordInput_OnPasswordChanged"
+                                 Style="{StaticResource InputPasswordBoxStyle}"
+                                 Margin="0,0,0,12"/>
 
                     <TextBlock Text="Подтверждение пароля"
                                Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Margin="0,0,0,16"/>
+                    <PasswordBox x:Name="ConfirmPasswordInput"
+                                 PasswordChanged="ConfirmPasswordInput_OnPasswordChanged"
+                                 Style="{StaticResource InputPasswordBoxStyle}"
+                                 Margin="0,0,0,16"/>
 
                     <Button Content="Сменить пароль"
                             Command="{Binding ChangePasswordCommand}"
