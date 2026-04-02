@@ -1,4 +1,5 @@
 using System.Windows;
+using ControlzEx.Theming;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 
@@ -6,8 +7,8 @@ namespace Documentor.Infrastructure.Services;
 
 public class ThemeService : IThemeService
 {
-    private const string LightThemePath = "Themes/LightTheme.xaml";
-    private const string DarkThemePath = "Themes/DarkTheme.xaml";
+    private const string LightBrushesPath = "Themes/AppBrushes.Light.xaml";
+    private const string DarkBrushesPath = "Themes/AppBrushes.Dark.xaml";
 
     private readonly IAppSettingsService _appSettingsService;
 
@@ -24,29 +25,32 @@ public class ThemeService : IThemeService
         if (app == null)
             return;
 
+        var mahAppsTheme = theme == AppTheme.Dark
+            ? "Dark.Blue"
+            : "Light.Blue";
+
+        ThemeManager.Current.ChangeTheme(app, mahAppsTheme);
+
         var dictionaries = app.Resources.MergedDictionaries;
 
-        var existingTheme = dictionaries
-            .FirstOrDefault(d =>
-                d.Source != null &&
-                (d.Source.OriginalString.EndsWith("LightTheme.xaml") ||
-                 d.Source.OriginalString.EndsWith("DarkTheme.xaml")));
+        var existingBrushDictionary = dictionaries.FirstOrDefault(d =>
+            d.Source != null &&
+            (d.Source.OriginalString.EndsWith("AppBrushes.Light.xaml") ||
+             d.Source.OriginalString.EndsWith("AppBrushes.Dark.xaml")));
 
-        if (existingTheme != null)
+        if (existingBrushDictionary != null)
         {
-            dictionaries.Remove(existingTheme);
+            dictionaries.Remove(existingBrushDictionary);
         }
 
-        var themePath = theme == AppTheme.Light
-            ? LightThemePath
-            : DarkThemePath;
+        var brushPath = theme == AppTheme.Dark
+            ? DarkBrushesPath
+            : LightBrushesPath;
 
-        var newTheme = new ResourceDictionary
+        dictionaries.Insert(3, new ResourceDictionary
         {
-            Source = new Uri(themePath, UriKind.Relative)
-        };
-
-        dictionaries.Insert(0, newTheme);
+            Source = new Uri(brushPath, UriKind.Relative)
+        });
 
         CurrentTheme = theme;
         _appSettingsService.SaveTheme(theme);

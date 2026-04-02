@@ -1,10 +1,11 @@
 using System.Windows;
 using System.Windows.Controls;
 using Documentor.Presentation.ViewModels.Windows;
+using MahApps.Metro.Controls;
 
 namespace Documentor.Presentation.Views.Windows;
 
-public partial class LoginWindow : Window
+public partial class LoginWindow : MetroWindow
 {
     public LoginWindow()
     {
