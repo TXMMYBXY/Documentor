@@ -55,6 +55,23 @@ public class AdminClient : GeneralClient, IAdminClient
         return await GetResponseAsync<List<GetDepartmentDto>>("department");
     }
 
+    public async Task CreateNewDepartmentAsync(CreateDepartmentDto createDepartmentDto)
+    {
+        await PostResponseAsync<CreateDepartmentDto, CreateDepartmentDto>(createDepartmentDto, "department");
+    }
+
+    public async Task DeleteDepartmentByIdAsync(int departmentId)
+    {
+        await DeleteResponseAsync<DeleteDepartmentDto, object>(
+            new DeleteDepartmentDto { DepartmentId = departmentId }, 
+            "department");
+    }
+
+    public async Task UpdateDepartmentAsync(int departmentId, UpdateDepartmentDto updateDepartmentDto)
+    {
+        await PatchResponseAsync<UpdateDepartmentDto, object>(updateDepartmentDto, $"department/{departmentId}");
+    }
+
     public async Task<List<GetRoleDto>> GetAllRolesAsync()
     {
         return await GetResponseAsync<List<GetRoleDto>>("role");

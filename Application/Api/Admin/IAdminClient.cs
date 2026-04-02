@@ -18,6 +18,5 @@ public interface IAdminClient
     Task DeleteDepartmentByIdAsync(int departmentId);
     Task UpdateDepartmentAsync(int departmentId, UpdateDepartmentDto updateDepartmentDto);
     
-    
     Task<List<GetRoleDto>> GetAllRolesAsync();
 }
