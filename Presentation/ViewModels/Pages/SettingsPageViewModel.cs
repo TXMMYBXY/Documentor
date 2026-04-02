@@ -4,33 +4,29 @@ using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 
-namespace Documentor.Presentation.ViewModels.Pages;
-
-public class SettingsPageViewModel : ViewModelBase
+namespace Documentor.Presentation.ViewModels.Pages
 {
-    private readonly IThemeService _themeService;
-
-    public AppTheme SelectedTheme
+    public class SettingsPageViewModel : ViewModelBase
     {
-        get => _themeService.CurrentTheme;
-        set
+        private readonly IThemeService _themeService;
+
+        private bool _isDarkTheme;
+        public bool IsDarkTheme
         {
-            _themeService.ApplyTheme(value);
-            OnPropertyChanged();
+            get => _isDarkTheme;
+            set
+            {
+                if (SetProperty(ref _isDarkTheme, value))
+                {
+                    _themeService.ApplyTheme(value ? AppTheme.Dark : AppTheme.Light);
+                }
+            }
         }
-    }
 
-    public ICommand SetLightThemeCommand { get; }
-    public ICommand SetDarkThemeCommand { get; }
-
-    public SettingsPageViewModel(IThemeService themeService)
-    {
-        _themeService = themeService;
-
-        SetLightThemeCommand = new RelayCommand(() =>
-            _themeService.ApplyTheme(AppTheme.Light));
-
-        SetDarkThemeCommand = new RelayCommand(() =>
-            _themeService.ApplyTheme(AppTheme.Dark));
+        public SettingsPageViewModel(IThemeService themeService)
+        {
+            _themeService = themeService;
+            _isDarkTheme = _themeService.CurrentTheme == AppTheme.Dark;
+        }
     }
 }

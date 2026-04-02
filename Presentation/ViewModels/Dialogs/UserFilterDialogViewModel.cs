@@ -1,86 +1,153 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
+using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 
-namespace Documentor.Presentation.ViewModels.Dialogs;
-
-public class UserFilterDialogViewModel : ViewModelBase
+namespace Documentor.Presentation.ViewModels.Dialogs
 {
-    private string? _fullName;
-    private string? _email;
-    private int? _departmentId;
-    private int? _roleId;
-    private int _pageSize = 10;
-
-    public string? FullName
+    public class UserFilterDialogViewModel : ViewModelBase
     {
-        get => _fullName;
-        set => SetProperty(ref _fullName, value);
-    }
+        private readonly IUserManagementService _userManagementService;
 
-    public string? Email
-    {
-        get => _email;
-        set => SetProperty(ref _email, value);
-    }
+        private string? _fullName;
+        private string? _email;
+        private LookupItemModel? _selectedDepartment;
+        private LookupItemModel? _selectedRole;
+        private int _pageSize = 10;
+        private bool _isBusy;
+        private string _errorMessage = string.Empty;
 
-    public int? DepartmentId
-    {
-        get => _departmentId;
-        set => SetProperty(ref _departmentId, value);
-    }
-
-    public int? RoleId
-    {
-        get => _roleId;
-        set => SetProperty(ref _roleId, value);
-    }
-
-    public int PageSize
-    {
-        get => _pageSize;
-        set => SetProperty(ref _pageSize, value);
-    }
-
-    public ICommand ApplyCommand { get; }
-    public ICommand ResetCommand { get; }
-    public ICommand CancelCommand { get; }
-
-    public Action<bool?>? CloseRequested { get; set; }
-
-    public UserFilterModel ResultFilter => new()
-    {
-        FullName = FullName,
-        Email = Email,
-        DepartmentId = DepartmentId,
-        RoleId = RoleId,
-        PageSize = PageSize,
-        PageNumber = 1
-    };
-
-    public UserFilterDialogViewModel(UserFilterModel? currentFilter = null)
-    {
-        if (currentFilter != null)
+        public string? FullName
         {
-            FullName = currentFilter.FullName;
-            Email = currentFilter.Email;
-            DepartmentId = currentFilter.DepartmentId;
-            RoleId = currentFilter.RoleId;
-            PageSize = currentFilter.PageSize;
+            get => _fullName;
+            set => SetProperty(ref _fullName, value);
         }
 
-        ApplyCommand = new RelayCommand(() => CloseRequested?.Invoke(true));
-        ResetCommand = new RelayCommand(Reset);
-        CancelCommand = new RelayCommand(() => CloseRequested?.Invoke(false));
-    }
+        public string? Email
+        {
+            get => _email;
+            set => SetProperty(ref _email, value);
+        }
 
-    private void Reset()
-    {
-        FullName = null;
-        Email = null;
-        DepartmentId = null;
-        RoleId = null;
-        PageSize = 10;
+        public LookupItemModel? SelectedDepartment
+        {
+            get => _selectedDepartment;
+            set => SetProperty(ref _selectedDepartment, value);
+        }
+
+        public LookupItemModel? SelectedRole
+        {
+            get => _selectedRole;
+            set => SetProperty(ref _selectedRole, value);
+        }
+
+        public int PageSize
+        {
+            get => _pageSize;
+            set => SetProperty(ref _pageSize, value);
+        }
+
+        public bool IsBusy
+        {
+            get => _isBusy;
+            set => SetProperty(ref _isBusy, value);
+        }
+
+        public string ErrorMessage
+        {
+            get => _errorMessage;
+            set => SetProperty(ref _errorMessage, value);
+        }
+
+        public ObservableCollection<LookupItemModel> Departments { get; } = new();
+        public ObservableCollection<LookupItemModel> Roles { get; } = new();
+
+        public ICommand ApplyCommand { get; }
+        public ICommand ResetCommand { get; }
+        public ICommand CancelCommand { get; }
+
+        public Action<bool?>? CloseRequested { get; set; }
+
+        public UserFilterModel ResultFilter => new()
+        {
+            FullName = FullName,
+            Email = Email,
+            DepartmentId = SelectedDepartment?.Id == 0 ? null : SelectedDepartment?.Id,
+            RoleId = SelectedRole?.Id == 0 ? null : SelectedRole?.Id,
+            PageSize = PageSize,
+            PageNumber = 1
+        };
+
+        public UserFilterDialogViewModel(IUserManagementService userManagementService, UserFilterModel? currentFilter = null)
+        {
+            _userManagementService = userManagementService;
+
+            if (currentFilter != null)
+            {
+                FullName = currentFilter.FullName;
+                Email = currentFilter.Email;
+                PageSize = currentFilter.PageSize;
+            }
+
+            ApplyCommand = new RelayCommand(() => CloseRequested?.Invoke(true));
+            ResetCommand = new RelayCommand(Reset);
+            CancelCommand = new RelayCommand(() => CloseRequested?.Invoke(false));
+
+            _ = LoadLookupsAsync(currentFilter);
+        }
+
+        private async Task LoadLookupsAsync(UserFilterModel? currentFilter)
+        {
+            try
+            {
+                IsBusy = true;
+                ErrorMessage = string.Empty;
+
+                var departments = await _userManagementService.GetDepartmentsAsync();
+                var roles = await _userManagementService.GetRolesAsync();
+
+                Departments.Clear();
+                Departments.Add(new LookupItemModel { Id = 0, Title = "Все" });
+                foreach (var item in departments)
+                    Departments.Add(item);
+
+                Roles.Clear();
+                Roles.Add(new LookupItemModel { Id = 0, Title = "Все" });
+                foreach (var item in roles)
+                    Roles.Add(item);
+
+                if (currentFilter?.DepartmentId != null)
+                    SelectedDepartment = Departments.FirstOrDefault(x => x.Id == currentFilter.DepartmentId);
+                else
+                    SelectedDepartment = Departments.First();
+
+                if (currentFilter?.RoleId != null)
+                    SelectedRole = Roles.FirstOrDefault(x => x.Id == currentFilter.RoleId);
+                else
+                    SelectedRole = Roles.First();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Ошибка загрузки справочников: {ex.Message}";
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+        }
+
+        private void Reset()
+        {
+            FullName = null;
+            Email = null;
+            SelectedDepartment = Departments.First();
+            SelectedRole = Roles.First();
+            PageSize = 10;
+        }
     }
 }

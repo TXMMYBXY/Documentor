@@ -1,3 +1,4 @@
+using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
@@ -86,6 +87,7 @@ public class UsersPageViewModel : ViewModelBase
     public ICommand RefreshCommand { get; }
     public ICommand OpenFilterCommand { get; }
     public ICommand ClearFilterCommand { get; }
+    public ICommand AddUserCommand { get; }
     public ICommand EditUserCommand { get; }
     public ICommand ResetPasswordCommand { get; }
     public ICommand ChangeStatusCommand { get; }
@@ -100,6 +102,7 @@ public class UsersPageViewModel : ViewModelBase
         RefreshCommand = new AsyncRelayCommand(_LoadAsync);
         OpenFilterCommand = new RelayCommand(_OpenFilter);
         ClearFilterCommand = new AsyncRelayCommand(_ClearFilterAsync);
+        AddUserCommand = new RelayCommand(_AddUser);
         EditUserCommand = new RelayCommand(_EditUser, () => SelectedUser != null);
         ResetPasswordCommand = new RelayCommand(_OpenResetPasswordDialog, () => SelectedUser != null);
         ChangeStatusCommand = new AsyncRelayCommand(_ChangeStatusAsync, () => SelectedUser != null);
@@ -149,7 +152,7 @@ public class UsersPageViewModel : ViewModelBase
 
     private void _OpenFilter()
     {
-        var vm = new UserFilterDialogViewModel(new UserFilterModel
+        var vm = new UserFilterDialogViewModel(_userManagementService, new UserFilterModel
         {
             FullName = _currentFilter.FullName,
             Email = _currentFilter.Email,
@@ -186,6 +189,23 @@ public class UsersPageViewModel : ViewModelBase
         PageSize = 10;
 
         await _LoadAsync();
+    }
+
+    private void _AddUser()
+    {
+        var vm = new AddUserViewModel(_userManagementService);
+
+        var dialog = new AddUserDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+        {
+            _ = _LoadAsync();
+        }
     }
 
     private void _EditUser()

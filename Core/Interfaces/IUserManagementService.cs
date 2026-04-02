@@ -11,6 +11,7 @@ public interface IUserManagementService
     Task<IReadOnlyList<LookupItemModel>> GetDepartmentsAsync();
     Task<IReadOnlyList<LookupItemModel>> GetRolesAsync();
 
+    Task CreateUserAsync(CreateUserModel model);
     Task UpdateUserAsync(int userId, EditUserModel model);
     Task ResetPasswordAsync(int userId, string password);
 }

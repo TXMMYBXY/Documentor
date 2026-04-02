@@ -36,9 +36,15 @@
         <Border Grid.Row="2"
                 Style="{StaticResource CardBorderStyle}">
             <WrapPanel>
+                <Button Command="{Binding AddUserCommand}"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        ToolTip="Добавить пользователя"
+                        Content="Добавить"
+                        Width="36"/>
+                
                 <Button Content="Фильтр"
                         Command="{Binding OpenFilterCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"/>
+                        Style="{StaticResource SecondaryButtonStyle}"/>
 
                 <Button Content="Сбросить фильтр"
                         Command="{Binding ClearFilterCommand}"
@@ -47,6 +53,7 @@
                 <Button Content="Обновить"
                         Command="{Binding RefreshCommand}"
                         Style="{StaticResource SecondaryButtonStyle}"/>
+
 
                 <Button Content="Редактировать"
                         Command="{Binding EditUserCommand}"

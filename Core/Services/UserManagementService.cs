@@ -63,6 +63,11 @@ public class UserManagementService : IUserManagementService
             : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
     }
 
+    public async Task CreateUserAsync(CreateUserModel model)
+    {
+        throw new NotImplementedException();
+    }
+
     public async Task UpdateUserAsync(int userId, EditUserModel model)
     {
         var dto = _mapper.Map<UpdateUserDto>(model);
