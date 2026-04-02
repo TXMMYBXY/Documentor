@@ -1,7 +1,10 @@
 <UserControl x:Class="Documentor.Presentation.Views.Pages.UsersPageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+             PreviewKeyDown="Root_OnPreviewKeyDown"
+             MouseDown="Root_OnMouseDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -14,6 +17,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+
+        <!-- Header -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -34,48 +39,156 @@
                        VerticalAlignment="Center"/>
         </Grid>
 
+        <!-- Action bar -->
         <Border Grid.Row="2"
                 Style="{StaticResource CardBorderStyle}">
-            <WrapPanel>
-                <Button Command="{Binding AddUserCommand}"
-                        Style="{StaticResource PrimaryButtonStyle}"
-                        ToolTip="Добавить пользователя"
-                        Content="Добавить"/>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
 
-                <Button Content="Фильтр"
-                        Command="{Binding OpenFilterCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
+                <!-- Верхняя строка -->
+                <Grid Grid.Row="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="12"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
 
-                <Button Content="Сбросить фильтр"
-                        Command="{Binding ClearFilterCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
+                    <!-- Добавить -->
+                    <Button Grid.Column="0"
+                            Command="{Binding AddUserCommand}"
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            ToolTip="Добавить пользователя"
+                            Width="42"
+                            MinWidth="42"
+                            Padding="0"
+                            Margin="0">
+                        <iconPacks:PackIconMaterial Kind="AccountPlus"
+                                                    Width="18"
+                                                    Height="18"/>
+                    </Button>
 
-                <Button Content="Обновить"
-                        Command="{Binding RefreshCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
+                    <!-- Фильтр + сброс -->
+                    <Grid Grid.Column="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
 
-                <Button Content="Редактировать"
-                        Command="{Binding EditUserCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
+                        <Button Grid.Column="0"
+                                Command="{Binding OpenFilterCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Margin="0"
+                                MinWidth="120">
+                            <StackPanel Orientation="Horizontal">
+                                <iconPacks:PackIconMaterial Kind="FilterOutline"
+                                                            Width="16"
+                                                            Height="16"
+                                                            Margin="0,0,8,0"/>
+                                <TextBlock Text="Фильтр"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
 
-                <Button Content="Сбросить пароль"
-                        Command="{Binding ResetPasswordCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
+                        <Button Grid.Column="1"
+                                Command="{Binding ClearFilterCommand}"
+                                Style="{StaticResource SecondaryButtonStyle}"
+                                Width="42"
+                                MinWidth="42"
+                                Padding="0"
+                                Margin="1,0,0,0"
+                                ToolTip="Сбросить фильтр">
+                            <iconPacks:PackIconMaterial Kind="Close"
+                                                        Width="16"
+                                                        Height="16"/>
+                        </Button>
+                    </Grid>
 
-                <Button Content="Сменить статус"
-                        Command="{Binding ChangeStatusCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
+                    <!-- Обновить -->
+                    <Button Grid.Column="4"
+                            Command="{Binding RefreshCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Margin="0"
+                            ToolTip="Обновить список">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="Refresh"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Margin="0,0,8,0"/>
+                            <TextBlock Text="Обновить"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </Grid>
 
-                <Button Content="Удалить"
-                        Command="{Binding DeleteUserCommand}"
-                        Style="{StaticResource SecondaryButtonStyle}"/>
-            </WrapPanel>
+                <!-- Вторая строка -->
+                <WrapPanel Grid.Row="2">
+                    <Button Command="{Binding EditUserCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="PencilOutline"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Margin="0,0,8,0"/>
+                            <TextBlock Text="Редактировать"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding ResetPasswordCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="LockReset"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Margin="0,0,8,0"/>
+                            <TextBlock Text="Сбросить пароль"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding ChangeStatusCommand}"
+                            Style="{StaticResource SecondaryButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="AccountSwitchOutline"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Margin="0,0,8,0"/>
+                            <TextBlock Text="Сменить статус"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Command="{Binding DeleteUserCommand}"
+                            Background="#C62828"
+                            Foreground="White"
+                            BorderBrush="#C62828"
+                            Style="{StaticResource SecondaryButtonStyle}"
+                            Margin="0,0,0,0">
+                        <StackPanel Orientation="Horizontal">
+                            <iconPacks:PackIconMaterial Kind="DeleteOutline"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Margin="0,0,8,0"/>
+                            <TextBlock Text="Удалить"
+                                       VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </WrapPanel>
+            </Grid>
         </Border>
 
+        <!-- Data -->
         <Border Grid.Row="4"
                 Style="{StaticResource CardBorderStyle}">
             <Grid>
-                <DataGrid ItemsSource="{Binding Users}"
+                <DataGrid x:Name="UsersGrid"
+                          ItemsSource="{Binding Users}"
                           SelectedItem="{Binding SelectedUser}"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
@@ -100,7 +213,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Border Background="{DynamicResource MahApps.Brushes.ThemeBackground}"
+                <Border Background="{DynamicResource Brush.Surface}"
                         BorderBrush="{DynamicResource Brush.Border}"
                         BorderThickness="1"
                         Padding="20"
@@ -125,15 +238,24 @@
             </Grid>
         </Border>
 
+        <!-- Paging -->
         <Border Grid.Row="6"
                 Style="{StaticResource CardBorderStyle}"
                 Padding="12">
             <StackPanel Orientation="Horizontal"
-                        HorizontalAlignment="Center">
-                <Button Content="Назад"
-                        Command="{Binding PreviousPageCommand}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Button Command="{Binding PreviousPageCommand}"
                         Style="{StaticResource SecondaryButtonStyle}"
-                        Margin="0,0,12,0"/>
+                        Width="40"
+                        MinWidth="40"
+                        Padding="0"
+                        Margin="0,0,12,0"
+                        ToolTip="Предыдущая страница">
+                    <iconPacks:PackIconMaterial Kind="ChevronLeft"
+                                                Width="18"
+                                                Height="18"/>
+                </Button>
 
                 <TextBlock Text="{Binding CurrentPage, StringFormat=Страница {0}}"
                            VerticalAlignment="Center"
@@ -146,13 +268,21 @@
                            Margin="0,0,12,0"
                            Foreground="{DynamicResource Brush.TextSecondary}"/>
 
-                <Button Content="Вперёд"
-                        Command="{Binding NextPageCommand}"
+                <Button Command="{Binding NextPageCommand}"
                         Style="{StaticResource SecondaryButtonStyle}"
-                        Margin="0"/>
+                        Width="40"
+                        MinWidth="40"
+                        Padding="0"
+                        Margin="0"
+                        ToolTip="Следующая страница">
+                    <iconPacks:PackIconMaterial Kind="ChevronRight"
+                                                Width="18"
+                                                Height="18"/>
+                </Button>
             </StackPanel>
         </Border>
 
+        <!-- Error -->
         <TextBlock Grid.Row="7"
                    Text="{Binding ErrorMessage}"
                    Foreground="{DynamicResource Brush.Error}"
