@@ -1,4 +1,5 @@
 using Documentor.Application.Api.Admin.Dtos;
+using Documentor.Application.Api.Admin.Dtos.User;
 
 namespace DocumentFlowing.Client.Models;
 

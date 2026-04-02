@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace Documentor.Application.Api.Admin.Dtos;
+namespace Documentor.Application.Api.Admin.Dtos.User;
 
 public class GetUsersResponseDto
 {

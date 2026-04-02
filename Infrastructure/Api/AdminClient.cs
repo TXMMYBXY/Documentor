@@ -3,6 +3,8 @@ using System.Web;
 using DocumentFlowing.Client.Models;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos;
+using Documentor.Application.Api.Admin.Dtos.Department;
+using Documentor.Application.Api.Admin.Dtos.User;
 using Documentor.Application.Api.Models;
 using Microsoft.Extensions.Options;
 
@@ -21,9 +23,9 @@ public class AdminClient : GeneralClient, IAdminClient
         return await GetResponseAsync<GetUsersResponseDto>($"users{query}");
     }
 
-    public async Task CreateNewUserAsync(CreateNewUserDto createNewUserDto)
+    public async Task CreateNewUserAsync(CreateUserDto createUserDto)
     {
-        await PostResponseAsync<CreateNewUserDto, CreateNewUserDto>(createNewUserDto, "users");
+        await PostResponseAsync<CreateUserDto, CreateUserDto>(createUserDto, "users");
     }
 
     public async Task<bool> ChangeStatusByIdAsync(int userId)

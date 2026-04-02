@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
+using Documentor.Application.Api.Admin.Dtos.User;
 
-namespace Documentor.Application.Api.Admin.Dtos;
+namespace Documentor.Application.Api.Admin.Dtos.Department;
 
 public class GetDepartmentDto
 {

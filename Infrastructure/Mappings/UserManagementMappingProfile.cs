@@ -1,5 +1,7 @@
 using AutoMapper;
 using Documentor.Application.Api.Admin.Dtos;
+using Documentor.Application.Api.Admin.Dtos.Department;
+using Documentor.Application.Api.Admin.Dtos.User;
 using Documentor.Core.Models;
 
 namespace Documentor.Infrastructure.Mappings;
@@ -23,6 +25,6 @@ public class UserManagementMappingProfile : Profile
 
         CreateMap<EditUserModel, UpdateUserDto>();
 
-        CreateMap<CreateNewUserDto, CreateUserModel>().ReverseMap();
+        CreateMap<CreateUserDto, CreateUserModel>().ReverseMap();
     }
 }

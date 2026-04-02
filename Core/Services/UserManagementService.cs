@@ -1,6 +1,7 @@
 using AutoMapper;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos;
+using Documentor.Application.Api.Admin.Dtos.User;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 
@@ -66,7 +67,7 @@ public class UserManagementService : IUserManagementService
 
     public async Task CreateUserAsync(CreateUserModel model)
     {
-        var dto = _mapper.Map<CreateNewUserDto>(model);
+        var dto = _mapper.Map<CreateUserDto>(model);
 
         await _adminClient.CreateNewUserAsync(dto);
     }

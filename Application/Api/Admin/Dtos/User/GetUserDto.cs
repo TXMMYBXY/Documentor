@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using DocumentFlowing.Client.Models;
 
-namespace Documentor.Application.Api.Admin.Dtos;
+namespace Documentor.Application.Api.Admin.Dtos.User;
 
 public class GetUserDto
 {
