@@ -46,5 +46,14 @@
       </Page>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\documentor.ico" />
+      <Resource Include="Resources\documentor.ico" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <ApplicationIcon>Resources\documentor.ico</ApplicationIcon>
+    </PropertyGroup>
+
 </Project>
     

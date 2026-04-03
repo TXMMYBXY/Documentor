@@ -12,13 +12,15 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
 
-                <!-- Твои кисти -->
+                <!-- Кисти -->
                 <ResourceDictionary Source="Themes/AppBrushes.Light.xaml"/>
 
                 <!-- Стили -->
                 <ResourceDictionary Source="Resources/Styles/Buttons.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/Layout.xaml"/>
                 <ResourceDictionary Source="Resources/Styles/ComboBox.xaml"/>
+                
+                
             </ResourceDictionary.MergedDictionaries>
             
             <converters:BoolToGridLengthConverter x:Key="BoolToGridLengthConverter" />

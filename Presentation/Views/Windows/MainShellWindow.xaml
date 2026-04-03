@@ -8,7 +8,16 @@
                  Height="800"
                  TitleCharacterCasing="Normal"
                  WindowStartupLocation="CenterScreen"
-                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}">
+                 GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
+                 ShowIconOnTitleBar="True"
+                 Icon="pack://application:,,,/Resources/documentor.ico">
+    <mah:MetroWindow.IconTemplate>
+        <DataTemplate>
+            <Image Margin="4"
+                   RenderOptions.BitmapScalingMode="HighQuality"
+                   Source="pack://application:,,,/Resources/documentor.ico" />
+        </DataTemplate>
+    </mah:MetroWindow.IconTemplate>
     <Grid Background="{DynamicResource Brush.WindowBackground}">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="{Binding IsNavigationPaneExpanded, Converter={StaticResource BoolToGridLengthConverter}}"/>
