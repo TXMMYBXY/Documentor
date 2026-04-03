@@ -9,4 +9,8 @@ public interface IAppSettingsService
 
     int GetPageSize();
     void SavePageSize(int pageSize);
+
+    string? GetApiDomainOverride();
+    void SaveApiDomainOverride(string domain);
+    void ClearApiDomainOverride();
 }

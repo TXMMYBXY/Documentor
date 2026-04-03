@@ -13,10 +13,12 @@ using Documentor.Infrastructure.Services;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Navigation;
 using Documentor.Presentation.ViewModels.Dialogs;
+using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.ViewModels.Pages;
 using Documentor.Presentation.ViewModels.Windows;
 using Documentor.Presentation.Views.Dialogs;
+using Documentor.Presentation.Views.Dialogs.Common;
 using Documentor.Presentation.Views.Dialogs.Department;
 using Documentor.Presentation.Views.Windows;
 using Microsoft.Extensions.Configuration;
@@ -88,6 +90,14 @@ public static class ServiceCollectionExtensions
         
         services.AddTransient<SettingsPageViewModel>();
         services.AddSingleton<IAppSettingsService, RegistryAppSettingsService>();
+        
+        services.AddSingleton<IApiEndpointProvider, ApiEndpointProvider>();
+
+        services.AddTransient<ApiSettingsDialogViewModel>();
+        services.AddTransient<ApiSettingsDialogWindow>();
+
+        services.AddTransient<ConfirmationDialogViewModel>();
+        services.AddTransient<ConfirmationDialogWindow>();
         
         return services;
     }

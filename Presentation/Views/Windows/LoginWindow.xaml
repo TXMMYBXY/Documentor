@@ -19,7 +19,6 @@
             <ColumnDefinition Width="460"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Левая панель -->
         <Border Grid.Column="0"
                 Background="{DynamicResource Brush.SidebarBackground}">
             <Grid Margin="40">
@@ -51,7 +50,6 @@
             </Grid>
         </Border>
 
-        <!-- Правая часть -->
         <Grid Grid.Column="1">
             <Border Style="{StaticResource LoginCardStyle}"
                     HorizontalAlignment="Center"
@@ -64,7 +62,20 @@
 
                     <TextBlock Text="Введите учётные данные для входа в систему"
                                Style="{StaticResource SectionHintTextStyle}"
-                               Margin="0,0,0,28"/>
+                               Margin="0,0,0,20"/>
+
+                    <StackPanel Orientation="Horizontal"
+                                Margin="0,0,0,20">
+                        <TextBlock Text="Адрес API: "
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource Brush.TextSecondary}"/>
+
+                        <TextBlock VerticalAlignment="Center">
+                            <Hyperlink Command="{Binding OpenApiSettingsCommand}">
+                                <Run Text="{Binding CurrentApiUrl, Mode=OneWay}"/>
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
 
                     <TextBlock Text="Email"
                                Style="{StaticResource FormLabelTextStyle}"/>

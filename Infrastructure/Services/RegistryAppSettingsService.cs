@@ -9,6 +9,7 @@ public class RegistryAppSettingsService : IAppSettingsService
     private const string RegistryPath = @"Software\Documentor\Settings";
     private const string ThemeValueName = "Theme";
     private const string PageSizeValueName = "PageSize";
+    private const string ApiDomainOverrideValueName = "ApiDomainOverride";
 
     public AppTheme GetTheme()
     {
@@ -52,14 +53,10 @@ public class RegistryAppSettingsService : IAppSettingsService
             var value = key?.GetValue(PageSizeValueName);
 
             if (value is int pageSize && pageSize > 0)
-            {
                 return pageSize;
-            }
 
             if (int.TryParse(value?.ToString(), out var parsed) && parsed > 0)
-            {
                 return parsed;
-            }
 
             return 10;
         }
@@ -78,6 +75,43 @@ public class RegistryAppSettingsService : IAppSettingsService
 
             using var key = Registry.CurrentUser.CreateSubKey(RegistryPath);
             key?.SetValue(PageSizeValueName, pageSize, RegistryValueKind.DWord);
+        }
+        catch
+        {
+        }
+    }
+
+    public string? GetApiDomainOverride()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RegistryPath);
+            return key?.GetValue(ApiDomainOverrideValueName) as string;
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public void SaveApiDomainOverride(string domain)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            key?.SetValue(ApiDomainOverrideValueName, domain);
+        }
+        catch
+        {
+        }
+    }
+
+    public void ClearApiDomainOverride()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            key?.DeleteValue(ApiDomainOverrideValueName, false);
         }
         catch
         {
