@@ -1,36 +1,75 @@
-using System.Windows.Input;
-using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
+using Documentor.Presentation.ViewModels.Base;
 
-namespace Documentor.Presentation.ViewModels.Pages;
-
-public class SettingsPageViewModel : ViewModelBase
+namespace Documentor.Presentation.ViewModels.Pages
 {
-    private readonly IThemeService _themeService;
-
-    public AppTheme SelectedTheme
+    public class SettingsPageViewModel : ViewModelBase
     {
-        get => _themeService.CurrentTheme;
-        set
+        private readonly IThemeService _themeService;
+        private readonly IAppSettingsService _appSettingsService;
+
+        private bool _isDarkTheme;
+        private int _selectedPageSize;
+
+        public bool IsDarkTheme
         {
-            _themeService.ApplyTheme(value);
-            OnPropertyChanged();
+            get => _isDarkTheme;
+            set
+            {
+                if (SetProperty(ref _isDarkTheme, value))
+                {
+                    _themeService.ApplyTheme(value ? AppTheme.Dark : AppTheme.Light);
+                }
+            }
         }
-    }
 
-    public ICommand SetLightThemeCommand { get; }
-    public ICommand SetDarkThemeCommand { get; }
+        public int MinPageSize => 5;
+        public int MaxPageSize => 100;
+        public int PageSizeTickFrequency => 5;
 
-    public SettingsPageViewModel(IThemeService themeService)
-    {
-        _themeService = themeService;
+        public int SelectedPageSize
+        {
+            get => _selectedPageSize;
+            set
+            {
+                var normalized = NormalizePageSize(value);
 
-        SetLightThemeCommand = new RelayCommand(() =>
-            _themeService.ApplyTheme(AppTheme.Light));
+                if (SetProperty(ref _selectedPageSize, normalized))
+                {
+                    _appSettingsService.SavePageSize(normalized);
+                }
+            }
+        }
 
-        SetDarkThemeCommand = new RelayCommand(() =>
-            _themeService.ApplyTheme(AppTheme.Dark));
+        public SettingsPageViewModel(
+            IThemeService themeService,
+            IAppSettingsService appSettingsService)
+        {
+            _themeService = themeService;
+            _appSettingsService = appSettingsService;
+
+            _isDarkTheme = _themeService.CurrentTheme == AppTheme.Dark;
+            _selectedPageSize = NormalizePageSize(_appSettingsService.GetPageSize());
+        }
+
+        private int NormalizePageSize(int value)
+        {
+            if (value < MinPageSize)
+                value = MinPageSize;
+
+            if (value > MaxPageSize)
+                value = MaxPageSize;
+
+            var remainder = value % PageSizeTickFrequency;
+            if (remainder != 0)
+            {
+                value -= remainder;
+                if (value < MinPageSize)
+                    value = MinPageSize;
+            }
+
+            return value;
+        }
     }
 }

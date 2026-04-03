@@ -2,6 +2,7 @@ using AutoMapper;
 using Documentor.Application.Services;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 using Documentor.Presentation.Navigation;
 
 namespace Documentor.Infrastructure.Services;

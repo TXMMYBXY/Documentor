@@ -10,9 +10,50 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+      <PackageReference Include="MahApps.Metro" Version="2.4.11" />
+      <PackageReference Include="MahApps.Metro.IconPacks" Version="6.2.1" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
       <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.0" />
       <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.0" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Page Update="Presentation\Views\Dialogs\User\AddUserDialogWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Presentation\Views\Dialogs\User\EditUserDialogWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Presentation\Views\Dialogs\User\ResetPasswordDialogWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+      <Page Update="Presentation\Views\Dialogs\User\UserFilterDialogWindow.xaml">
+        <Generator>MSBuild:Compile</Generator>
+        <XamlRuntime>Wpf</XamlRuntime>
+        <SubType>Designer</SubType>
+      </Page>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Resources\documentor.ico" />
+      <Resource Include="Resources\documentor.ico" />
+    </ItemGroup>
+
+    <PropertyGroup>
+        <ApplicationIcon>Resources\documentor.ico</ApplicationIcon>
+    </PropertyGroup>
+
 </Project>
+    

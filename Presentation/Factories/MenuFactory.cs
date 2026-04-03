@@ -2,6 +2,7 @@ using DocumentFlowing.Common;
 using Documentor.Core.Enums;
 using Documentor.Presentation.Menu;
 using Documentor.Presentation.Navigation;
+using MahApps.Metro.IconPacks;
 
 namespace Documentor.Presentation.Factories;
 
@@ -21,48 +22,50 @@ public class MenuFactory : IMenuFactory
         switch (role)
         {
             case UserRole.Admin:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Пользователи", PageKey.Users));
-                items.Add(Create("Отделы", PageKey.Departments));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+                items.Add(Create("Пользователи", PageKey.Users, PackIconMaterialKind.AccountGroupOutline));
+                items.Add(Create("Отделы", PageKey.Departments, PackIconMaterialKind.Domain));
+                items.Add(Create("Заявления", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
+                items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
+                items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
 
             case UserRole.Boss:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates));
-                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates, PackIconMaterialKind.FileDocumentOutline));
+                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
+                items.Add(Create("Задачи", PageKey.Tasks, PackIconMaterialKind.FormatListChecks));
+                items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
+                items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
 
             case UserRole.Purchaser:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates, PackIconMaterialKind.FileDocumentOutline));
+                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
+                items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
+                items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
 
             case UserRole.User:
-                items.Add(Create("Панель", PageKey.Dashboard));
-                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates));
-                items.Add(Create("Задачи", PageKey.Tasks));
-                items.Add(Create("Профиль", PageKey.Profile));
-                items.Add(Create("Настройки", PageKey.Settings));
+                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
+                items.Add(Create("Задачи", PageKey.Tasks, PackIconMaterialKind.FormatListChecks));
+                items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
+                items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
         }
 
         return items;
     }
 
-    private NavigationMenuItem Create(string title, PageKey pageKey)
+    private NavigationMenuItem Create(string title, PageKey pageKey, PackIconMaterialKind iconKind)
     {
         return new NavigationMenuItem
         {
             Title = title,
+            PageKey = pageKey,
+            IconKind = iconKind,
             Command = new RelayCommand(() => _navigationService.NavigateTo(pageKey))
         };
     }

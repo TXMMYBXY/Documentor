@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace DocumentFlowing.Presentation.ViewModels.Base;
+namespace Documentor.Presentation.ViewModels.Base;
 
 public abstract class ViewModelBase : INotifyPropertyChanged
 {

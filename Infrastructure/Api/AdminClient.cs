@@ -3,6 +3,8 @@ using System.Web;
 using DocumentFlowing.Client.Models;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos;
+using Documentor.Application.Api.Admin.Dtos.Department;
+using Documentor.Application.Api.Admin.Dtos.User;
 using Documentor.Application.Api.Models;
 using Microsoft.Extensions.Options;
 
@@ -15,15 +17,15 @@ public class AdminClient : GeneralClient, IAdminClient
     {
     }
 
-    public async Task<GetUsersResponseDto?> GetUsersAsync(UserFilterDto filter)
+    public async Task<PagedUserDto?> GetUsersAsync(UserFilterDto filter)
     {
-        var query = BuildUsersQuery(filter);
-        return await GetResponseAsync<GetUsersResponseDto>($"users{query}");
+        var query = _BuildUsersQuery(filter);
+        return await GetResponseAsync<PagedUserDto>($"users{query}");
     }
 
-    public async Task CreateNewUserAsync(CreateNewUserDto createNewUserDto)
+    public async Task CreateNewUserAsync(CreateUserDto createUserDto)
     {
-        await PostResponseAsync<CreateNewUserDto, CreateNewUserDto>(createNewUserDto, "users");
+        await PostResponseAsync<CreateUserDto, CreateUserDto>(createUserDto, "users");
     }
 
     public async Task<bool> ChangeStatusByIdAsync(int userId)
@@ -48,9 +50,32 @@ public class AdminClient : GeneralClient, IAdminClient
         await PatchResponseAsync<UpdateUserDto, object>(updateUserDto, $"users/{userId}/user-info");
     }
 
-    public async Task<List<GetDepartmentDto>> GetAllDepartmentsAsync()
+    public async Task<PagedDepartmentDto> GetAllDepartmentsAsync()
     {
-        return await GetResponseAsync<List<GetDepartmentDto>>("department");
+        return await GetResponseAsync<PagedDepartmentDto>($"department");
+    }
+    
+    public async Task<PagedDepartmentDto> GetDepartmentsAsync(DepartmentFilterDto filter)
+    {
+        var query = _BuildDepartmentsQuery(filter);
+        return await GetResponseAsync<PagedDepartmentDto>($"department{query}");
+    }
+
+    public async Task CreateNewDepartmentAsync(CreateDepartmentDto createDepartmentDto)
+    {
+        await PostResponseAsync<CreateDepartmentDto, CreateDepartmentDto>(createDepartmentDto, "department");
+    }
+
+    public async Task DeleteDepartmentByIdAsync(int departmentId)
+    {
+        await DeleteResponseAsync<DeleteDepartmentDto, object>(
+            new DeleteDepartmentDto { DepartmentId = departmentId }, 
+            "department");
+    }
+
+    public async Task UpdateDepartmentAsync(int departmentId, UpdateDepartmentDto updateDepartmentDto)
+    {
+        await PutResponseAsync<UpdateDepartmentDto, object>(updateDepartmentDto, $"department/{departmentId}");
     }
 
     public async Task<List<GetRoleDto>> GetAllRolesAsync()
@@ -58,7 +83,7 @@ public class AdminClient : GeneralClient, IAdminClient
         return await GetResponseAsync<List<GetRoleDto>>("role");
     }
 
-    private static string BuildUsersQuery(UserFilterDto filter)
+    private static string _BuildUsersQuery(UserFilterDto filter)
     {
         var parameters = new List<string>();
 
@@ -73,6 +98,25 @@ public class AdminClient : GeneralClient, IAdminClient
 
         if (filter.RoleId.HasValue)
             parameters.Add($"RoleId={filter.RoleId.Value}");
+
+        if (filter.PageSize.HasValue)
+            parameters.Add($"PageSize={filter.PageSize.Value}");
+
+        if (filter.PageNumber.HasValue)
+            parameters.Add($"PageNumber={filter.PageNumber.Value}");
+
+        if (parameters.Count == 0)
+            return string.Empty;
+
+        return "?" + string.Join("&", parameters);
+    }
+    
+    private static string _BuildDepartmentsQuery(DepartmentFilterDto filter)
+    {
+        var parameters = new List<string>();
+
+        if (!string.IsNullOrWhiteSpace(filter.Title))
+            parameters.Add($"Title={Uri.EscapeDataString(filter.Title)}");
 
         if (filter.PageSize.HasValue)
             parameters.Add($"PageSize={filter.PageSize.Value}");

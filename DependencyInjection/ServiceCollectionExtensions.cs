@@ -13,9 +13,13 @@ using Documentor.Infrastructure.Services;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Navigation;
 using Documentor.Presentation.ViewModels.Dialogs;
+using Documentor.Presentation.ViewModels.Dialogs.Common;
+using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.ViewModels.Pages;
 using Documentor.Presentation.ViewModels.Windows;
 using Documentor.Presentation.Views.Dialogs;
+using Documentor.Presentation.Views.Dialogs.Common;
+using Documentor.Presentation.Views.Dialogs.Department;
 using Documentor.Presentation.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +32,7 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // services.Configure<DocumentFlowApi>(configuration.GetSection("DocumentFlowApi"));
+        services.Configure<DocumentFlowApi>(configuration.GetSection("DocumentFlowApi"));
 
         services.AddHttpClient<IGeneralClient, GeneralClient>();
         services.AddHttpClient<IAuthorizationClient, AuthorizationClient>();
@@ -51,6 +55,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IApplicationNavigationService, ApplicationNavigationService>();
         services.AddTransient<IAppStartupService, AppStartupService>();
         services.AddTransient<IUserManagementService, UserManagementService>();
+        services.AddTransient<IDepartmentManagementService, DepartmentManagementService>();
 
         services.AddTransient<IPersonalAccountService, PersonalAccountService>();
         services.AddTransient<IAuthorizationService, AuthorizationService>();
@@ -74,11 +79,26 @@ public static class ServiceCollectionExtensions
         
         services.AddTransient<UserFilterDialogWindow>();
         services.AddTransient<UserFilterDialogViewModel>();
+        services.AddTransient<EditUserDialogWindow>();
+        services.AddTransient<ResetPasswordDialogWindow>();
+        
+        services.AddTransient<AddDepartmentDialogWindow>();
+        services.AddTransient<EditDepartmentDialogWindow>();
+        services.AddTransient<DepartmentFilterDialogWindow>();
         
         services.AddTransient<AuthorizationHandler>();
         
         services.AddTransient<SettingsPageViewModel>();
+        services.AddSingleton<IAppSettingsService, RegistryAppSettingsService>();
+        
+        services.AddSingleton<IApiEndpointProvider, ApiEndpointProvider>();
 
+        services.AddTransient<ApiSettingsDialogViewModel>();
+        services.AddTransient<ApiSettingsDialogWindow>();
+
+        services.AddTransient<ConfirmationDialogViewModel>();
+        services.AddTransient<ConfirmationDialogWindow>();
+        
         return services;
     }
 }

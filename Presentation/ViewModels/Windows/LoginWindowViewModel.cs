@@ -1,11 +1,11 @@
 using System.Windows.Input;
 using AutoMapper;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Application.Services;
 using Documentor.Core.Interfaces;
-using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 using Documentor.Presentation.Navigation;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Windows;
 
@@ -16,6 +16,9 @@ public class LoginWindowViewModel : ViewModelBase
     private readonly IUserSession _userSession;
     private readonly IApplicationNavigationService _applicationNavigationService;
     private readonly IMapper _mapper;
+    private readonly IApiEndpointProvider _apiEndpointProvider;
+
+    private Action? _openApiSettingsAction;
 
     private string _email = string.Empty;
     private string _password = string.Empty;
@@ -37,31 +40,72 @@ public class LoginWindowViewModel : ViewModelBase
     public string ErrorMessage
     {
         get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
+        set
+        {
+            if (SetProperty(ref _errorMessage, value))
+            {
+                OnPropertyChanged(nameof(HasError));
+            }
+        }
     }
+
+    public bool HasError => !string.IsNullOrWhiteSpace(ErrorMessage);
 
     public bool IsBusy
     {
         get => _isBusy;
-        set => SetProperty(ref _isBusy, value);
+        set
+        {
+            if (SetProperty(ref _isBusy, value))
+            {
+                if (LoginCommand is AsyncRelayCommand command)
+                    command.RaiseCanExecuteChanged();
+            }
+        }
     }
 
+    public string CurrentApiUrl => _apiEndpointProvider.GetBaseUrl();
+
     public ICommand LoginCommand { get; }
+    public ICommand OpenApiSettingsCommand { get; }
 
     public LoginWindowViewModel(
         IAuthorizationService authorizationService,
         ITokenService tokenService,
         IUserSession userSession,
         IApplicationNavigationService applicationNavigationService,
-        IMapper mapper)
+        IMapper mapper,
+        IApiEndpointProvider apiEndpointProvider)
     {
         _authorizationService = authorizationService;
         _tokenService = tokenService;
         _userSession = userSession;
         _applicationNavigationService = applicationNavigationService;
         _mapper = mapper;
+        _apiEndpointProvider = apiEndpointProvider;
 
-        LoginCommand = new AsyncRelayCommand(LoginAsync);
+        LoginCommand = new AsyncRelayCommand(LoginAsync, () => !IsBusy);
+        OpenApiSettingsCommand = new RelayCommand(OpenApiSettings);
+    }
+
+    public void SetOpenApiSettingsAction(Action openApiSettingsAction)
+    {
+        _openApiSettingsAction = openApiSettingsAction;
+    }
+
+    public void RefreshApiUrl()
+    {
+        OnPropertyChanged(nameof(CurrentApiUrl));
+    }
+
+    public IApiEndpointProvider GetApiEndpointProvider()
+    {
+        return _apiEndpointProvider;
+    }
+
+    private void OpenApiSettings()
+    {
+        _openApiSettingsAction?.Invoke();
     }
 
     private async Task LoginAsync()

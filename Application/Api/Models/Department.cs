@@ -1,6 +1,6 @@
-using Documentor.Application.Api.Admin.Dtos;
+using Documentor.Application.Api.Admin.Dtos.User;
 
-namespace DocumentFlowing.Client.Models;
+namespace Documentor.Application.Api.Models;
 
 public class Department
 {

@@ -16,7 +16,7 @@ public class WindowService : IWindowService
 
     public void ShowWindow<T>() where T : Window
     {
-        var window = CreateWindow<T>();
+        var window = _CreateWindow<T>();
         window.Show();
     }
 
@@ -24,7 +24,7 @@ public class WindowService : IWindowService
     {
         var currentApplication = System.Windows.Application.Current;
         var currentWindow = currentApplication?.MainWindow;
-        var newWindow = CreateWindow<T>();
+        var newWindow = _CreateWindow<T>();
 
         if (currentApplication == null)
             throw new InvalidOperationException("WPF Application.Current is null.");
@@ -36,7 +36,7 @@ public class WindowService : IWindowService
             currentWindow.Close();
     }
 
-    private T CreateWindow<T>() where T : Window
+    private T _CreateWindow<T>() where T : Window
     {
         var window = _serviceProvider.GetRequiredService<T>();
 

@@ -3,6 +3,7 @@ using Documentor.Application.Api.Me;
 using Documentor.Application.Api.Me.Dtos;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.Profile;
 
 namespace Documentor.Core.Services;
 

@@ -1,55 +1,122 @@
 <UserControl x:Class="Documentor.Presentation.Views.Pages.ProfilePageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls">
     <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="16"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-            <TextBlock Text="{Binding Title}"
-                       FontSize="28"
-                       FontWeight="Bold"
-                       Margin="0,0,0,20"/>
+            <TextBlock Grid.Row="0"
+                       Text="{Binding Title}"
+                       Style="{StaticResource PageTitleTextStyle}"/>
 
-            <GroupBox Header="Информация о пользователе" Margin="0,0,0,20">
-                <StackPanel Margin="10">
-                    <TextBlock Text="{Binding FullName}" FontSize="18" FontWeight="SemiBold"/>
-                    <TextBlock Text="{Binding Email}" Margin="0,8,0,0"/>
-                    <TextBlock Text="{Binding Department}" Margin="0,8,0,0"/>
-                    <TextBlock Text="{Binding Role}" Margin="0,8,0,0"/>
+            <!-- Информация -->
+            <Border Grid.Row="2"
+                    Style="{StaticResource CardBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="Информация о пользователе"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,16"
+                               Foreground="{DynamicResource Brush.TextPrimary}"/>
+
+                    <TextBlock Text="{Binding FullName}"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="{DynamicResource Brush.TextPrimary}"/>
+
+                    <TextBlock Text="{Binding Email}"
+                               Margin="0,10,0,0"
+                               Foreground="{DynamicResource Brush.TextSecondary}"/>
+
+                    <TextBlock Text="{Binding Department}"
+                               Margin="0,8,0,0"
+                               Foreground="{DynamicResource Brush.TextSecondary}"/>
+
+                    <TextBlock Text="{Binding Role}"
+                               Margin="0,8,0,0"
+                               Foreground="{DynamicResource Brush.TextSecondary}"/>
                 </StackPanel>
-            </GroupBox>
+            </Border>
 
-            <GroupBox Header="Смена пароля" Margin="0,0,0,20">
-                <StackPanel Margin="10">
-                    <TextBox Text="{Binding CurrentPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="0,0,0,8"/>
-                    <TextBox Text="{Binding NewPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="0,0,0,8"/>
-                    <TextBox Text="{Binding ConfirmPassword, UpdateSourceTrigger=PropertyChanged}"
-                             Margin="0,0,0,8"/>
+            <!-- Пароль -->
+            <Border Grid.Row="4"
+                    Style="{StaticResource CardBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="Смена пароля"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,16"
+                               Foreground="{DynamicResource Brush.TextPrimary}"/>
+
+                    <TextBlock Text="Текущий пароль"
+                               Style="{StaticResource FormLabelTextStyle}"/>
+                    <PasswordBox x:Name="CurrentPasswordInput"
+                                 PasswordChanged="CurrentPasswordInput_OnPasswordChanged"
+                                 Style="{StaticResource InputPasswordBoxStyle}"
+                                 Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Новый пароль"
+                               Style="{StaticResource FormLabelTextStyle}"/>
+                    <PasswordBox x:Name="NewPasswordInput"
+                                 PasswordChanged="NewPasswordInput_OnPasswordChanged"
+                                 Style="{StaticResource InputPasswordBoxStyle}"
+                                 Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Подтверждение пароля"
+                               Style="{StaticResource FormLabelTextStyle}"/>
+                    <PasswordBox x:Name="ConfirmPasswordInput"
+                                 PasswordChanged="ConfirmPasswordInput_OnPasswordChanged"
+                                 Style="{StaticResource InputPasswordBoxStyle}"
+                                 Margin="0,0,0,16"/>
+
                     <Button Content="Сменить пароль"
                             Command="{Binding ChangePasswordCommand}"
-                            Width="160"
-                            Height="32"/>
+                            Style="{StaticResource PrimaryButtonStyle}"
+                            Width="180"
+                            HorizontalAlignment="Left"
+                            Margin="0"/>
                 </StackPanel>
-            </GroupBox>
+            </Border>
 
-            <GroupBox Header="История входов">
-                <DataGrid ItemsSource="{Binding LoginHistory}"
-                          AutoGenerateColumns="False"
-                          IsReadOnly="True"
-                          Height="250">
-                    <DataGrid.Columns>
-                        <DataGridTextColumn Header="Дата и время входа"
-                                            Binding="{Binding LoginTimeFormatted}"
-                                            Width="*"/>
-                    </DataGrid.Columns>
-                </DataGrid>
-            </GroupBox>
+            <!-- История входов -->
+            <Border Grid.Row="6"
+                    Style="{StaticResource CardBorderStyle}">
+                <StackPanel>
+                    <TextBlock Text="История входов"
+                               FontSize="16"
+                               FontWeight="SemiBold"
+                               Margin="0,0,0,16"
+                               Foreground="{DynamicResource Brush.TextPrimary}"/>
 
-            <TextBlock Text="{Binding ErrorMessage}"
-                       Foreground="Red"
-                       Margin="0,15,0,0"
+                    <DataGrid ItemsSource="{Binding LoginHistory}"
+                              AutoGenerateColumns="False"
+                              IsReadOnly="True"
+                              Height="260"
+                              Style="{StaticResource AppDataGridStyle}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Дата и время входа"
+                                                Binding="{Binding LoginTimeFormatted}"
+                                                Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </StackPanel>
+            </Border>
+
+            <TextBlock Grid.Row="7"
+                       Text="{Binding ErrorMessage}"
+                       Foreground="{DynamicResource Brush.Error}"
+                       Margin="0,12,0,0"
                        TextWrapping="Wrap"/>
-        </StackPanel>
+        </Grid>
     </ScrollViewer>
 </UserControl>
