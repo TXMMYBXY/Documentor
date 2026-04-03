@@ -1,11 +1,12 @@
 using MahApps.Metro.Controls;
 
-namespace Documentor.Presentation.Views.Dialogs.Department;
-
-public partial class AddDepartmentDialogWindow : MetroWindow
+namespace Documentor.Presentation.Views.Dialogs.Department
 {
-    public AddDepartmentDialogWindow()
+    public partial class AddDepartmentDialogWindow : MetroWindow
     {
-        InitializeComponent();
+        public AddDepartmentDialogWindow()
+        {
+            InitializeComponent();
+        }
     }
 }

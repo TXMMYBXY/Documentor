@@ -1,11 +1,12 @@
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.Windows.Input;
 using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models.Department;
+using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.Department;
+using Documentor.Presentation.Views.Dialogs.Common;
 using Documentor.Presentation.Views.Dialogs.Department;
 
 namespace Documentor.Presentation.ViewModels.Pages;
@@ -147,8 +148,30 @@ public class DepartmentsPageViewModel : ViewModelBase
 
     private void _OpenFilterStub()
     {
-        MessageBox.Show("Окно фильтра отделов будет добавлено позже.", "Информация",
-            MessageBoxButton.OK, MessageBoxImage.Information);
+        DepartmentFilterDialogWindow? dialog = null;
+
+        var vm = new DepartmentFilterDialogViewModel(new DepartmentFilterModel
+        {
+            Title = _currentFilter.Title,
+            PageSize = _currentFilter.PageSize
+        });
+
+        vm.SetCloseAction(result => dialog!.DialogResult = result);
+
+        dialog = new DepartmentFilterDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+        {
+            _currentFilter = vm.ResultFilter;
+            CurrentPage = 1;
+            PageSize = _currentFilter.PageSize;
+            _ = _LoadAsync();
+        }
     }
 
     private async Task _ClearFilterAsync()
@@ -167,8 +190,22 @@ public class DepartmentsPageViewModel : ViewModelBase
 
     private void _AddDepartmentStub()
     {
-        MessageBox.Show("Окно добавления отдела будет добавлено позже.", "Информация",
-            MessageBoxButton.OK, MessageBoxImage.Information);
+        AddDepartmentDialogWindow? dialog = null;
+
+        var vm = new AddDepartmentViewModel(_departmentManagementService);
+        vm.SetCloseAction(result => dialog!.DialogResult = result);
+
+        dialog = new AddDepartmentDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+        {
+            _ = _LoadAsync();
+        }
     }
 
     private void _EditDepartmentStub()
@@ -176,8 +213,26 @@ public class DepartmentsPageViewModel : ViewModelBase
         if (SelectedDepartment == null)
             return;
 
-        MessageBox.Show($"Окно редактирования отдела «{SelectedDepartment.Title}» будет добавлено позже.",
-            "Информация", MessageBoxButton.OK, MessageBoxImage.Information);
+        EditDepartmentDialogWindow? dialog = null;
+
+        var vm = new EditDepartmentDialogViewModel(
+            _departmentManagementService,
+            SelectedDepartment.Id,
+            SelectedDepartment);
+
+        vm.SetCloseAction(result => dialog!.DialogResult = result);
+
+        dialog = new EditDepartmentDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+        {
+            _ = _LoadAsync();
+        }
     }
 
     public void OpenEmployeesDialogFor(DepartmentListItemModel? department)
@@ -203,13 +258,23 @@ public class DepartmentsPageViewModel : ViewModelBase
         if (SelectedDepartment == null)
             return;
 
-        var result = MessageBox.Show(
-            $"Удалить отдел \"{SelectedDepartment.Title}\"?",
-            "Подтверждение удаления",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Warning);
+        ConfirmationDialogWindow? dialog = null;
 
-        if (result != MessageBoxResult.Yes)
+        var vm = new ConfirmationDialogViewModel(
+            "Удаление отдела",
+            $"Удалить отдел \"{SelectedDepartment.Title}\"?",
+            result => dialog!.DialogResult = result,
+            "Удалить",
+            "Отмена");
+
+        dialog = new ConfirmationDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var confirm = dialog.ShowDialog();
+        if (confirm != true)
             return;
 
         try

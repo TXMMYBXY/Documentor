@@ -16,5 +16,9 @@ public class DepartmentManagementMappingProfile : Profile
         CreateMap<GetDepartmentDto, LookupItemModel>()
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
         
+        CreateMap<CreateDepartmentModel, CreateDepartmentDto>();
+
+        CreateMap<EditDepartmentModel, UpdateDepartmentDto>();
+
     }
 }

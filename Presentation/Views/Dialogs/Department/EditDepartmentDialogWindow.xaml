@@ -3,18 +3,18 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="Редактирование отдела"
-                 Width="500"
-                 Height="420"
-                 MinWidth="500"
-                 MinHeight="420"
-                 WindowStartupLocation="CenterOwner"
+                 Width="520"
+                 Height="460"
+                 MinWidth="520"
+                 MinHeight="460"
                  ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
                  TitleCharacterCasing="Normal"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}">
     <Grid Margin="20"
           Background="{DynamicResource Brush.WindowBackground}">
         <Border Style="{StaticResource CardBorderStyle}">
-            <Grid>
+            <Grid Margin="16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="16"/>
@@ -23,29 +23,37 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Редактирование отдела"
+                <TextBlock Grid.Row="0"
+                           Text="Редактирование отдела"
                            Style="{StaticResource PageTitleTextStyle}"/>
 
-                <StackPanel Grid.Row="2">
-                    <TextBlock Text="Название"
-                               Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Margin="0,0,0,14"/>
+                <ScrollViewer Grid.Row="2"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled"
+                              Padding="10">
+                    <StackPanel>
+                        <TextBlock Text="Название"
+                                   Style="{StaticResource FormLabelTextStyle}"/>
+                        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputTextBoxStyle}"
+                                 Margin="0,0,0,14"/>
 
-                    <TextBlock Text="Описание"
-                               Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Height="120"/>
+                        <TextBlock Text="Описание"
+                                   Style="{StaticResource FormLabelTextStyle}"/>
+                        <TextBox Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputTextBoxStyle}"
+                                 AcceptsReturn="True"
+                                 TextWrapping="Wrap"
+                                 VerticalScrollBarVisibility="Auto"
+                                 MinHeight="140"
+                                 MaxHeight="180"/>
 
-                    <TextBlock Text="{Binding ErrorMessage}"
-                               Foreground="{DynamicResource Brush.Error}"
-                               Margin="0,12,0,0"
-                               TextWrapping="Wrap"/>
-                </StackPanel>
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="{DynamicResource Brush.Error}"
+                                   Margin="0,12,0,0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
 
                 <StackPanel Grid.Row="4"
                             Orientation="Horizontal"

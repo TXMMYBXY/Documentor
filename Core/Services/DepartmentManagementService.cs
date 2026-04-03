@@ -40,17 +40,17 @@ public class DepartmentManagementService : IDepartmentManagementService
 
     public async Task DeleteDepartmentAsync(int departmentId)
     {
-        throw new NotImplementedException();
+        await _adminClient.DeleteDepartmentByIdAsync(departmentId);
     }
 
     public async Task CreateDepartmentAsync(CreateDepartmentModel model)
     {
-        throw new NotImplementedException();
+        await _adminClient.CreateNewDepartmentAsync(_mapper.Map<CreateDepartmentDto>(model));
     }
 
     public async Task UpdateDepartmentAsync(int departmentId, EditDepartmentModel model)
     {
-        throw new NotImplementedException();
+        await _adminClient.UpdateDepartmentAsync(departmentId, _mapper.Map<UpdateDepartmentDto>(model));
     }
 
     public async Task<IReadOnlyList<LookupItemModel>> GetUsersAsync()

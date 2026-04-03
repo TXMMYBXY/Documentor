@@ -4,17 +4,17 @@
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  Title="Фильтр отделов"
                  Width="500"
-                 Height="360"
+                 Height="380"
                  MinWidth="500"
                  MinHeight="360"
-                 WindowStartupLocation="CenterOwner"
                  ResizeMode="NoResize"
+                 WindowStartupLocation="CenterOwner"
                  TitleCharacterCasing="Normal"
                  GlowBrush="{DynamicResource MahApps.Brushes.Accent}">
     <Grid Margin="20"
           Background="{DynamicResource Brush.WindowBackground}">
         <Border Style="{StaticResource CardBorderStyle}">
-            <Grid>
+            <Grid Margin="16">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="16"/>
@@ -23,27 +23,32 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Text="Фильтр отделов"
+                <TextBlock Grid.Row="0"
+                           Text="Фильтр отделов"
                            Style="{StaticResource PageTitleTextStyle}"/>
 
-                <StackPanel Grid.Row="2">
-                    <TextBlock Text="Название"
-                               Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Margin="0,0,0,14"/>
+                <ScrollViewer Grid.Row="2"
+                              VerticalScrollBarVisibility="Auto"
+                              HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="Название"
+                                   Style="{StaticResource FormLabelTextStyle}"/>
+                        <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputTextBoxStyle}"
+                                 Margin="0,0,0,14"/>
 
-                    <TextBlock Text="Размер страницы"
-                               Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
-                             Style="{StaticResource InputTextBoxStyle}"
-                             Width="120"/>
+                        <TextBlock Text="Размер страницы"
+                                   Style="{StaticResource FormLabelTextStyle}"/>
+                        <TextBox Text="{Binding PageSize, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource InputTextBoxStyle}"
+                                 Width="120"/>
 
-                    <TextBlock Text="{Binding ErrorMessage}"
-                               Foreground="{DynamicResource Brush.Error}"
-                               Margin="0,12,0,0"
-                               TextWrapping="Wrap"/>
-                </StackPanel>
+                        <TextBlock Text="{Binding ErrorMessage}"
+                                   Foreground="{DynamicResource Brush.Error}"
+                                   Margin="0,12,0,0"
+                                   TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
 
                 <StackPanel Grid.Row="4"
                             Orientation="Horizontal"

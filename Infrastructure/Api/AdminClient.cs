@@ -75,7 +75,7 @@ public class AdminClient : GeneralClient, IAdminClient
 
     public async Task UpdateDepartmentAsync(int departmentId, UpdateDepartmentDto updateDepartmentDto)
     {
-        await PatchResponseAsync<UpdateDepartmentDto, object>(updateDepartmentDto, $"department/{departmentId}");
+        await PutResponseAsync<UpdateDepartmentDto, object>(updateDepartmentDto, $"department/{departmentId}");
     }
 
     public async Task<List<GetRoleDto>> GetAllRolesAsync()
@@ -116,7 +116,7 @@ public class AdminClient : GeneralClient, IAdminClient
         var parameters = new List<string>();
 
         if (!string.IsNullOrWhiteSpace(filter.Title))
-            parameters.Add($"FullName={Uri.EscapeDataString(filter.Title)}");
+            parameters.Add($"Title={Uri.EscapeDataString(filter.Title)}");
 
         if (filter.PageSize.HasValue)
             parameters.Add($"PageSize={filter.PageSize.Value}");

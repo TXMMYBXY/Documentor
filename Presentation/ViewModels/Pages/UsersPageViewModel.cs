@@ -8,8 +8,10 @@ using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.User;
 using Documentor.Presentation.ViewModels.Dialogs;
+using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.Views.Dialogs;
+using Documentor.Presentation.Views.Dialogs.Common;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 
@@ -296,13 +298,23 @@ public class UsersPageViewModel : ViewModelBase
         if (SelectedUser == null)
             return;
 
-        var result = MessageBox.Show(
-            $"Удалить пользователя \"{SelectedUser.FullName}\"?",
-            "Подтверждение удаления",
-            MessageBoxButton.YesNo,
-            MessageBoxImage.Warning);
+        ConfirmationDialogWindow? dialog = null;
 
-        if (result != MessageBoxResult.Yes)
+        var vm = new ConfirmationDialogViewModel(
+            "Удаление пользователя",
+            $"Удалить пользователя \"{SelectedUser.FullName}\"?",
+            result => dialog!.DialogResult = result,
+            "Удалить",
+            "Отмена");
+
+        dialog = new ConfirmationDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var confirm = dialog.ShowDialog();
+        if (confirm != true)
             return;
 
         try
