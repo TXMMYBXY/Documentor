@@ -1,12 +1,12 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Menu;
 using Documentor.Presentation.Navigation;
+using Documentor.Presentation.ViewModels.Base;
 using Documentor.Presentation.ViewModels.Pages;
 
 namespace Documentor.Presentation.ViewModels.Windows;

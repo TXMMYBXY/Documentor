@@ -1,6 +1,6 @@
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Pages
 {

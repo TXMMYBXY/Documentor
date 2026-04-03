@@ -1,5 +1,5 @@
 using System.Windows;
-using Documentor.Presentation.ViewModels.Dialogs;
+using System.Windows.Controls;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using MahApps.Metro.Controls;
 
@@ -10,30 +10,21 @@ public partial class ResetPasswordDialogWindow : MetroWindow
     public ResetPasswordDialogWindow()
     {
         InitializeComponent();
-        Loaded += OnLoaded;
     }
 
-    private void OnLoaded(object sender, RoutedEventArgs e)
+    private void NewPasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
     {
-        if (DataContext is ResetPasswordDialogViewModel vm)
+        if (DataContext is ResetPasswordDialogViewModel vm && sender is PasswordBox passwordBox)
         {
-            vm.CloseRequested = result =>
-            {
-                DialogResult = result;
-                Close();
-            };
+            vm.NewPassword = passwordBox.Password;
         }
     }
-    
-    private void PasswordInput_OnPasswordChanged(object sender, RoutedEventArgs e)
-    {
-        if (DataContext is ResetPasswordDialogViewModel vm)
-            vm.Password = PasswordInput.Password;
-    }
 
-    private void ConfirmPasswordInput_OnPasswordChanged(object sender, RoutedEventArgs e)
+    private void ConfirmPasswordBox_OnPasswordChanged(object sender, RoutedEventArgs e)
     {
-        if (DataContext is ResetPasswordDialogViewModel vm)
-            vm.ConfirmPassword = ConfirmPasswordInput.Password;
+        if (DataContext is ResetPasswordDialogViewModel vm && sender is PasswordBox passwordBox)
+        {
+            vm.ConfirmPassword = passwordBox.Password;
+        }
     }
 }

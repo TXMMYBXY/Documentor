@@ -1,16 +1,14 @@
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Models.Department;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Department;
 
-public class DepartmentFilterDialogViewModel : ViewModelBase
+public class DepartmentFilterDialogViewModel : DialogViewModelBase
 {
     private string _title = string.Empty;
     private int _pageSize = 10;
-    private string _errorMessage = string.Empty;
-    private Action<bool>? _closeAction;
 
     public string Title
     {
@@ -24,17 +22,10 @@ public class DepartmentFilterDialogViewModel : ViewModelBase
         set => SetProperty(ref _pageSize, value);
     }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
     public DepartmentFilterModel ResultFilter { get; private set; } = new();
 
     public ICommand ApplyCommand { get; }
     public ICommand ResetCommand { get; }
-    public ICommand CancelCommand { get; }
 
     public DepartmentFilterDialogViewModel(DepartmentFilterModel filter)
     {
@@ -43,12 +34,6 @@ public class DepartmentFilterDialogViewModel : ViewModelBase
 
         ApplyCommand = new RelayCommand(Apply);
         ResetCommand = new RelayCommand(Reset);
-        CancelCommand = new RelayCommand(() => _closeAction?.Invoke(false));
-    }
-
-    public void SetCloseAction(Action<bool> closeAction)
-    {
-        _closeAction = closeAction;
     }
 
     private void Apply()
@@ -60,7 +45,7 @@ public class DepartmentFilterDialogViewModel : ViewModelBase
             PageNumber = 1
         };
 
-        _closeAction?.Invoke(true);
+        RequestClose(true);
     }
 
     private void Reset()

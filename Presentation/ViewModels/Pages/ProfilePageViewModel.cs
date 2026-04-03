@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.Profile;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 

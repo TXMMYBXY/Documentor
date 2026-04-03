@@ -1,11 +1,11 @@
 using System.Windows.Input;
 using AutoMapper;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Application.Services;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models.User;
 using Documentor.Presentation.Navigation;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Windows;
 

@@ -1,14 +1,14 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.User;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.User;
 
-public class EditUserDialogViewModel : ViewModelBase
+public class EditUserDialogViewModel : DialogViewModelBase
 {
     private readonly IUserManagementService _userManagementService;
     private readonly int _userId;
@@ -17,8 +17,6 @@ public class EditUserDialogViewModel : ViewModelBase
     private string _email = string.Empty;
     private LookupItemModel? _selectedDepartment;
     private LookupItemModel? _selectedRole;
-    private string _errorMessage = string.Empty;
-    private bool _isBusy;
 
     public string FullName
     {
@@ -44,25 +42,10 @@ public class EditUserDialogViewModel : ViewModelBase
         set => SetProperty(ref _selectedRole, value);
     }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
-    public bool IsBusy
-    {
-        get => _isBusy;
-        set => SetProperty(ref _isBusy, value);
-    }
-
     public ObservableCollection<LookupItemModel> Departments { get; } = new();
     public ObservableCollection<LookupItemModel> Roles { get; } = new();
 
     public ICommand SaveCommand { get; }
-    public ICommand CancelCommand { get; }
-
-    public Action<bool?>? CloseRequested { get; set; }
 
     public EditUserDialogViewModel(
         IUserManagementService userManagementService,
@@ -76,26 +59,39 @@ public class EditUserDialogViewModel : ViewModelBase
         Email = user.Email;
 
         SaveCommand = new AsyncRelayCommand(SaveAsync);
-        CancelCommand = new RelayCommand(() => CloseRequested?.Invoke(false));
 
         _ = LoadLookupsAsync(user);
     }
 
     private async Task LoadLookupsAsync(UserListItemModel user)
     {
-        var departments = await _userManagementService.GetDepartmentsAsync();
-        var roles = await _userManagementService.GetRolesAsync();
+        try
+        {
+            IsBusy = true;
+            ErrorMessage = string.Empty;
 
-        Departments.Clear();
-        foreach (var item in departments)
-            Departments.Add(item);
+            var departments = await _userManagementService.GetDepartmentsAsync();
+            var roles = await _userManagementService.GetRolesAsync();
 
-        Roles.Clear();
-        foreach (var item in roles)
-            Roles.Add(item);
+            Departments.Clear();
+            foreach (var item in departments)
+                Departments.Add(item);
 
-        SelectedDepartment = Departments.FirstOrDefault(x => x.Title == user.Department);
-        SelectedRole = Roles.FirstOrDefault(x => x.Title == user.Role);
+            Roles.Clear();
+            foreach (var item in roles)
+                Roles.Add(item);
+
+            SelectedDepartment = Departments.FirstOrDefault(x => x.Title == user.Department);
+            SelectedRole = Roles.FirstOrDefault(x => x.Title == user.Role);
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка загрузки справочников: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 
     private async Task SaveAsync()
@@ -122,7 +118,7 @@ public class EditUserDialogViewModel : ViewModelBase
                 RoleId = SelectedRole.Id
             });
 
-            CloseRequested?.Invoke(true);
+            RequestClose(true);
         }
         catch (Exception ex)
         {

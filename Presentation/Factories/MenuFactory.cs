@@ -25,6 +25,7 @@ public class MenuFactory : IMenuFactory
                 items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
                 items.Add(Create("Пользователи", PageKey.Users, PackIconMaterialKind.AccountGroupOutline));
                 items.Add(Create("Отделы", PageKey.Departments, PackIconMaterialKind.Domain));
+                items.Add(Create("Заявления", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
                 items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
                 items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
@@ -41,7 +42,7 @@ public class MenuFactory : IMenuFactory
             case UserRole.Purchaser:
                 items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
                 items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates, PackIconMaterialKind.FileDocumentOutline));
-                items.Add(Create("Задачи", PageKey.Tasks, PackIconMaterialKind.FormatListChecks));
+                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
                 items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
                 items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;

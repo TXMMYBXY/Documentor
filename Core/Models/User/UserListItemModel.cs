@@ -1,4 +1,4 @@
-using DocumentFlowing.Presentation.ViewModels.Base;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Core.Models.User;
 

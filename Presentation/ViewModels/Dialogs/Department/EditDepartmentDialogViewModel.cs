@@ -1,20 +1,18 @@
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models.Department;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Department;
 
-public class EditDepartmentDialogViewModel : ViewModelBase
+public class EditDepartmentDialogViewModel : DialogViewModelBase
 {
     private readonly IDepartmentManagementService _departmentManagementService;
     private readonly int _departmentId;
 
     private string _title = string.Empty;
     private string _description = string.Empty;
-    private string _errorMessage = string.Empty;
-    private Action<bool>? _closeAction;
 
     public string Title
     {
@@ -28,14 +26,7 @@ public class EditDepartmentDialogViewModel : ViewModelBase
         set => SetProperty(ref _description, value);
     }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
     public ICommand SaveCommand { get; }
-    public ICommand CancelCommand { get; }
 
     public EditDepartmentDialogViewModel(
         IDepartmentManagementService departmentManagementService,
@@ -45,16 +36,10 @@ public class EditDepartmentDialogViewModel : ViewModelBase
         _departmentManagementService = departmentManagementService;
         _departmentId = departmentId;
 
-        _title = department.Title;
-        _description = department.Description;
+        Title = department.Title;
+        Description = department.Description;
 
         SaveCommand = new AsyncRelayCommand(SaveAsync);
-        CancelCommand = new RelayCommand(() => _closeAction?.Invoke(false));
-    }
-
-    public void SetCloseAction(Action<bool> closeAction)
-    {
-        _closeAction = closeAction;
     }
 
     private async Task SaveAsync()
@@ -62,6 +47,7 @@ public class EditDepartmentDialogViewModel : ViewModelBase
         try
         {
             ErrorMessage = string.Empty;
+            IsBusy = true;
 
             await _departmentManagementService.UpdateDepartmentAsync(_departmentId, new EditDepartmentModel
             {
@@ -69,11 +55,15 @@ public class EditDepartmentDialogViewModel : ViewModelBase
                 Description = Description
             });
 
-            _closeAction?.Invoke(true);
+            RequestClose(true);
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Ошибка обновления отдела: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 }

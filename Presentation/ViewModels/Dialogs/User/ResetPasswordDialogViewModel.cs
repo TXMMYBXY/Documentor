@@ -1,24 +1,22 @@
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.User;
 
-public class ResetPasswordDialogViewModel : ViewModelBase
+public class ResetPasswordDialogViewModel : DialogViewModelBase
 {
     private readonly IUserManagementService _userManagementService;
     private readonly int _userId;
 
-    private string _password = string.Empty;
+    private string _newPassword = string.Empty;
     private string _confirmPassword = string.Empty;
-    private string _errorMessage = string.Empty;
-    private bool _isBusy;
 
-    public string Password
+    public string NewPassword
     {
-        get => _password;
-        set => SetProperty(ref _password, value);
+        get => _newPassword;
+        set => SetProperty(ref _newPassword, value);
     }
 
     public string ConfirmPassword
@@ -27,22 +25,7 @@ public class ResetPasswordDialogViewModel : ViewModelBase
         set => SetProperty(ref _confirmPassword, value);
     }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
-    public bool IsBusy
-    {
-        get => _isBusy;
-        set => SetProperty(ref _isBusy, value);
-    }
-
     public ICommand SaveCommand { get; }
-    public ICommand CancelCommand { get; }
-
-    public Action<bool?>? CloseRequested { get; set; }
 
     public ResetPasswordDialogViewModel(IUserManagementService userManagementService, int userId)
     {
@@ -50,7 +33,6 @@ public class ResetPasswordDialogViewModel : ViewModelBase
         _userId = userId;
 
         SaveCommand = new AsyncRelayCommand(SaveAsync);
-        CancelCommand = new RelayCommand(() => CloseRequested?.Invoke(false));
     }
 
     private async Task SaveAsync()
@@ -60,20 +42,21 @@ public class ResetPasswordDialogViewModel : ViewModelBase
             ErrorMessage = string.Empty;
             IsBusy = true;
 
-            if (string.IsNullOrWhiteSpace(Password) || string.IsNullOrWhiteSpace(ConfirmPassword))
+            if (string.IsNullOrWhiteSpace(NewPassword) || string.IsNullOrWhiteSpace(ConfirmPassword))
             {
-                ErrorMessage = "Введите пароль и подтверждение";
+                ErrorMessage = "Введите новый пароль и подтверждение.";
                 return;
             }
 
-            if (Password != ConfirmPassword)
+            if (NewPassword != ConfirmPassword)
             {
-                ErrorMessage = "Пароли не совпадают";
+                ErrorMessage = "Пароли не совпадают.";
                 return;
             }
 
-            await _userManagementService.ResetPasswordAsync(_userId, Password);
-            CloseRequested?.Invoke(true);
+            await _userManagementService.ResetPasswordAsync(_userId, NewPassword);
+
+            RequestClose(true);
         }
         catch (Exception ex)
         {

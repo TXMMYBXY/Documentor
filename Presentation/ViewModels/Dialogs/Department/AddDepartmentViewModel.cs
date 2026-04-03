@@ -1,19 +1,17 @@
 using System.Windows.Input;
 using DocumentFlowing.Common;
-using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models.Department;
+using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Department;
 
-public class AddDepartmentViewModel : ViewModelBase
+public class AddDepartmentViewModel : DialogViewModelBase
 {
     private readonly IDepartmentManagementService _departmentManagementService;
 
     private string _title = string.Empty;
     private string _description = string.Empty;
-    private string _errorMessage = string.Empty;
-    private Action<bool>? _closeAction;
 
     public string Title
     {
@@ -27,26 +25,12 @@ public class AddDepartmentViewModel : ViewModelBase
         set => SetProperty(ref _description, value);
     }
 
-    public string ErrorMessage
-    {
-        get => _errorMessage;
-        set => SetProperty(ref _errorMessage, value);
-    }
-
     public ICommand AddCommand { get; }
-    public ICommand CancelCommand { get; }
 
     public AddDepartmentViewModel(IDepartmentManagementService departmentManagementService)
     {
         _departmentManagementService = departmentManagementService;
-
         AddCommand = new AsyncRelayCommand(AddAsync);
-        CancelCommand = new RelayCommand(() => _closeAction?.Invoke(false));
-    }
-
-    public void SetCloseAction(Action<bool> closeAction)
-    {
-        _closeAction = closeAction;
     }
 
     private async Task AddAsync()
@@ -54,6 +38,7 @@ public class AddDepartmentViewModel : ViewModelBase
         try
         {
             ErrorMessage = string.Empty;
+            IsBusy = true;
 
             await _departmentManagementService.CreateDepartmentAsync(new CreateDepartmentModel
             {
@@ -61,11 +46,15 @@ public class AddDepartmentViewModel : ViewModelBase
                 Description = Description
             });
 
-            _closeAction?.Invoke(true);
+            RequestClose(true);
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Ошибка создания отдела: {ex.Message}";
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 }
