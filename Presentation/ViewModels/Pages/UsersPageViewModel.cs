@@ -1,13 +1,10 @@
-using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
-using Documentor.Core.Models;
 using Documentor.Core.Models.User;
-using Documentor.Presentation.ViewModels.Dialogs;
 using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.Views.Dialogs;
@@ -18,16 +15,17 @@ namespace Documentor.Presentation.ViewModels.Pages;
 public class UsersPageViewModel : ViewModelBase
 {
     private readonly IUserManagementService _userManagementService;
+    private readonly IAppSettingsService _appSettingsService;
 
     private UserListItemModel? _selectedUser;
     private string _errorMessage = string.Empty;
     private bool _isLoading;
 
     private int _currentPage = 1;
-    private int _pageSize = 10;
+    private int _pageSize;
     private int _totalPages;
     private int _totalCount;
-
+    
     private UserFilterModel _currentFilter = new();
 
     public string Title => "Управление пользователями";
@@ -99,9 +97,12 @@ public class UsersPageViewModel : ViewModelBase
     public ICommand NextPageCommand { get; }
     public ICommand PreviousPageCommand { get; }
 
-    public UsersPageViewModel(IUserManagementService userManagementService)
+    public UsersPageViewModel(IUserManagementService userManagementService, IAppSettingsService appSettingsService)
     {
         _userManagementService = userManagementService;
+        _appSettingsService = appSettingsService;
+        
+        _pageSize = _appSettingsService.GetPageSize();
 
         RefreshCommand = new AsyncRelayCommand(_LoadAsync);
         OpenFilterCommand = new RelayCommand(_OpenFilter);
@@ -183,14 +184,16 @@ public class UsersPageViewModel : ViewModelBase
 
     private async Task _ClearFilterAsync()
     {
+        var pageSize = _appSettingsService.GetPageSize();
+
         _currentFilter = new UserFilterModel
         {
             PageNumber = 1,
-            PageSize = 10
+            PageSize = pageSize
         };
 
         CurrentPage = 1;
-        PageSize = 10;
+        PageSize = pageSize;
 
         await _LoadAsync();
     }

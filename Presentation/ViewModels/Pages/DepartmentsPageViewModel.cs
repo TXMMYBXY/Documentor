@@ -14,6 +14,7 @@ namespace Documentor.Presentation.ViewModels.Pages;
 public class DepartmentsPageViewModel : ViewModelBase
 {
     private readonly IDepartmentManagementService _departmentManagementService;
+    private readonly IAppSettingsService _appSettingsService;
 
     private DepartmentListItemModel? _selectedDepartment;
     private string _errorMessage = string.Empty;
@@ -93,9 +94,12 @@ public class DepartmentsPageViewModel : ViewModelBase
 
     public string ActiveFilterSummary => _BuildFilterSummary();
 
-    public DepartmentsPageViewModel(IDepartmentManagementService departmentManagementService)
+    public DepartmentsPageViewModel(IDepartmentManagementService departmentManagementService, IAppSettingsService appSettingsService)
     {
         _departmentManagementService = departmentManagementService;
+        _appSettingsService = appSettingsService;
+        
+        _pageSize = _appSettingsService.GetPageSize();
 
         RefreshCommand = new AsyncRelayCommand(_LoadAsync);
         OpenFilterCommand = new RelayCommand(_OpenFilterStub);
@@ -176,14 +180,16 @@ public class DepartmentsPageViewModel : ViewModelBase
 
     private async Task _ClearFilterAsync()
     {
+        var pageSize = _appSettingsService.GetPageSize();
+
         _currentFilter = new DepartmentFilterModel
         {
             PageNumber = 1,
-            PageSize = 10
+            PageSize = pageSize
         };
 
         CurrentPage = 1;
-        PageSize = 10;
+        PageSize = pageSize;
 
         await _LoadAsync();
     }
