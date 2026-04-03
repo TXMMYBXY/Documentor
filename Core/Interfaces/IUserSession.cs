@@ -1,5 +1,6 @@
 using Documentor.Core.Enums;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 
 namespace Documentor.Core.Interfaces;
 

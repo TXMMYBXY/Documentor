@@ -1,6 +1,6 @@
 using DocumentFlowing.Presentation.ViewModels.Base;
 
-namespace Documentor.Core.Models;
+namespace Documentor.Core.Models.User;
 
 public class UserListItemModel : ViewModelBase
 {

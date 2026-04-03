@@ -1,9 +1,9 @@
 using AutoMapper;
 using Documentor.Application.Api.Admin;
-using Documentor.Application.Api.Admin.Dtos;
 using Documentor.Application.Api.Admin.Dtos.User;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 
 namespace Documentor.Core.Services;
 
@@ -20,8 +20,8 @@ public class UserManagementService : IUserManagementService
 
     public async Task<PagedResult<UserListItemModel>> GetUsersAsync(UserFilterModel filter)
     {
-        var dto = _mapper.Map<UserFilterDto>(filter);
-        var response = await _adminClient.GetUsersAsync(dto);
+        var filterDto = _mapper.Map<UserFilterDto>(filter);
+        var response = await _adminClient.GetUsersAsync(filterDto);
 
         if (response == null)
         {
@@ -51,9 +51,10 @@ public class UserManagementService : IUserManagementService
     public async Task<IReadOnlyList<LookupItemModel>> GetDepartmentsAsync()
     {
         var result = await _adminClient.GetAllDepartmentsAsync();
+        
         return result == null
             ? Array.Empty<LookupItemModel>()
-            : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
+            : _mapper.Map<IReadOnlyList<LookupItemModel>>(result.Departments);
     }
 
     public async Task<IReadOnlyList<LookupItemModel>> GetRolesAsync()

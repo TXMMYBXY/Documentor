@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
+using DocumentFlowing.Client.Models;
 
-namespace DocumentFlowing.Client.Models;
+namespace Documentor.Application.Api.Models;
 
 public class User
 {

@@ -1,12 +1,12 @@
 using System.Text.Json.Serialization;
 
-namespace Documentor.Application.Api.Admin.Dtos.User;
+namespace Documentor.Application.Api.Admin.Dtos.Department;
 
-public class GetUsersResponseDto
+public class PagedDepartmentDto
 {
-    [JsonPropertyName("users")]
-    public List<GetUserDto> Users { get; set; } = new();
-
+    [JsonPropertyName("departments")] 
+    public List<GetDepartmentDto> Departments { get; set; } = new ();
+    
     [JsonPropertyName("totalCount")]
     public int TotalCount { get; set; }
 

@@ -1,13 +1,9 @@
-using Documentor.Core.Enums;
+namespace Documentor.Core.Models.Profile;
 
-namespace Documentor.Core.Models;
-
-public class UserInfoModel
+public class ProfileModel
 {
-    public int UserId { get; set; }
     public string FullName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string Department { get; set; } = string.Empty;
-    public UserRole Role { get; set; }
     public string RoleTitle { get; set; } = string.Empty;
 }

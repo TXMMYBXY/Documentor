@@ -1,8 +1,10 @@
+using System.Diagnostics;
 using AutoMapper;
 using Documentor.Application.Api.Admin.Dtos;
 using Documentor.Application.Api.Admin.Dtos.Department;
 using Documentor.Application.Api.Admin.Dtos.User;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 
 namespace Documentor.Infrastructure.Mappings;
 
@@ -11,9 +13,29 @@ public class UserManagementMappingProfile : Profile
     public UserManagementMappingProfile()
     {
         CreateMap<GetUserDto, UserListItemModel>()
-            .ForMember(
-                dest => dest.Role,
-                opt => opt.MapFrom(src => src.RoleEntity != null ? src.RoleEntity.Title : string.Empty));
+            .AfterMap((src, dest) =>
+            {
+                switch (src.RoleEntity.Title)
+                {
+                    case "Admin":
+                        dest.Role = "Администратор";
+                        break;
+                    case "Boss":
+                        dest.Role = "Начальник закупок";
+                        break;
+                    case "Purchaser":
+                        dest.Role = "Сотрудник закупок";
+                        break;
+                    case "Employee":
+                        dest.Role = "Сотрудник";
+                        break;
+                
+                    default:
+                        dest.Role = "Неизвестная роль";
+                        break;
+                }
+                
+            });
 
         CreateMap<UserFilterModel, UserFilterDto>();
 

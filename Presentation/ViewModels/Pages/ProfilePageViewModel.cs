@@ -4,6 +4,7 @@ using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.Profile;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 

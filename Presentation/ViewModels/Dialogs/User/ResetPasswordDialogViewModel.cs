@@ -3,7 +3,7 @@ using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 
-namespace Documentor.Presentation.ViewModels.Dialogs;
+namespace Documentor.Presentation.ViewModels.Dialogs.User;
 
 public class ResetPasswordDialogViewModel : ViewModelBase
 {

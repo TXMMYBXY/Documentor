@@ -1,4 +1,5 @@
 using Documentor.Core.Models;
+using Documentor.Core.Models.Profile;
 
 namespace Documentor.Core.Interfaces;
 

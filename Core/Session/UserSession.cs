@@ -1,6 +1,7 @@
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 
 namespace Documentor.Core.Session;
 

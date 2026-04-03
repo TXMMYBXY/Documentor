@@ -6,7 +6,9 @@ using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 using Documentor.Presentation.ViewModels.Dialogs;
+using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.Views.Dialogs;
 
 namespace Documentor.Presentation.ViewModels.Pages;

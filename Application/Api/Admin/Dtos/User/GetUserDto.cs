@@ -19,5 +19,4 @@ public class GetUserDto
     public string Department { get; set; }
     [JsonPropertyName("role")]
     public Role RoleEntity { get; set; }
-    public string Role => RoleEntity.Title;
 }

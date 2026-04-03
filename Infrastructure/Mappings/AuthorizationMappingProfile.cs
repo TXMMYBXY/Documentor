@@ -3,6 +3,7 @@ using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization.Dtos;
 using Documentor.Core.Enums;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 
 namespace Documentor.Infrastructure.Mappings;
 

@@ -1,4 +1,4 @@
-namespace Documentor.Core.Models;
+namespace Documentor.Core.Models.Profile;
 
 public class ChangePasswordModel
 {

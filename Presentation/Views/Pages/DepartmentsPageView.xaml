@@ -1,9 +1,9 @@
 <UserControl x:Class="Documentor.Presentation.Views.Pages.DepartmentsPageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-             >
+             PreviewKeyDown="Root_OnPreviewKeyDown"
+             MouseDown="Root_OnMouseDown">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,7 +15,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        
+
         <!-- Header -->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
@@ -36,7 +36,8 @@
                        Style="{StaticResource SectionHintTextStyle}"
                        VerticalAlignment="Center"/>
         </Grid>
-        
+
+        <!-- Action bar -->
         <Border Grid.Row="2"
                 Style="{StaticResource CardBorderStyle}">
             <Grid>
@@ -46,7 +47,6 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <!-- Верхняя строка -->
                 <Grid Grid.Row="0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
@@ -56,21 +56,24 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Добавить -->
+                    <!-- Add -->
                     <Button Grid.Column="0"
-                            Command="{Binding AddUserCommand}"
-                            Style="{StaticResource PrimaryButtonStyle}"
-                            ToolTip="Добавить пользователя"
-                            Width="42"
-                            MinWidth="42"
-                            Padding="0"
-                            Margin="0">
-                        <iconPacks:PackIconMaterial Kind="HomePlus"
+                            Command="{Binding AddDepartmentCommand}"
+                            ToolTip="Добавить отдел">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Width" Value="42"/>
+                                <Setter Property="MinWidth" Value="42"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </Button.Style>
+                        <iconPacks:PackIconMaterial Kind="DomainPlus"
                                                     Width="18"
                                                     Height="18"/>
                     </Button>
 
-                    <!-- Фильтр + сброс -->
+                    <!-- Filter -->
                     <Grid Grid.Column="2">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"/>
@@ -78,10 +81,13 @@
                         </Grid.ColumnDefinitions>
 
                         <Button Grid.Column="0"
-                                Command="{Binding OpenFilterCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Margin="0"
-                                MinWidth="120">
+                                Command="{Binding OpenFilterCommand}">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="MinWidth" Value="120"/>
+                                </Style>
+                            </Button.Style>
                             <StackPanel Orientation="Horizontal">
                                 <iconPacks:PackIconMaterial Kind="FilterOutline"
                                                             Width="16"
@@ -94,24 +100,30 @@
 
                         <Button Grid.Column="1"
                                 Command="{Binding ClearFilterCommand}"
-                                Style="{StaticResource SecondaryButtonStyle}"
-                                Width="42"
-                                MinWidth="42"
-                                Padding="0"
-                                Margin="1,0,0,0"
                                 ToolTip="Сбросить фильтр">
+                            <Button.Style>
+                                <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                    <Setter Property="Width" Value="42"/>
+                                    <Setter Property="MinWidth" Value="42"/>
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="1,0,0,0"/>
+                                </Style>
+                            </Button.Style>
                             <iconPacks:PackIconMaterial Kind="Close"
                                                         Width="16"
                                                         Height="16"/>
                         </Button>
                     </Grid>
 
-                    <!-- Обновить -->
+                    <!-- Refresh -->
                     <Button Grid.Column="4"
                             Command="{Binding RefreshCommand}"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            Margin="0"
                             ToolTip="Обновить список">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </Button.Style>
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial Kind="Refresh"
                                                         Width="16"
@@ -123,9 +135,9 @@
                     </Button>
                 </Grid>
 
-                <!-- Вторая строка -->
+                <!-- Lower actions -->
                 <WrapPanel Grid.Row="2">
-                    <Button Command="{Binding EditUserCommand}"
+                    <Button Command="{Binding EditDepartmentCommand}"
                             Style="{StaticResource SecondaryButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial Kind="PencilOutline"
@@ -136,13 +148,16 @@
                                        VerticalAlignment="Center"/>
                         </StackPanel>
                     </Button>
-                    
-                    <Button Command="{Binding DeleteUserCommand}"
-                            Background="#C62828"
-                            Foreground="White"
-                            BorderBrush="#C62828"
-                            Style="{StaticResource SecondaryButtonStyle}"
-                            Margin="0,0,0,0">
+
+                    <Button Command="{Binding DeleteDepartmentCommand}">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                <Setter Property="Background" Value="#C62828"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="BorderBrush" Value="#C62828"/>
+                                <Setter Property="Margin" Value="0"/>
+                            </Style>
+                        </Button.Style>
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial Kind="DeleteOutline"
                                                         Width="16"
@@ -155,34 +170,53 @@
                 </WrapPanel>
             </Grid>
         </Border>
-        
+
         <!-- Data -->
         <Border Grid.Row="4"
                 Style="{StaticResource CardBorderStyle}">
             <Grid>
-                <DataGrid x:Name="UsersGrid"
-                          ItemsSource="{Binding Users}"
-                          SelectedItem="{Binding SelectedUser}"
-                          AutoGenerateColumns="False"
+                <DataGrid x:Name="DepartmentsGrid"
+                          ItemsSource="{Binding Departments}"
+                          SelectedItem="{Binding SelectedDepartment}"
                           IsReadOnly="True"
-                          SelectionMode="Single"
                           Style="{StaticResource AppDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Название"
                                             Binding="{Binding Title}"
-                                            Width="220"/>
+                                            Width="220"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+
                         <DataGridTextColumn Header="Описание"
                                             Binding="{Binding Description}"
-                                            Width="260"/>
-                        <DataGridTextColumn Header="Роль"
-                                            Binding="{Binding Role}"
-                                            Width="140"/>
-                        <DataGridTextColumn Header="Отдел"
-                                            Binding="{Binding Department}"
-                                            Width="220"/>
-                        <DataGridCheckBoxColumn Header="Активен"
-                                                Binding="{Binding IsActive}"
-                                                Width="90"/>
+                                            Width="*"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+
+                        <DataGridTextColumn Header="Кол-во сотрудников"
+                                            Binding="{Binding EmployeesCount}"
+                                            Width="150"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+
+                        <DataGridTemplateColumn Header="Сотрудники"
+                                                Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="EmployeesButton_OnClick"
+                                            ToolTip="Показать сотрудников отдела">
+                                        <Button.Style>
+                                            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                                                <Setter Property="Width" Value="36"/>
+                                                <Setter Property="MinWidth" Value="36"/>
+                                                <Setter Property="Padding" Value="0"/>
+                                                <Setter Property="Margin" Value="0"/>
+                                            </Style>
+                                        </Button.Style>
+                                        <iconPacks:PackIconMaterial Kind="AccountGroupOutline"
+                                                                    Width="16"
+                                                                    Height="16"/>
+                                    </Button>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
 
@@ -203,13 +237,67 @@
                         </Style>
                     </Border.Style>
 
-                    <TextBlock Text="Пользователи не найдены"
+                    <TextBlock Text="Отделы не найдены"
                                FontWeight="Bold"
                                FontSize="14"
                                Foreground="{DynamicResource Brush.TextPrimary}"/>
                 </Border>
             </Grid>
         </Border>
-        
+
+        <!-- Paging -->
+        <Border Grid.Row="6"
+                Style="{StaticResource CardBorderStyle}"
+                Padding="12">
+            <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
+                <Button Command="{Binding PreviousPageCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                            <Setter Property="Width" Value="40"/>
+                            <Setter Property="MinWidth" Value="40"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0,0,12,0"/>
+                        </Style>
+                    </Button.Style>
+                    <iconPacks:PackIconMaterial Kind="ChevronLeft"
+                                                Width="18"
+                                                Height="18"/>
+                </Button>
+
+                <TextBlock Text="{Binding CurrentPage, StringFormat=Страница {0}}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0"
+                           FontWeight="SemiBold"
+                           Foreground="{DynamicResource Brush.TextPrimary}"/>
+
+                <TextBlock Text="{Binding TotalPages, StringFormat=из {0}}"
+                           VerticalAlignment="Center"
+                           Margin="0,0,12,0"
+                           Foreground="{DynamicResource Brush.TextSecondary}"/>
+
+                <Button Command="{Binding NextPageCommand}">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                            <Setter Property="Width" Value="40"/>
+                            <Setter Property="MinWidth" Value="40"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="Margin" Value="0"/>
+                        </Style>
+                    </Button.Style>
+                    <iconPacks:PackIconMaterial Kind="ChevronRight"
+                                                Width="18"
+                                                Height="18"/>
+                </Button>
+            </StackPanel>
+        </Border>
+
+        <!-- Error -->
+        <TextBlock Grid.Row="7"
+                   Text="{Binding ErrorMessage}"
+                   Foreground="{DynamicResource Brush.Error}"
+                   Margin="0,12,0,0"
+                   TextWrapping="Wrap"/>
     </Grid>
 </UserControl>

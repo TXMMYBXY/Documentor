@@ -1,6 +1,7 @@
 using AutoMapper;
 using Documentor.Application.Api.Me.Dtos;
 using Documentor.Core.Models;
+using Documentor.Core.Models.Profile;
 
 namespace Documentor.Infrastructure.Mappings;
 

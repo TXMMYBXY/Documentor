@@ -1,14 +1,12 @@
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using DocumentFlowing.Common;
 using DocumentFlowing.Presentation.ViewModels.Base;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
+using Documentor.Core.Models.User;
 
-namespace Documentor.Presentation.ViewModels.Dialogs
+namespace Documentor.Presentation.ViewModels.Dialogs.User
 {
     public class AddUserViewModel : ViewModelBase
     {
