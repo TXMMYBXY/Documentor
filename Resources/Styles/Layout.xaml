@@ -53,17 +53,103 @@
         <Setter Property="mah:ControlsHelper.CornerRadius" Value="0"/>
     </Style>
 
+    <!-- DataGrid Header -->
+    <Style x:Key="AppDataGridHeaderStyle"
+           TargetType="DataGridColumnHeader"
+           BasedOn="{StaticResource MahApps.Styles.DataGridColumnHeader}">
+        <Setter Property="Background" Value="{DynamicResource Brush.SurfaceAlt}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}"/>
+        <Setter Property="BorderThickness" Value="0,0,1,1"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Height" Value="42"/>
+        <Setter Property="Padding" Value="12,0"/>
+    </Style>
+
+    <!-- DataGrid Cell -->
+    <Style x:Key="AppDataGridCellStyle"
+       TargetType="DataGridCell"
+       BasedOn="{StaticResource MahApps.Styles.DataGridCell}">
+    <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}"/>
+    <Setter Property="BorderThickness" Value="0,0,0,1"/>
+    <Setter Property="Padding" Value="12,10"/>
+    <Setter Property="FontSize" Value="14"/>
+    <Setter Property="VerticalContentAlignment" Value="Center"/>
+    <Setter Property="Background" Value="Transparent"/>
+    <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+    <Setter Property="TextBlock.Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+    <Setter Property="Template">
+        <Setter.Value>
+            <ControlTemplate TargetType="DataGridCell">
+                <Border x:Name="CellBorder"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="True">
+                    <ContentPresenter Margin="{TemplateBinding Padding}"
+                                      VerticalAlignment="Center"
+                                      SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                </Border>
+                <ControlTemplate.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter TargetName="CellBorder" Property="Background" Value="{DynamicResource Brush.TableRowSelected}"/>
+                        <Setter Property="Foreground" Value="{DynamicResource Brush.TableRowSelectedText}"/>
+                        <Setter Property="TextBlock.Foreground" Value="{DynamicResource Brush.TableRowSelectedText}"/>
+                    </Trigger>
+                    <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+                        <Setter Property="TextBlock.Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+                    </Trigger>
+                </ControlTemplate.Triggers>
+            </ControlTemplate>
+        </Setter.Value>
+    </Setter>
+</Style>
+
+    <!-- DataGrid Row -->
+    <Style x:Key="AppDataGridRowStyle"
+           TargetType="DataGridRow"
+           BasedOn="{StaticResource MahApps.Styles.DataGridRow}">
+        <Setter Property="MinHeight" Value="42"/>
+        <Setter Property="Background" Value="{DynamicResource Brush.Surface}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="SnapsToDevicePixels" Value="True"/>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Brush.TableRowHover}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+            </Trigger>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="{DynamicResource Brush.TableRowSelected}"/>
+                <Setter Property="Foreground" Value="{DynamicResource Brush.TableRowSelectedText}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- DataGrid -->
     <Style x:Key="AppDataGridStyle"
            TargetType="DataGrid"
            BasedOn="{StaticResource MahApps.Styles.DataGrid}">
         <Setter Property="Background" Value="{DynamicResource Brush.Surface}"/>
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource Brush.Border}"/>
         <Setter Property="BorderThickness" Value="1"/>
-        <Setter Property="GridLinesVisibility" Value="Horizontal"/>
+        <Setter Property="RowBackground" Value="{DynamicResource Brush.Surface}"/>
+        <Setter Property="AlternatingRowBackground" Value="{DynamicResource Brush.SurfaceAlt}"/>
+        <Setter Property="GridLinesVisibility" Value="None"/>
         <Setter Property="HeadersVisibility" Value="Column"/>
         <Setter Property="CanUserAddRows" Value="False"/>
         <Setter Property="CanUserDeleteRows" Value="False"/>
-        <Setter Property="AlternatingRowBackground" Value="{DynamicResource Brush.SurfaceAlt}"/>
+        <Setter Property="CanUserResizeRows" Value="False"/>
+        <Setter Property="RowHeaderWidth" Value="0"/>
+        <Setter Property="SelectionMode" Value="Single"/>
+        <Setter Property="SelectionUnit" Value="FullRow"/>
+        <Setter Property="AutoGenerateColumns" Value="False"/>
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource AppDataGridHeaderStyle}"/>
+        <Setter Property="CellStyle" Value="{StaticResource AppDataGridCellStyle}"/>
+        <Setter Property="RowStyle" Value="{StaticResource AppDataGridRowStyle}"/>
     </Style>
 
     <Style x:Key="SidebarMenuButtonStyle" TargetType="Button">
@@ -105,6 +191,12 @@
             </ControlTemplate>
         </Setter.Value>
     </Setter>
+    </Style>
+    
+    <Style x:Key="AppDataGridTextStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{DynamicResource Brush.TextPrimary}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
     </Style>
 
 </ResourceDictionary>

@@ -197,16 +197,24 @@
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Email"
                                             Binding="{Binding Email}"
-                                            Width="220"/>
+                                            Width="212"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+
                         <DataGridTextColumn Header="ФИО"
                                             Binding="{Binding FullName}"
-                                            Width="260"/>
+                                            Width="260"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+
                         <DataGridTextColumn Header="Роль"
                                             Binding="{Binding Role}"
-                                            Width="140"/>
+                                            Width="140"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+
                         <DataGridTextColumn Header="Отдел"
                                             Binding="{Binding Department}"
-                                            Width="220"/>
+                                            Width="220"
+                                            ElementStyle="{StaticResource AppDataGridTextStyle}"/>
+                        
                         <DataGridCheckBoxColumn Header="Активен"
                                                 Binding="{Binding IsActive}"
                                                 Width="90"/>
