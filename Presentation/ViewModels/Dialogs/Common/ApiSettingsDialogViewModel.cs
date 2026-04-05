@@ -10,7 +10,7 @@ public class ApiSettingsDialogViewModel : ViewModelBase
     private readonly IApiEndpointProvider _apiEndpointProvider;
     private Action<bool>? _closeAction;
 
-    private string _apiUrl = string.Empty;
+    private string _apiUrl;
     private string _errorMessage = string.Empty;
 
     public string ApiUrl

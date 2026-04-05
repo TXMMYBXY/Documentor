@@ -3,6 +3,7 @@ using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Authorization;
 using Documentor.Application.Api.Me;
 using Documentor.Application.Api.Models;
+using Documentor.Application.Api.Statement;
 using Documentor.Application.Services;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Middleware;
@@ -43,6 +44,9 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<IAdminClient, AdminClient>()
             .AddHttpMessageHandler<AuthorizationHandler>();
         
+        services.AddHttpClient<IStatementClient, StatementClient>()
+            .AddHttpMessageHandler<AuthorizationHandler>();
+        
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         
         services.AddSingleton<IUserSession, UserSession>();
@@ -56,6 +60,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAppStartupService, AppStartupService>();
         services.AddTransient<IUserManagementService, UserManagementService>();
         services.AddTransient<IDepartmentManagementService, DepartmentManagementService>();
+        services.AddTransient<IStatementManagementService, StatementManagementService>();
 
         services.AddTransient<IPersonalAccountService, PersonalAccountService>();
         services.AddTransient<IAuthorizationService, AuthorizationService>();

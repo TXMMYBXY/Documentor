@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Documentor.Application.Api.Admin.Dtos.User;
 
 namespace Documentor.Application.Api.Statement.Dtos;
 
@@ -10,14 +11,11 @@ public class GetTemplateDto
     [JsonPropertyName("title")]
     public string Title { get; set; }
 
-    [JsonPropertyName("path")]
-    public string Path { get; set; }
-
     [JsonPropertyName("createdBy")]
     public int CreatedBy { get; set; }
 
     [JsonPropertyName("user")]
-    public virtual Models.User User { get; set; }
+    public GetUserDto User { get; set; }
     
     [JsonPropertyName("createdAt")]
     public DateTime CreatedAt { get; set; }

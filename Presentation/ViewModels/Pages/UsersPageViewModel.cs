@@ -18,7 +18,7 @@ public class UsersPageViewModel : PagedListPageViewModel<UserListItemModel, User
     private readonly IUserManagementService _userManagementService;
     private readonly IAppSettingsService _appSettingsService;
 
-    public string Title => "Управление пользователями";
+    public static string Title => "Управление пользователями";
 
     public ObservableCollection<UserListItemModel> Users => Items;
 
