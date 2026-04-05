@@ -13,18 +13,18 @@ public class PersonalAccountClient : GeneralClient, IPersonalAccountClient
     {
     }
 
-    public async Task<GetPersonDto?> GetPersonalInfoAsync(string uri)
+    public async Task<GetPersonDto?> GetPersonalInfoAsync()
     {
-        return await GetResponseAsync<GetPersonDto>(uri);
+        return await GetResponseAsync<GetPersonDto>("personal");
     }
 
-    public async Task<IReadOnlyList<GetLoginTimeDto>?> GetLoginTimesAsync(string uri)
+    public async Task<IReadOnlyList<GetLoginTimeDto>?> GetLoginTimesAsync()
     {
-        return await GetResponseAsync<IReadOnlyList<GetLoginTimeDto>>(uri);
+        return await GetResponseAsync<IReadOnlyList<GetLoginTimeDto>>("personal/login-times");
     }
 
-    public async Task ChangePasswordAsync(ChangePasswordDto request, string uri)
+    public async Task ChangePasswordAsync(ChangePasswordDto request)
     {
-        await PatchResponseAsync<ChangePasswordDto, object>(request, uri);
+        await PatchResponseAsync<ChangePasswordDto, object>(request, "personal/change-password");
     }
 }

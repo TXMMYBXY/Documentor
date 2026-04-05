@@ -192,7 +192,7 @@ public class TokenService : ITokenService
             throw new NullReferenceException("Refresh token is out");
         }
         
-        var token = await _authorizationClient.GetNewAccessTokenAsync(request, "authorization/access");
+        var token = await _authorizationClient.GetNewAccessTokenAsync(request);
 
         if (token == null)
         {
@@ -217,7 +217,7 @@ public class TokenService : ITokenService
             throw new NullReferenceException("Refresh token is out");
         }
         
-        var token = await _authorizationClient.GetNewRefreshTokenAsync(request, "authorization/refresh");
+        var token = await _authorizationClient.GetNewRefreshTokenAsync(request);
         
         SaveRefreshToken(token);
     }

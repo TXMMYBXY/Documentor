@@ -30,7 +30,7 @@ public class AuthorizationService :  IAuthorizationService
             if (!string.IsNullOrEmpty(request.RefreshToken))
             {
                 var refreshToken 
-                    = await _authorizationClient.RequestForAccessAsync(request, "authorization/request-for-access");
+                    = await _authorizationClient.RequestForAccessAsync(request);
 
                 if (refreshToken.IsAllowed)
                 {
@@ -57,7 +57,7 @@ public class AuthorizationService :  IAuthorizationService
                 Password = password
             };
 
-            var response = await _authorizationClient.LoginAsync(loginRequest, "authorization/login");
+            var response = await _authorizationClient.LoginAsync(loginRequest);
 
             if (response != null && !string.IsNullOrEmpty(response.AccessToken))
             {
@@ -70,7 +70,7 @@ public class AuthorizationService :  IAuthorizationService
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка",
+            MessageBox.Show($"Auth failed: {ex.Message}", "Ошибка",
             MessageBoxButton.OK, MessageBoxImage.Error);
             
             return null;

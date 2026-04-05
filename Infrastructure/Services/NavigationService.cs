@@ -37,7 +37,7 @@ public class NavigationService : INavigationService
             // { typeof(CreateUserView), typeof(CreateUserViewModel) },
             // { typeof(ContractTemplateView), typeof(ContractTemplateViewModel) },
             // { typeof(StatementTemplateView), typeof(StatementTemplateViewModel) },
-            // { typeof(CreateTemplateView), typeof(CreateTemplateViewModel) },
+            // { typeof(CreateTemplateView), typeof(CreateTemplateDto) },
         };
     }
 

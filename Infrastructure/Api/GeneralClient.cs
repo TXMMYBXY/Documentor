@@ -59,7 +59,7 @@ public class GeneralClient : IGeneralClient
         return _ConvertResponse<TResponse>(responseJson);
     }
 
-    public async Task<TResponse?> DeleteResponseAsync<TRequest, TResponse>(TRequest request, string uri)
+    public async Task<TResponse?> MultipleDeletionResponseAsync<TRequest, TResponse>(TRequest request, string uri)
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -77,6 +77,17 @@ public class GeneralClient : IGeneralClient
         var responseJson = await response.Content.ReadAsStringAsync();
 
         return _ConvertResponse<TResponse>(responseJson);
+    }
+
+    public async Task<TResponse?> DeleteResponseAsync<TResponse>(string uri)
+    {
+            var response = await _httpClient.DeleteAsync(_documentFlowApi.Domain + uri);
+            
+            await _IsSuccessStatusCode(response);
+            
+            var responseJson = await response.Content.ReadAsStringAsync();
+            
+            return _ConvertResponse<TResponse>(responseJson);
     }
 
     public async Task<TResponse?> GetResponseAsync<TResponse>(string uri)

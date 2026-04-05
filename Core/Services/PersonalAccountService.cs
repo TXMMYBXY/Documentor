@@ -22,7 +22,7 @@ public class PersonalAccountService : IPersonalAccountService
 
     public async Task<ProfileModel?> GetProfileAsync()
     {
-        var dto = await _personalAccountClient.GetPersonalInfoAsync("personal");
+        var dto = await _personalAccountClient.GetPersonalInfoAsync();
 
         if (dto == null)
         {
@@ -34,7 +34,7 @@ public class PersonalAccountService : IPersonalAccountService
 
     public async Task<IReadOnlyList<LoginHistoryItemModel>> GetLoginHistoryAsync()
     {
-        var dto = await _personalAccountClient.GetLoginTimesAsync("personal/login-times");
+        var dto = await _personalAccountClient.GetLoginTimesAsync();
         if (dto == null)
             return Array.Empty<LoginHistoryItemModel>();
 
@@ -45,6 +45,6 @@ public class PersonalAccountService : IPersonalAccountService
     {
         var dto = _mapper.Map<ChangePasswordDto>(model);
         
-        await _personalAccountClient.ChangePasswordAsync(dto, "personal/change-password");
+        await _personalAccountClient.ChangePasswordAsync(dto);
     }
 }
