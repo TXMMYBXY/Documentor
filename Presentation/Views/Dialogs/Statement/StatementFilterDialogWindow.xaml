@@ -37,14 +37,14 @@
                              Style="{StaticResource InputTextBoxStyle}"
                              Margin="0,0,0,12"/>
 
-                    <TextBlock Text="Создан до"
-                               Style="{StaticResource FormLabelTextStyle}"/>
-                    <DatePicker SelectedDate="{Binding CreatedAtEarlier, Mode=TwoWay}"
-                                Margin="0,0,0,12"/>
-
                     <TextBlock Text="Создан после"
                                Style="{StaticResource FormLabelTextStyle}"/>
                     <DatePicker SelectedDate="{Binding CreatedAtLater, Mode=TwoWay}"
+                                Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Создан до"
+                               Style="{StaticResource FormLabelTextStyle}"/>
+                    <DatePicker SelectedDate="{Binding CreatedAtEarlier, Mode=TwoWay}"
                                 Margin="0,0,0,12"/>
 
                     <TextBlock Text="Размер страницы"

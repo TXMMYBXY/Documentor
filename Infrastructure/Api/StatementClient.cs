@@ -78,18 +78,24 @@ public class StatementClient : GeneralClient, IStatementClient
     private static string _BuildTemplateQuery(StatementFilterDto filter)
     {
         var parameters = new List<string>();
-        
+
         if (!string.IsNullOrWhiteSpace(filter.Title))
             parameters.Add($"Title={Uri.EscapeDataString(filter.Title)}");
-        
-        if(filter.CreatedBy.HasValue)
-            parameters.Add($"Owner={filter.CreatedBy.Value}");
-        
-        if(filter.CreatedAtEarlier.HasValue)
-            parameters.Add($"CreatedAtEarlier={filter.CreatedAtEarlier.Value}");
-        
-        if(filter.CreatedAtLater.HasValue)
-            parameters.Add($"CreatedAtLater={filter.CreatedAtLater.Value}");
+
+        if (filter.CreatedBy.HasValue)
+            parameters.Add($"CreatedBy={filter.CreatedBy.Value}");
+
+        if (filter.CreatedAtLater.HasValue)
+        {
+            var fromDate = filter.CreatedAtLater.Value.Date;
+            parameters.Add($"CreatedAtLater={Uri.EscapeDataString(fromDate.ToString("O"))}");
+        }
+
+        if (filter.CreatedAtEarlier.HasValue)
+        {
+            var toDate = filter.CreatedAtEarlier.Value.Date.AddDays(1).AddTicks(-1);
+            parameters.Add($"CreatedAtEarlier={Uri.EscapeDataString(toDate.ToString("O"))}");
+        }
 
         if (filter.PageSize.HasValue)
             parameters.Add($"PageSize={filter.PageSize.Value}");
