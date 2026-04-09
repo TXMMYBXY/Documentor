@@ -84,10 +84,7 @@ public class TokenService : ITokenService
 
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath))
             {
-                if (key == null)
-                {
-                    return;
-                }
+                if (key == null) return;
                 
                 if (refreshTokenResponse.Token != null && !string.IsNullOrEmpty(refreshTokenResponse.Token))
                 {
@@ -99,7 +96,7 @@ public class TokenService : ITokenService
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error saving tokens: {ex.Message}");
+            Console.WriteLine($"Error saving token: {ex.Message}");
         }
     }
 

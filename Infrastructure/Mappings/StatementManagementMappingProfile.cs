@@ -15,5 +15,7 @@ public class StatementManagementMappingProfile : Profile
                 opt => opt.MapFrom(src => src.User != null ? src.User.FullName : string.Empty));
 
         CreateMap<CreateStatementTemplateModel, CreateTemplateDto>();
+        
+        CreateMap<DynamicFieldInfoDto, DynamicFieldInfoModel>();
     }
 }

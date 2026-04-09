@@ -11,4 +11,7 @@ public interface IStatementManagementService
     
     Task CreateStatementAsync(CreateStatementTemplateModel templateModel);
     Task DownloadStatementTemplateAsync(int templateId, string savePath);
+    Task<IReadOnlyList<DynamicFieldInfoModel>> ExtractFieldsAsync(int templateId);
+    
+    Task CreateTaskAsync(int templateId, Dictionary<string, object> data);
 }

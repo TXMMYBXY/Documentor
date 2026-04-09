@@ -13,4 +13,7 @@ public interface IStatementClient
     Task DeleteTemplateAsync(int templateId);
     Task DeleteManyTemplateAsync(DeleteManyTemplatesDto manyTemplatesDto);
     Task<Stream> DownloadTemplateAsync(int templateId);
+    Task<IReadOnlyList<DynamicFieldInfoDto>> ExtractFieldsAsync(int templateId);
+
+    Task CreateTask(CreateTaskRequestDto dto);
 }

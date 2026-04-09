@@ -37,6 +37,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
     public ICommand DeleteStatementCommand { get; }
     public ICommand FillStatementCommand { get; }
     public ICommand DownloadStatementCommand { get; }
+    
 
     public StatementTemplatesPageViewModel(
         IStatementManagementService statementManagementService,
@@ -236,7 +237,25 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
 
     private void FillStatement()
     {
-        // пока без заполнения
+        if (SelectedStatement == null)
+            return;
+
+        FillStatementTemplateDialogWindow? dialog = null;
+
+        var vm = new FillStatementTemplateDialogViewModel(
+            _statementManagementService,
+            SelectedStatement.Id,
+            SelectedStatement.Title);
+
+        vm.CloseRequested = result => dialog!.DialogResult = result;
+
+        dialog = new FillStatementTemplateDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        dialog.ShowDialog();
     }
 
     private async Task DownloadStatementAsync()
