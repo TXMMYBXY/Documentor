@@ -1,6 +1,9 @@
+using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models.Statement;
 using Documentor.Presentation.ViewModels.Base;
@@ -46,12 +49,12 @@ public class EditStatementTemplateDialogViewModel : DialogViewModelBase
         _originalTitle = template.Title;
         _title = template.Title;
 
-        BrowseFileCommand = new RelayCommand(BrowseFile);
+        BrowseFileCommand = new RelayCommand(_BrowseFile);
         ClearFileCommand = new RelayCommand(() => FilePath = string.Empty);
-        SaveCommand = new AsyncRelayCommand(SaveAsync);
+        SaveCommand = new AsyncRelayCommand(_SaveAsync);
     }
 
-    private void BrowseFile()
+    private void _BrowseFile()
     {
         var dialog = new OpenFileDialog
         {
@@ -67,7 +70,7 @@ public class EditStatementTemplateDialogViewModel : DialogViewModelBase
         }
     }
 
-    private async Task SaveAsync()
+    private async Task _SaveAsync()
     {
         try
         {

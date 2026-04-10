@@ -46,8 +46,8 @@ public class StatementClient : GeneralClient, IStatementClient
 
         if (hasFile)
         {
-            await using var fileStream = File.OpenRead(templateDto.FilePath!);
-            using var streamContent = new StreamContent(fileStream);
+            var fileStream = File.OpenRead(templateDto.FilePath!);
+            var streamContent = new StreamContent(fileStream);
 
             streamContent.Headers.ContentType =
                 new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
@@ -62,7 +62,8 @@ public class StatementClient : GeneralClient, IStatementClient
             Content = form
         };
 
-        var response = await _httpClient.SendAsync(request);
+        using var response = await _httpClient.SendAsync(request);
+        
         response.EnsureSuccessStatusCode();
     }
 

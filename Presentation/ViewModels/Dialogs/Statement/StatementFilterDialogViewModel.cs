@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Core.Models.Statement;
 using Documentor.Presentation.ViewModels.Base;
 
