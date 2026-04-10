@@ -181,7 +181,6 @@ public class TokenService : ITokenService
         var request = new AccessTokenRequestDto
         {
             RefreshToken = ReturnRefreshToken(),
-            UserId = _GetUserId()
         };
 
         if (string.IsNullOrEmpty(request.RefreshToken))
@@ -205,11 +204,10 @@ public class TokenService : ITokenService
     {
         var request = new RefreshTokenRequestDto
         {
-            UserId = _GetUserId(),
             Token = ReturnRefreshToken()
         };
 
-        if (request.UserId == null && string.IsNullOrEmpty(request.Token))
+        if (string.IsNullOrEmpty(request.Token))
         {
             throw new NullReferenceException("Refresh token is out");
         }
@@ -320,23 +318,6 @@ public class TokenService : ITokenService
         catch
         {
             return false;
-        }
-    }
-    
-    private int? _GetUserId()
-    {
-        try
-        {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
-            {
-                if (key == null) return null;
-
-                return key.GetValue("UserId") as int?;
-            }
-        }
-        catch
-        {
-            return null;
         }
     }
 }

@@ -7,6 +7,5 @@ public class UpdateTemplateDto
     [JsonPropertyName("title")]
     public string Title { get; set; }
 
-    [JsonPropertyName("path")]
-    public string Path { get; set; }
+    public string? FilePath { get; set; }
 }

@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DocumentFlowing.Client.Authorization.Dtos;
+namespace Documentor.Application.Api.Authorization.Dtos;
 
 public class RefreshTokenResponseDto
 {

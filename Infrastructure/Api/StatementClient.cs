@@ -33,7 +33,37 @@ public class StatementClient : GeneralClient, IStatementClient
 
     public async Task UpdateTemplateAsync(int templateId, UpdateTemplateDto templateDto)
     {
-        await PatchResponseAsync<UpdateTemplateDto, object>(templateDto, $"statement-template/{templateId}");
+        var hasTitle = !string.IsNullOrWhiteSpace(templateDto.Title);
+        var hasFile = !string.IsNullOrWhiteSpace(templateDto.FilePath);
+
+        if (!hasTitle && !hasFile)
+            return;
+
+        using var form = new MultipartFormDataContent();
+
+        if (hasTitle)
+            form.Add(new StringContent(templateDto.Title!), "title");
+
+        if (hasFile)
+        {
+            await using var fileStream = File.OpenRead(templateDto.FilePath!);
+            using var streamContent = new StreamContent(fileStream);
+
+            streamContent.Headers.ContentType =
+                new MediaTypeHeaderValue("application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+
+            form.Add(streamContent, "file", Path.GetFileName(templateDto.FilePath));
+        }
+
+        var url = $"{_baseUrl.TrimEnd('/')}/statement-template/{templateId}/update-template";
+
+        using var request = new HttpRequestMessage(HttpMethod.Patch, url)
+        {
+            Content = form
+        };
+
+        var response = await _httpClient.SendAsync(request);
+        response.EnsureSuccessStatusCode();
     }
 
     public async Task CreateTemplateAsync(CreateTemplateDto templateDto)

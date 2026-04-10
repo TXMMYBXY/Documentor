@@ -2,6 +2,7 @@ using System.Net.Http;
 using DocumentFlowing.Client.Authorization.Dtos;
 using DocumentFlowing.Client.Models;
 using Documentor.Application.Api.Authorization;
+using Documentor.Application.Api.Authorization.Dtos;
 using Documentor.Application.Api.Models;
 using Microsoft.Extensions.Options;
 

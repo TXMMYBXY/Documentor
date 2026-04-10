@@ -50,6 +50,15 @@ public class StatementManagementService : IStatementManagementService
         await _statementClient.DeleteTemplateAsync(statementId);
     }
 
+    public async Task UpdateStatementTemplateAsync(int templateId, string? title, string? filePath)
+    {
+        await _statementClient.UpdateTemplateAsync(templateId, new UpdateTemplateDto
+        {
+            Title = title,
+            FilePath = filePath
+        });
+    }
+
     public async Task CreateStatementAsync(CreateStatementTemplateModel templateModel)
     {
         var dto = _mapper.Map<CreateTemplateDto>(templateModel);

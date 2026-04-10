@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization;
+using Documentor.Application.Api.Authorization.Dtos;
 using Documentor.Application.Services;
 
 namespace Documentor.Infrastructure.Services;

@@ -29,7 +29,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         set => SelectedItem = value;
     }
 
-    public override string ActiveFilterSummary => BuildFilterSummary();
+    public override string ActiveFilterSummary => _BuildFilterSummary();
 
     public ICommand OpenFilterCommand { get; }
     public ICommand AddStatementCommand { get; }
@@ -37,6 +37,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
     public ICommand DeleteStatementCommand { get; }
     public ICommand FillStatementCommand { get; }
     public ICommand DownloadStatementCommand { get; }
+    public ICommand EditStatementCommand { get; }
     
 
     public StatementTemplatesPageViewModel(
@@ -54,12 +55,13 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
             PageSize = PageSize
         };
 
-        OpenFilterCommand = new RelayCommand(OpenFilter);
-        AddStatementCommand = new RelayCommand(AddStatement);
-        ChangeStatusCommand = new AsyncRelayCommand(ChangeStatusAsync, () => SelectedStatement != null);
-        DeleteStatementCommand = new AsyncRelayCommand(DeleteStatementAsync, () => SelectedStatement != null);
-        FillStatementCommand = new RelayCommand(FillStatement, () => SelectedStatement != null && SelectedStatement.IsActive);
-        DownloadStatementCommand = new AsyncRelayCommand(DownloadStatementAsync, () => SelectedStatement != null);
+        OpenFilterCommand = new RelayCommand(_OpenFilter);
+        AddStatementCommand = new RelayCommand(_AddStatement);
+        ChangeStatusCommand = new AsyncRelayCommand(_ChangeStatusAsync, () => SelectedStatement != null);
+        DeleteStatementCommand = new AsyncRelayCommand(_DeleteStatementAsync, () => SelectedStatement != null);
+        FillStatementCommand = new RelayCommand(_FillStatement, () => SelectedStatement != null && SelectedStatement.IsActive);
+        DownloadStatementCommand = new AsyncRelayCommand(_DownloadStatementAsync, () => SelectedStatement != null);
+        EditStatementCommand = new RelayCommand(_EditStatement, () => SelectedStatement != null);
 
         _ = LoadAsync();
     }
@@ -104,6 +106,9 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
 
         if (DownloadStatementCommand is AsyncRelayCommand download)
             download.RaiseCanExecuteChanged();
+        
+        if (EditStatementCommand is RelayCommand edit)
+            edit.RaiseCanExecuteChanged();
     }
 
     protected override string BuildLoadErrorMessage(Exception ex)
@@ -111,7 +116,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         return $"Ошибка загрузки шаблонов заявлений: {ex.Message}";
     }
 
-    private void OpenFilter()
+    private void _OpenFilter()
     {
         StatementFilterDialogWindow? dialog = null;
 
@@ -142,7 +147,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         }
     }
 
-    private void AddStatement()
+    private void _AddStatement()
     {
         AddStatementTemplateDialogWindow? dialog = null;
 
@@ -161,8 +166,33 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
             _ = LoadAsync();
         }
     }
+    
+    private void _EditStatement()
+    {
+        if (SelectedStatement == null)
+            return;
 
-    private async Task ChangeStatusAsync()
+        EditStatementTemplateDialogWindow? dialog = null;
+
+        var vm = new EditStatementTemplateDialogViewModel(
+            _statementManagementService,
+            SelectedStatement.Id,
+            SelectedStatement);
+
+        vm.CloseRequested = result => dialog!.DialogResult = result;
+
+        dialog = new EditStatementTemplateDialogWindow
+        {
+            DataContext = vm,
+            Owner = System.Windows.Application.Current.MainWindow
+        };
+
+        var result = dialog.ShowDialog();
+        if (result == true)
+            _ = LoadAsync();
+    }
+
+    private async Task _ChangeStatusAsync()
     {
         if (SelectedStatement == null)
             return;
@@ -187,7 +217,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         }
     }
 
-    private async Task DeleteStatementAsync()
+    private async Task _DeleteStatementAsync()
     {
         if (SelectedStatement == null)
             return;
@@ -235,7 +265,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         }
     }
 
-    private void FillStatement()
+    private void _FillStatement()
     {
         if (SelectedStatement == null)
             return;
@@ -258,7 +288,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         dialog.ShowDialog();
     }
 
-    private async Task DownloadStatementAsync()
+    private async Task _DownloadStatementAsync()
     {
         if (SelectedStatement == null)
             return;
@@ -286,7 +316,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         }
     }
 
-    private string BuildFilterSummary()
+    private string _BuildFilterSummary()
     {
         var parts = new List<string>();
 

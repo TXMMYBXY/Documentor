@@ -1,11 +1,9 @@
 using System.Text.Json.Serialization;
 
-namespace DocumentFlowing.Client.Authorization.Dtos;
+namespace Documentor.Application.Api.Authorization.Dtos;
 
 public class AccessTokenRequestDto
 {
-    [JsonPropertyName("userId")]
-    public int? UserId { get; set; }
     [JsonPropertyName("refreshToken")]
     public string RefreshToken { get; set; }
 }

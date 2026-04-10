@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using Documentor.Application.Api.Authorization.Dtos;
+using DocumentFlowing.Client.Authorization.Dtos;
 
-namespace DocumentFlowing.Client.Authorization.Dtos;
+namespace Documentor.Application.Api.Authorization.Dtos;
 public class LoginResponseDto
 {
     [JsonPropertyName("userInfo")]
