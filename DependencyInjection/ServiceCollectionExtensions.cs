@@ -13,6 +13,7 @@ using Documentor.Infrastructure.Api;
 using Documentor.Infrastructure.Services;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Navigation;
+using Documentor.Presentation.Services;
 using Documentor.Presentation.ViewModels.Dialogs;
 using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.User;
@@ -103,6 +104,13 @@ public static class ServiceCollectionExtensions
 
         services.AddTransient<ConfirmationDialogViewModel>();
         services.AddTransient<ConfirmationDialogWindow>();
+        
+        services.AddSingleton<INotificationRealtimeService, NotificationRealtimeService>();
+        services.AddSingleton<INotificationCoordinator, NotificationCoordinator>();
+        services.AddSingleton<ToastNotificationService>();
+
+        services.AddSingleton<IToastNotificationService>(sp => sp.GetRequiredService<ToastNotificationService>());
+        services.AddSingleton<IInAppToastSource>(sp => sp.GetRequiredService<ToastNotificationService>());
         
         return services;
     }

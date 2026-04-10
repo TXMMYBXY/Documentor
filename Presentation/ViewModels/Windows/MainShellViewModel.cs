@@ -6,6 +6,7 @@ using Documentor.Core.Interfaces;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Menu;
 using Documentor.Presentation.Navigation;
+using Documentor.Presentation.Services;
 using Documentor.Presentation.ViewModels.Base;
 using Documentor.Presentation.ViewModels.Pages;
 
@@ -45,16 +46,19 @@ public class MainShellViewModel : ViewModelBase
 
     public ICommand LogoutCommand { get; }
     public ICommand ToggleNavigationPaneCommand { get; }
+    public IInAppToastSource Toasts { get; }
 
     public MainShellViewModel(
         IUserSession userSession,
         INavigationService navigationService,
         IMenuFactory menuFactory,
-        IApplicationNavigationService applicationNavigationService)
+        IApplicationNavigationService applicationNavigationService,
+        IInAppToastSource toasts)
     {
         _userSession = userSession;
         _navigationService = navigationService;
         _applicationNavigationService = applicationNavigationService;
+        Toasts = toasts;
 
         LogoutCommand = new RelayCommand(() => _applicationNavigationService.Logout());
         ToggleNavigationPaneCommand = new RelayCommand(() => IsNavigationPaneExpanded = !IsNavigationPaneExpanded);
