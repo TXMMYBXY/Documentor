@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Win32;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
@@ -10,6 +11,7 @@ public class RegistryAppSettingsService : IAppSettingsService
     private const string ThemeValueName = "Theme";
     private const string PageSizeValueName = "PageSize";
     private const string ApiDomainOverrideValueName = "ApiDomainOverride";
+    private const string DisplayedNotification = "DisplayedNotification";
 
     public AppTheme GetTheme()
     {
@@ -75,6 +77,35 @@ public class RegistryAppSettingsService : IAppSettingsService
 
             using var key = Registry.CurrentUser.CreateSubKey(RegistryPath);
             key?.SetValue(PageSizeValueName, pageSize, RegistryValueKind.DWord);
+        }
+        catch
+        {
+        }
+    }
+
+    public bool IsDisplayedNotification()
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.OpenSubKey(RegistryPath);
+
+            var value = key?.GetValue(DisplayedNotification);
+
+            return value is bool displayed && displayed;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public void SaveIsDisplayedNotification(bool displayed)
+    {
+        try
+        {
+            using var key = Registry.CurrentUser.CreateSubKey(RegistryPath);
+            
+            key?.SetValue(DisplayedNotification, displayed, RegistryValueKind.DWord);
         }
         catch
         {
