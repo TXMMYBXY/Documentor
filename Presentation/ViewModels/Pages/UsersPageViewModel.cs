@@ -1,7 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using DocumentFlowing.Common;
 using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
@@ -11,6 +10,7 @@ using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.Views.Dialogs;
 using Documentor.Presentation.Views.Dialogs.Common;
+using Documentor.Presentation.Views.Dialogs.User;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 

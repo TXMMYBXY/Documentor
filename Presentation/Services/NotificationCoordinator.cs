@@ -43,10 +43,14 @@ public class NotificationCoordinator : INotificationCoordinator
     {
         switch (realtimeNotification.Severity)
         {
+            case NotificationSeverity.Success:
+                _toast.ShowSuccess(realtimeNotification.Title, realtimeNotification.Message);
+                break;
+            
             case NotificationSeverity.Error:
                 _toast.ShowError(realtimeNotification.Title, realtimeNotification.Message);
                 break;
-
+            
             default:
                 _toast.ShowInfo(realtimeNotification.Title, realtimeNotification.Message);
                 break;

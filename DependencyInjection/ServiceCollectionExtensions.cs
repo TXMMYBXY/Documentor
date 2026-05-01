@@ -22,6 +22,7 @@ using Documentor.Presentation.ViewModels.Windows;
 using Documentor.Presentation.Views.Dialogs;
 using Documentor.Presentation.Views.Dialogs.Common;
 using Documentor.Presentation.Views.Dialogs.Department;
+using Documentor.Presentation.Views.Dialogs.User;
 using Documentor.Presentation.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

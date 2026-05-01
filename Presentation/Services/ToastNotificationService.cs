@@ -1,6 +1,5 @@
 using System.Collections.ObjectModel;
-using System.Threading;
-using System.Windows;
+using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 using Documentor.Presentation.Services.Toasts;
 
@@ -22,10 +21,14 @@ public class ToastNotificationService : IToastNotificationService, IInAppToastSo
         Notifications = new ReadOnlyObservableCollection<ToastItemViewModel>(_notifications);
     }
 
-    public void ShowInfo(string title, string message) => _ = ShowAsync(title, message, isError: false);
-    public void ShowError(string title, string message) => _ = ShowAsync(title, message, isError: true);
+    public void ShowInfo(string title, string message) => 
+        _ = ShowAsync(title, message, NotificationSeverity.Info);
+    public void ShowSuccess(string title, string message) => 
+        _ = ShowAsync(title, message, NotificationSeverity.Success);
+    public void ShowError(string title, string message) => 
+    _ = ShowAsync(title, message, NotificationSeverity.Error);
 
-    private async Task ShowAsync(string title, string message, bool isError)
+    private async Task ShowAsync(string title, string message, NotificationSeverity severity)
     {
         await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
         {
@@ -33,7 +36,7 @@ public class ToastNotificationService : IToastNotificationService, IInAppToastSo
             if (_notifications.Count >= MaxVisible)
                 _ = CloseAndRemoveAsync(_notifications[0]);
 
-            var item = new ToastItemViewModel(title, message, isError);
+            var item = new ToastItemViewModel(title, message, severity);
             _notifications.Add(item);
 
             _ = AutoCloseAsync(item, DefaultDuration);

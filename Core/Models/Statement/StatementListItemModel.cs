@@ -30,7 +30,7 @@ public class StatementListItemModel : ViewModelBase
 
     public DateTime CreatedAt
     {
-        get => _createdAt;
+        get => _createdAt.ToLocalTime();
         set => SetProperty(ref _createdAt, value);
     }
 

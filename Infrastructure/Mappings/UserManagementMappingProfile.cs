@@ -12,8 +12,9 @@ public class UserManagementMappingProfile : Profile
 {
     public UserManagementMappingProfile()
     {
-        CreateMap<GetUserDto, UserListItemModel>()
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.RoleEntity.Title));
+        CreateMap<UserDto, UserListItemModel>()
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Title))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Title));
 
         CreateMap<UserFilterModel, UserFilterDto>();
 

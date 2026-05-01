@@ -1,6 +1,5 @@
 using System.Net.Http;
 using System.Web;
-using DocumentFlowing.Client.Models;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos;
 using Documentor.Application.Api.Admin.Dtos.Department;
@@ -20,6 +19,7 @@ public class AdminClient : GeneralClient, IAdminClient
     public async Task<PagedUserDto?> GetUsersAsync(UserFilterDto filter)
     {
         var query = _BuildUsersQuery(filter);
+        
         return await GetResponseAsync<PagedUserDto>($"user{query}");
     }
 

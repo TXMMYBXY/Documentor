@@ -1,4 +1,5 @@
 using System.Threading;
+using Documentor.Core.Enums;
 using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.Services.Toasts;
@@ -7,7 +8,7 @@ public sealed class ToastItemViewModel : ViewModelBase
 {
     public string Title { get; }
     public string Message { get; }
-    public bool IsError { get; }
+    public NotificationSeverity Severity { get; }
 
     private bool _isClosing;
     public bool IsClosing
@@ -19,10 +20,10 @@ public sealed class ToastItemViewModel : ViewModelBase
     internal CancellationTokenSource LifetimeCts { get; } = new();
     internal int ClosingFlag;
 
-    public ToastItemViewModel(string title, string message, bool isError)
+    public ToastItemViewModel(string title, string message, NotificationSeverity severity)
     {
         Title = title;
         Message = message;
-        IsError = isError;
+        Severity = severity;
     }
 }

@@ -1,13 +1,15 @@
 using System.Text.Json.Serialization;
 
-namespace Documentor.Application.Api.Models;
+namespace Documentor.Application.Api.Authorization.Dtos;
 
-public class Role
+public class RoleDto
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
+    
     [JsonPropertyName("title")]
     public string Title { get; set; }
+    
     [JsonPropertyName("description")]
     public string? Description { get; set; }
 }

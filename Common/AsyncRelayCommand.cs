@@ -1,6 +1,6 @@
 using System.Windows.Input;
 
-namespace DocumentFlowing.Common;
+namespace Documentor.Common;
 
 public class AsyncRelayCommand : ICommand
 {

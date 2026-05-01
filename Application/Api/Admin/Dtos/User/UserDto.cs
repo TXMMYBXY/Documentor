@@ -1,22 +1,26 @@
 using System.Text.Json.Serialization;
-using DocumentFlowing.Client.Models;
+using Documentor.Application.Api.Admin.Dtos.Department;
+using Documentor.Application.Api.Authorization.Dtos;
 
 namespace Documentor.Application.Api.Admin.Dtos.User;
 
-public class GetUserDto
+public class UserDto
 {
     [JsonPropertyName("id")]
     public int Id { get; set; }
-    [JsonPropertyName("email")]
-    public string Email { get; set; }
+    
     [JsonPropertyName("fullName")]
     public string FullName { get; set; }
-    [JsonPropertyName("passwordHash")]
-    public string PasswordHash { get; set; }
+    
+    [JsonPropertyName("email")]
+    public string Email { get; set; }
+    
     [JsonPropertyName("isActive")]
     public bool IsActive { get; set; }
+    
     [JsonPropertyName("department")]
-    public string Department { get; set; }
+    public DepartmentCleanDto Department { get; set; }
+    
     [JsonPropertyName("role")]
-    public Role RoleEntity { get; set; }
+    public RoleDto Role { get; set; }
 }

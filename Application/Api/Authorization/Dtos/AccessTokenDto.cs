@@ -1,18 +1,15 @@
 using System.Text.Json.Serialization;
-using DocumentFlowing.Client.Authorization.Dtos;
 
 namespace Documentor.Application.Api.Authorization.Dtos;
 
-public class AccessTokenResponseDto
+public class AccessTokenDto
 {
-    [JsonPropertyName("userInfo")]
-    public UserInfoDto UserInfo { get; set; }
     [JsonPropertyName("accessToken")]
     public string AccessToken { get; set; }
+    
     [JsonPropertyName("expiresAt")]
-    public string ExpiresAt { get; set; }
+    public DateTimeOffset ExpiresAt { get; set; }
+    
     [JsonPropertyName("tokenType")]
     public string TokenType { get; set; } = "Bearer";
-    [JsonPropertyName("refreshToken")]
-    public RefreshTokenDto RefreshToken { get; set; }
 }

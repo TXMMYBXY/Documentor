@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using DocumentFlowing.Client.Models;
+using Documentor.Application.Api.Models;
 
 namespace Documentor.Application.Api.Me.Dtos;
 

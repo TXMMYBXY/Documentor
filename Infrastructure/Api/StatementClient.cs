@@ -111,9 +111,9 @@ public class StatementClient : GeneralClient, IStatementClient
         return await GetResponseAsync<IReadOnlyList<DynamicFieldInfoDto>>( $"statement-template/{templateId}/extract-fields");
     }
 
-    public async Task CreateTask(CreateTaskRequestDto dto)
+    public async Task  CreateTask(CreateTaskRequestDto dto)
     {
-        await PostResponseAsync<CreateTaskRequestDto, object>(dto, "task/generate");
+        await PostResponseAsync<CreateTaskRequestDto, object>(dto, "issue/generate");
     }
 
     private static string _BuildTemplateQuery(StatementFilterDto filter)

@@ -12,10 +12,7 @@ public class GetTemplateDto
     public string Title { get; set; }
 
     [JsonPropertyName("createdBy")]
-    public int CreatedBy { get; set; }
-
-    [JsonPropertyName("user")]
-    public GetUserDto User { get; set; }
+    public TemplateOwnerDto CreatedBy { get; set; }
     
     [JsonPropertyName("createdAt")]
     public DateTime CreatedAt { get; set; }

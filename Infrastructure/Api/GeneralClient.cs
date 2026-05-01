@@ -2,7 +2,6 @@
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using DocumentFlowing.Client.Models;
 using Documentor.Application.Api;
 using Documentor.Application.Api.Models;
 using Microsoft.Extensions.Options;
@@ -81,13 +80,13 @@ public class GeneralClient : IGeneralClient
 
     public async Task<TResponse?> DeleteResponseAsync<TResponse>(string uri)
     {
-            var response = await _httpClient.DeleteAsync(_documentFlowApi.Domain + uri);
-            
-            await _IsSuccessStatusCode(response);
-            
-            var responseJson = await response.Content.ReadAsStringAsync();
-            
-            return _ConvertResponse<TResponse>(responseJson);
+        var response = await _httpClient.DeleteAsync(_documentFlowApi.Domain + uri);
+        
+        await _IsSuccessStatusCode(response);
+        
+        var responseJson = await response.Content.ReadAsStringAsync();
+        
+        return _ConvertResponse<TResponse>(responseJson);
     }
 
     public async Task<TResponse?> GetResponseAsync<TResponse>(string uri)
@@ -95,7 +94,7 @@ public class GeneralClient : IGeneralClient
         var response = await _httpClient.GetAsync(_documentFlowApi.Domain + uri);
 
         await _IsSuccessStatusCode(response);
-
+        
         var responseJson = await response.Content.ReadAsStringAsync();
 
         return _ConvertResponse<TResponse>(responseJson);
@@ -110,7 +109,7 @@ public class GeneralClient : IGeneralClient
             try
             {
                 result =
-                    JsonSerializer.Deserialize<ErrorResponse>(errorContent); //TODO FIX:exception in json convert
+                    JsonSerializer.Deserialize<ErrorResponse>(errorContent);
 
             }
             catch (JsonException ex)
@@ -132,7 +131,8 @@ public class GeneralClient : IGeneralClient
 
     private static T? _ConvertResponse<T>(string response)
     {
-        if (response.Equals(""))
+        
+        if (string.IsNullOrWhiteSpace(response))
         {
             return default;
         }

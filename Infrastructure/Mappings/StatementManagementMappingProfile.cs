@@ -12,7 +12,7 @@ public class StatementManagementMappingProfile : Profile
 
         CreateMap<GetTemplateDto, StatementListItemModel>()
             .ForMember(dest => dest.Owner,
-                opt => opt.MapFrom(src => src.User != null ? src.User.FullName : string.Empty));
+                opt => opt.MapFrom(src => src.CreatedBy != null ? src.CreatedBy.FullName : string.Empty));
 
         CreateMap<CreateStatementTemplateModel, CreateTemplateDto>();
         

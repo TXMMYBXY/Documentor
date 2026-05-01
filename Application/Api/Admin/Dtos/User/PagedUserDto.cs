@@ -5,7 +5,7 @@ namespace Documentor.Application.Api.Admin.Dtos.User;
 public class PagedUserDto
 {
     [JsonPropertyName("users")]
-    public List<GetUserDto> Users { get; set; } = new();
+    public ICollection<UserDto>? Users { get; set; }
 
     [JsonPropertyName("totalCount")]
     public int TotalCount { get; set; }

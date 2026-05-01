@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization;
 using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Api.Authorization.Dtos.Requests;
 using Documentor.Application.Services;
 
 namespace Documentor.Infrastructure.Services;
@@ -60,11 +60,11 @@ public class AuthorizationService :  IAuthorizationService
 
             var response = await _authorizationClient.LoginAsync(loginRequest);
 
-            if (response != null && !string.IsNullOrEmpty(response.AccessToken))
+            if (response != null && !string.IsNullOrEmpty(response.Access.AccessToken))
             {
                 _tokenService.SaveTokens(response);
 
-                return _tokenService.GetUserInfo().RoleId;
+                return _tokenService.GetUserInfo().Role.Id;
             }
 
             return null;

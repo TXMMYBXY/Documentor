@@ -1,5 +1,6 @@
-using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Api.Authorization.Dtos.Requests;
+using Documentor.Application.Api.Authorization.Dtos.Responses;
 
 namespace Documentor.Application.Api.Authorization;
 
