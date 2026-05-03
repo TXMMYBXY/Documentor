@@ -4,8 +4,9 @@
              xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
              xmlns:toasts="clr-namespace:Documentor.Presentation.Services.Toasts"
              xmlns:enums="clr-namespace:Documentor.Core.Enums">
+
     <UserControl.Resources>
-        <Style TargetType="Border" x:Key="ToastCardStyle">
+        <Style x:Key="ToastCardBaseStyle" TargetType="Border">
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="12"/>
             <Setter Property="Background" Value="{DynamicResource Brush.SurfaceAlt}"/>
@@ -18,9 +19,8 @@
         <DataTemplate DataType="{x:Type toasts:ToastItemViewModel}">
             <Border>
                 <Border.Style>
-                    <Style TargetType="Border" BasedOn="{StaticResource ToastCardStyle}">
+                    <Style TargetType="Border" BasedOn="{StaticResource ToastCardBaseStyle}">
                         <Style.Triggers>
-
                             <!-- SUCCESS -->
                             <DataTrigger Binding="{Binding Severity}" Value="{x:Static enums:NotificationSeverity.Success}">
                                 <Setter Property="Background" Value="{DynamicResource Brush.Toast.SuccessBackground}"/>
@@ -56,7 +56,6 @@
                                     </BeginStoryboard>
                                 </DataTrigger.EnterActions>
                             </DataTrigger>
-
                         </Style.Triggers>
                     </Style>
                 </Border.Style>
@@ -66,10 +65,17 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="10"/>
                         <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                    <!-- ИКОНКА -->
-                    <iconPacks:PackIconMaterial Width="20"
+                    <!-- ICON -->
+                    <iconPacks:PackIconMaterial Grid.Row="0"
+                                                Grid.Column="0"
+                                                Width="20"
                                                 Height="20"
                                                 VerticalAlignment="Top">
                         <iconPacks:PackIconMaterial.Style>
@@ -92,7 +98,9 @@
                         </iconPacks:PackIconMaterial.Style>
                     </iconPacks:PackIconMaterial>
 
-                    <StackPanel Grid.Column="2">
+                    <!-- TEXT -->
+                    <StackPanel Grid.Row="0"
+                                Grid.Column="2">
                         <TextBlock Text="{Binding Title}"
                                    FontWeight="SemiBold"
                                    Foreground="{DynamicResource Brush.TextPrimary}"
@@ -105,16 +113,106 @@
                                    TextWrapping="Wrap"
                                    MaxWidth="360"/>
                     </StackPanel>
+
+                    <!-- CLOSE -->
+                    <Button Grid.Row="0"
+                            Grid.Column="3"
+                            Command="{Binding CloseCommand}"
+                            Width="24"
+                            Height="24"
+                            Padding="0"
+                            Margin="0,-2,0,0"
+                            Background="Transparent"
+                            BorderThickness="0"
+                            ToolTip="Закрыть">
+                        <iconPacks:PackIconMaterial Kind="Close"
+                                                    Width="14"
+                                                    Height="14"
+                                                    Foreground="{DynamicResource Brush.TextSecondary}"/>
+                    </Button>
+
+                    <!-- ACTION BUTTON -->
+                    <StackPanel Grid.Row="1"
+                                Grid.Column="2"
+                                Grid.ColumnSpan="2"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                Margin="0,10,0,0">
+                        <StackPanel.Style>
+                            <Style TargetType="StackPanel">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAction}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </StackPanel.Style>
+
+                        <Button Command="{Binding ActionCommand}"
+        Width="34"
+        Height="34"
+        MinWidth="34"
+        Padding="0"
+        ToolTip="{Binding ActionText}">
+        <Button.Style>
+            <Style TargetType="Button" BasedOn="{StaticResource SecondaryButtonStyle}">
+                <Setter Property="Content">
+                    <Setter.Value>
+                        <Grid Width="16" Height="16">
+                            <iconPacks:PackIconMaterial Kind="DownloadOutline"
+                                                        Width="16"
+                                                        Height="16"
+                                                        Foreground="{DynamicResource Brush.TextPrimary}">
+                                <iconPacks:PackIconMaterial.Style>
+                                    <Style TargetType="iconPacks:PackIconMaterial">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsActionBusy}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </iconPacks:PackIconMaterial.Style>
+                            </iconPacks:PackIconMaterial>
+
+                            <ProgressBar IsIndeterminate="True"
+                                         Height="6"
+                                         VerticalAlignment="Center"
+                                         Visibility="Collapsed">
+                                <ProgressBar.Style>
+                                    <Style TargetType="ProgressBar">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsActionBusy}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ProgressBar.Style>
+                            </ProgressBar>
+                        </Grid>
+                    </Setter.Value>
+                </Setter>
+
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding IsActionBusy}" Value="True">
+                        <Setter Property="IsEnabled" Value="False"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </Button.Style>
+    </Button>
+                    </StackPanel>
                 </Grid>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
 
-    <!-- Хост НЕ перехватывает клики -->
-    <Grid IsHitTestVisible="False">
-        <ItemsControl ItemsSource="{Binding Notifications}">
+    <!-- Должно быть True, иначе кнопка не нажимается -->
+    <Grid IsHitTestVisible="True">
+        <ItemsControl ItemsSource="{Binding Notifications}"
+                      HorizontalAlignment="Right"
+                      VerticalAlignment="Bottom">
             <ItemsControl.ItemsPanel>
-                <!-- Уведомления складываем снизу вверх -->
                 <ItemsPanelTemplate>
                     <StackPanel VerticalAlignment="Bottom"/>
                 </ItemsPanelTemplate>

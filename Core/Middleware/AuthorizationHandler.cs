@@ -33,9 +33,9 @@ public class AuthorizationHandler : DelegatingHandler
         await RefreshLock.WaitAsync(cancellationToken);
         try
         {
-            var currentToken = _tokenService.ReturnAccessToken();
+            var currentToken = _tokenService.AccessToken;
 
-            if (string.IsNullOrWhiteSpace(currentToken) || !_tokenService.IsAccessTokenValid())
+            if (string.IsNullOrWhiteSpace(currentToken.AccessToken) || !_tokenService.IsAccessTokenValid())
             {
                 var refreshToken = _tokenService.ReturnRefreshToken();
                 if (string.IsNullOrWhiteSpace(refreshToken))
@@ -62,7 +62,7 @@ public class AuthorizationHandler : DelegatingHandler
 
     private Task AddAuthorizationHeaderAsync(HttpRequestMessage request)
     {
-        var token = _tokenService.ReturnAccessToken();
+        var token = _tokenService.AccessToken.AccessToken;
 
         if (!string.IsNullOrWhiteSpace(token))
         {

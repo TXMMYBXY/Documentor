@@ -1,23 +1,20 @@
 using System.Diagnostics;
 using Documentor.Application.Services;
 using Documentor.Core.Interfaces;
-using Documentor.Core.Models;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace Documentor.Infrastructure.Services;
 
-public class NotificationRealtimeService : INotificationRealtimeService
+public class DocumentRealtimeService : IDocumentRealtimeService
 {
     private readonly IApiEndpointProvider _apiEndpointProvider;
     private readonly ITokenService _tokenService;
 
     private HubConnection? _connection;
 
-    public event Action<RealtimeNotification>? NotificationReceived;
+    public event Action<int>? DocumentReadyReceived;
 
-    public NotificationRealtimeService(
-        IApiEndpointProvider apiEndpointProvider,
-        ITokenService tokenService)
+    public DocumentRealtimeService(IApiEndpointProvider apiEndpointProvider, ITokenService tokenService)
     {
         _apiEndpointProvider = apiEndpointProvider;
         _tokenService = tokenService;
@@ -28,8 +25,8 @@ public class NotificationRealtimeService : INotificationRealtimeService
         if (_connection != null)
             return;
 
-        var hubUrl = BuildNotificationsHubUrl(_apiEndpointProvider.GetBaseUrl());
-        Debug.WriteLine($"[NotificationRealtimeService] HubUrl: {hubUrl}");
+        var hubUrl = BuildDocumentsHubUrl(_apiEndpointProvider.GetBaseUrl());
+        Debug.WriteLine($"[DocumentRealtimeService] HubUrl: {hubUrl}");
 
         _connection = new HubConnectionBuilder()
             .WithUrl(hubUrl, options =>
@@ -37,21 +34,20 @@ public class NotificationRealtimeService : INotificationRealtimeService
                 options.AccessTokenProvider = () =>
                 {
                     var token = _tokenService.AccessToken.AccessToken;
-                    
                     return Task.FromResult(token);
                 };
             })
             .WithAutomaticReconnect()
             .Build();
 
-        _connection.On<RealtimeNotification>("Notification", message =>
+        _connection.On<int>("downloadDocument", documentId =>
         {
-            Debug.WriteLine($"[NotificationRealtimeService] NewTemplate: {message}");
-            NotificationReceived?.Invoke(message);
+            Debug.WriteLine($"[DocumentRealtimeService] downloadDocument: {documentId}");
+            DocumentReadyReceived?.Invoke(documentId);
         });
 
         await _connection.StartAsync();
-        Debug.WriteLine($"[NotificationRealtimeService] Connected. ConnectionId={_connection.ConnectionId}");
+        Debug.WriteLine($"[DocumentRealtimeService] Connected. ConnectionId={_connection.ConnectionId}");
     }
 
     public async Task StopAsync()
@@ -64,13 +60,13 @@ public class NotificationRealtimeService : INotificationRealtimeService
         _connection = null;
     }
 
-    private static string BuildNotificationsHubUrl(string apiBaseUrl)
+    private static string BuildDocumentsHubUrl(string apiBaseUrl)
     {
         var url = apiBaseUrl.TrimEnd('/');
 
         if (url.EndsWith("/api", StringComparison.OrdinalIgnoreCase))
             url = url[..^4];
 
-        return $"{url}/notifications";
+        return $"{url}/documents";
     }
 }

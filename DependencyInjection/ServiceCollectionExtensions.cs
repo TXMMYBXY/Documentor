@@ -1,6 +1,7 @@
 using Documentor.Application.Api;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Authorization;
+using Documentor.Application.Api.Document;
 using Documentor.Application.Api.Me;
 using Documentor.Application.Api.Models;
 using Documentor.Application.Api.Statement;
@@ -47,6 +48,13 @@ public static class ServiceCollectionExtensions
             .AddHttpMessageHandler<AuthorizationHandler>();
         
         services.AddHttpClient<IStatementClient, StatementClient>()
+            .AddHttpMessageHandler<AuthorizationHandler>();
+        
+        services.AddHttpClient<IDocumentClient, DocumentClient>((sp, client) =>
+            {
+                var api = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<DocumentFlowApi>>().Value;
+                client.BaseAddress = new Uri(api.Domain);
+            })
             .AddHttpMessageHandler<AuthorizationHandler>();
         
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -107,12 +115,14 @@ public static class ServiceCollectionExtensions
         services.AddTransient<ConfirmationDialogWindow>();
         
         services.AddSingleton<INotificationRealtimeService, NotificationRealtimeService>();
+        services.AddSingleton<IDocumentRealtimeService, DocumentRealtimeService>();
+        
         services.AddSingleton<INotificationCoordinator, NotificationCoordinator>();
         services.AddSingleton<ToastNotificationService>();
 
         services.AddSingleton<IToastNotificationService>(sp => sp.GetRequiredService<ToastNotificationService>());
         services.AddSingleton<IInAppToastSource>(sp => sp.GetRequiredService<ToastNotificationService>());
-        
+
         return services;
     }
 }

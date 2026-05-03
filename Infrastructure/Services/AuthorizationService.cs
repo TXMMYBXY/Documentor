@@ -35,6 +35,8 @@ public class AuthorizationService :  IAuthorizationService
 
                 if (refreshToken.IsAllowed)
                 {
+                    _tokenService.SaveTokens(refreshToken);
+                    
                     return true;
                 }
             }
