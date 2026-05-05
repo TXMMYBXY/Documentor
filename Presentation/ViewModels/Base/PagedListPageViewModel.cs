@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Core.Models;
 
 namespace Documentor.Presentation.ViewModels.Base;
@@ -8,6 +8,7 @@ namespace Documentor.Presentation.ViewModels.Base;
 public abstract class PagedListPageViewModel<TItem, TFilter> : ViewModelBase
 {
     private TItem? _selectedItem;
+    
     private string _errorMessage = string.Empty;
     private bool _isLoading;
 

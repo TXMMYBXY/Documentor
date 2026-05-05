@@ -1,9 +1,8 @@
 using System.Windows;
-using Documentor.Presentation.ViewModels.Dialogs;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using MahApps.Metro.Controls;
 
-namespace Documentor.Presentation.Views.Dialogs;
+namespace Documentor.Presentation.Views.Dialogs.User;
 
 public partial class UserFilterDialogWindow : MetroWindow
 {

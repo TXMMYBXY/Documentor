@@ -1,7 +1,8 @@
 using System.Net.Http;
-using DocumentFlowing.Client.Authorization.Dtos;
-using DocumentFlowing.Client.Models;
+using System.Threading.Tasks;
 using Documentor.Application.Api.Authorization;
+using Documentor.Application.Api.Authorization.Dtos.Requests;
+using Documentor.Application.Api.Authorization.Dtos.Responses;
 using Documentor.Application.Api.Models;
 using Microsoft.Extensions.Options;
 
@@ -10,27 +11,27 @@ namespace Documentor.Infrastructure.Api;
 public class AuthorizationClient : GeneralClient, IAuthorizationClient
 {
     
-    public AuthorizationClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi) : base(httpClient, documentFlowApi)
+    public AuthorizationClient(HttpClient httpClient) : base(httpClient)
     {
     }
 
-    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto request, string uri)
+    public async Task<LoginResponseDto> LoginAsync(LoginRequestDto request)
     {
-        return await PostResponseAsync<LoginRequestDto, LoginResponseDto>(request, uri);
+        return await PostResponseAsync<LoginRequestDto, LoginResponseDto>(request, "authorization/login");
     }
 
-    public async Task<RefreshTokenToLoginResponseDto> RequestForAccessAsync(RefreshTokenToLoginRequestDto request, string uri)
+    public async Task<RefreshTokenToLoginResponseDto> RequestForAccessAsync(RefreshTokenToLoginRequestDto request)
     {
-        return await PostResponseAsync<RefreshTokenToLoginRequestDto, RefreshTokenToLoginResponseDto>(request, uri);
+        return await PostResponseAsync<RefreshTokenToLoginRequestDto, RefreshTokenToLoginResponseDto>(request, "authorization/request-for-access");
     }
 
-    public async Task<AccessTokenResponseDto> GetNewAccessTokenAsync(AccessTokenRequestDto requestDto, string uri)
+    public async Task<AccessTokenResponseDto> GetNewAccessTokenAsync(AccessTokenRequestDto requestDto)
     {
-        return await PostResponseAsync<AccessTokenRequestDto, AccessTokenResponseDto>(requestDto, uri);
+        return await PostResponseAsync<AccessTokenRequestDto, AccessTokenResponseDto>(requestDto, "authorization/access");
     }
 
-    public async Task<RefreshTokenResponseDto> GetNewRefreshTokenAsync(RefreshTokenRequestDto requestDto, string uri)
+    public async Task<RefreshTokenResponseDto> GetNewRefreshTokenAsync(RefreshTokenRequestDto requestDto)
     {
-        return await PostResponseAsync<RefreshTokenRequestDto, RefreshTokenResponseDto>(requestDto, uri);
+        return await PostResponseAsync<RefreshTokenRequestDto, RefreshTokenResponseDto>(requestDto, "authorization/refresh");
     }
 }

@@ -1,5 +1,5 @@
-using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Api.Authorization.Dtos.Responses;
 
 namespace Documentor.Application.Services;
 
@@ -8,20 +8,13 @@ namespace Documentor.Application.Services;
 /// </summary>
 public interface ITokenService
 {
+    AccessTokenDto AccessToken { get; set; }
+    
     /// <summary>
     /// Сохраняет токены
     /// </summary>
     void SaveTokens(LoginResponseDto loginResponseDto);
-    
-    /// <summary>
-    /// Сохраняет токен обновления
-    /// </summary>
-    void SaveRefreshToken(RefreshTokenResponseDto refreshTokenResponse);
-    
-    /// <summary>
-    /// Возвращает токен доступа
-    /// </summary>
-    string ReturnAccessToken();
+    void SaveTokens(RefreshTokenToLoginResponseDto refreshTokenDto);
     
     /// <summary>
     /// Возвращает токен обновления
@@ -37,11 +30,6 @@ public interface ITokenService
     /// Проверяет есть ли валидный токен доступа
     /// </summary>
     bool IsAccessTokenValid();
-    
-    /// <summary>
-    /// Проверяет есть ли валидный токен обновления
-    /// </summary>
-    bool IsRefreshTokenValid();
     
     /// <summary>
     /// Очищает реестр от токенов

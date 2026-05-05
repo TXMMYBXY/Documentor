@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace DocumentFlowing.Client.Models;
+namespace Documentor.Application.Api.Models;
 
 public class ErrorResponse
 {

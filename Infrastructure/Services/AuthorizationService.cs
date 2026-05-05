@@ -1,6 +1,7 @@
 ﻿using System.Windows;
-using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization;
+using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Api.Authorization.Dtos.Requests;
 using Documentor.Application.Services;
 
 namespace Documentor.Infrastructure.Services;
@@ -30,10 +31,12 @@ public class AuthorizationService :  IAuthorizationService
             if (!string.IsNullOrEmpty(request.RefreshToken))
             {
                 var refreshToken 
-                    = await _authorizationClient.RequestForAccessAsync(request, "authorization/request-for-access");
+                    = await _authorizationClient.RequestForAccessAsync(request);
 
                 if (refreshToken.IsAllowed)
                 {
+                    _tokenService.SaveTokens(refreshToken);
+                    
                     return true;
                 }
             }
@@ -57,20 +60,20 @@ public class AuthorizationService :  IAuthorizationService
                 Password = password
             };
 
-            var response = await _authorizationClient.LoginAsync(loginRequest, "authorization/login");
+            var response = await _authorizationClient.LoginAsync(loginRequest);
 
-            if (response != null && !string.IsNullOrEmpty(response.AccessToken))
+            if (response != null && !string.IsNullOrEmpty(response.Access.AccessToken))
             {
                 _tokenService.SaveTokens(response);
 
-                return _tokenService.GetUserInfo().RoleId;
+                return _tokenService.GetUserInfo().Role.Id;
             }
 
             return null;
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка",
+            MessageBox.Show($"Auth failed: {ex.Message}", "Ошибка",
             MessageBoxButton.OK, MessageBoxImage.Error);
             
             return null;

@@ -7,7 +7,7 @@ public enum PageKey
     Departments,
     ContractTemplates,
     StatementTemplates,
-    Tasks,
     Profile,
-    Settings
+    Settings,
+    Archive
 }

@@ -22,10 +22,10 @@ public class PageViewModelFactory : IPageViewModelFactory
             PageKey.Users => _serviceProvider.GetRequiredService<UsersPageViewModel>(),
             PageKey.Departments => _serviceProvider.GetRequiredService<DepartmentsPageViewModel>(),
             PageKey.ContractTemplates => _serviceProvider.GetRequiredService<ContractTemplatesPageViewModel>(),
-            PageKey.StatementTemplates => _serviceProvider.GetRequiredService<StatementTemplatesPageViewModel>(),
-            PageKey.Tasks => _serviceProvider.GetRequiredService<TasksPageViewModel>(),
+            PageKey.StatementTemplates => _serviceProvider.GetRequiredService<TemplatesPageViewModel>(),
             PageKey.Profile => _serviceProvider.GetRequiredService<ProfilePageViewModel>(),
             PageKey.Settings => _serviceProvider.GetRequiredService<SettingsPageViewModel>(),
+            PageKey.Archive => _serviceProvider.GetRequiredService<DocumentPageViewModel>(),
             _ => throw new NotSupportedException($"Page {pageKey} is not supported")
         };
     }

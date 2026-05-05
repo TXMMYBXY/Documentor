@@ -1,6 +1,8 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
-using DocumentFlowing.Client.Models;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos;
 using Documentor.Application.Api.Admin.Dtos.Department;
@@ -13,41 +15,45 @@ namespace Documentor.Infrastructure.Api;
 public class AdminClient : GeneralClient, IAdminClient
 {
     public AdminClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi)
-        : base(httpClient, documentFlowApi)
+        : base(httpClient)
     {
     }
 
     public async Task<PagedUserDto?> GetUsersAsync(UserFilterDto filter)
     {
         var query = _BuildUsersQuery(filter);
-        return await GetResponseAsync<PagedUserDto>($"users{query}");
+        
+        return await GetResponseAsync<PagedUserDto>($"user{query}");
     }
 
     public async Task CreateNewUserAsync(CreateUserDto createUserDto)
     {
-        await PostResponseAsync<CreateUserDto, CreateUserDto>(createUserDto, "users");
+        await PostResponseAsync<CreateUserDto, CreateUserDto>(createUserDto, "user");
     }
 
     public async Task<bool> ChangeStatusByIdAsync(int userId)
     {
-        return await PatchResponseAsync<object, bool>(null, $"users/{userId}/change-status");
+        return await PatchResponseAsync<object, bool>(null, $"user/{userId}/change-status");
     }
 
     public async Task DeleteUserByIdAsync(int selectedUserId)
     {
-        await DeleteResponseAsync<DeleteUserDto, object>(
-            new DeleteUserDto { UserId = selectedUserId },
-            "users");
+        await DeleteResponseAsync<object>($"user/{selectedUserId}");
+    }
+    
+    public async Task DeleteSelectedUsersAsync(List<int> usersIds)
+    {
+        await MultipleDeletionResponseAsync<List<int>, object>(usersIds, "user");
     }
 
     public async Task ChangePasswordByIdAsync(int userId, ResetPasswordDto resetPasswordDto)
     {
-        await PatchResponseAsync<ResetPasswordDto, object>(resetPasswordDto, $"users/{userId}/reset-password");
+        await PatchResponseAsync<ResetPasswordDto, object>(resetPasswordDto, $"user/{userId}/reset-password");
     }
 
     public async Task UpdateUserAsync(int userId, UpdateUserDto updateUserDto)
     {
-        await PatchResponseAsync<UpdateUserDto, object>(updateUserDto, $"users/{userId}/user-info");
+        await PatchResponseAsync<UpdateUserDto, object>(updateUserDto, $"user/{userId}/user-info");
     }
 
     public async Task<PagedDepartmentDto> GetAllDepartmentsAsync()
@@ -68,9 +74,7 @@ public class AdminClient : GeneralClient, IAdminClient
 
     public async Task DeleteDepartmentByIdAsync(int departmentId)
     {
-        await DeleteResponseAsync<DeleteDepartmentDto, object>(
-            new DeleteDepartmentDto { DepartmentId = departmentId }, 
-            "department");
+        await DeleteResponseAsync<object>($"department/{departmentId}");
     }
 
     public async Task UpdateDepartmentAsync(int departmentId, UpdateDepartmentDto updateDepartmentDto)

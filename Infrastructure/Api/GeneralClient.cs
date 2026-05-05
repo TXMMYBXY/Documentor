@@ -1,31 +1,29 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
-using DocumentFlowing.Client.Models;
+using System.Threading.Tasks;
 using Documentor.Application.Api;
 using Documentor.Application.Api.Models;
-using Microsoft.Extensions.Options;
 
 namespace Documentor.Infrastructure.Api;
 public class GeneralClient : IGeneralClient
 {
     private readonly HttpClient _httpClient;
-    private readonly DocumentFlowApi _documentFlowApi;
 
-    public GeneralClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi)
+    public GeneralClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
         ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-        _documentFlowApi = documentFlowApi.Value;
     }
 
     public async Task<TResponse?> PatchResponseAsync<TRequest, TResponse>(TRequest request, string uri)
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PatchAsync(_documentFlowApi.Domain + uri, requestContent);
-
+        var response = await _httpClient.PatchAsync(uri, requestContent);
+        
         await _IsSuccessStatusCode(response);
 
         var responseJson = await response.Content.ReadAsStringAsync();
@@ -37,7 +35,7 @@ public class GeneralClient : IGeneralClient
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PutAsync(_documentFlowApi.Domain + uri, requestContent);
+        var response = await _httpClient.PutAsync(uri, requestContent);
 
         await _IsSuccessStatusCode(response);
 
@@ -50,7 +48,7 @@ public class GeneralClient : IGeneralClient
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(_documentFlowApi.Domain + uri, requestContent);
+        var response = await _httpClient.PostAsync(uri, requestContent);
         
         await _IsSuccessStatusCode(response);
 
@@ -59,7 +57,7 @@ public class GeneralClient : IGeneralClient
         return _ConvertResponse<TResponse>(responseJson);
     }
 
-    public async Task<TResponse?> DeleteResponseAsync<TRequest, TResponse>(TRequest request, string uri)
+    public async Task<TResponse?> MultipleDeletionResponseAsync<TRequest, TResponse>(TRequest request, string uri)
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
@@ -67,7 +65,7 @@ public class GeneralClient : IGeneralClient
         {
             Method = HttpMethod.Delete,
             Content = requestContent,
-            RequestUri = new Uri(_documentFlowApi.Domain + uri)
+            RequestUri = new Uri(uri)
         };
         requestDelete.Headers.Add("accept", "text/plain");
         var response = await _httpClient.SendAsync(requestDelete);
@@ -79,12 +77,23 @@ public class GeneralClient : IGeneralClient
         return _ConvertResponse<TResponse>(responseJson);
     }
 
+    public async Task<TResponse?> DeleteResponseAsync<TResponse>(string uri)
+    {
+        var response = await _httpClient.DeleteAsync(uri);
+        
+        await _IsSuccessStatusCode(response);
+        
+        var responseJson = await response.Content.ReadAsStringAsync();
+        
+        return _ConvertResponse<TResponse>(responseJson);
+    }
+
     public async Task<TResponse?> GetResponseAsync<TResponse>(string uri)
     {
-        var response = await _httpClient.GetAsync(_documentFlowApi.Domain + uri);
+        var response = await _httpClient.GetAsync(uri);
 
         await _IsSuccessStatusCode(response);
-
+        
         var responseJson = await response.Content.ReadAsStringAsync();
 
         return _ConvertResponse<TResponse>(responseJson);
@@ -99,7 +108,7 @@ public class GeneralClient : IGeneralClient
             try
             {
                 result =
-                    JsonSerializer.Deserialize<ErrorResponse>(errorContent); //TODO FIX:exception in json convert
+                    JsonSerializer.Deserialize<ErrorResponse>(errorContent);
 
             }
             catch (JsonException ex)
@@ -121,11 +130,15 @@ public class GeneralClient : IGeneralClient
 
     private static T? _ConvertResponse<T>(string response)
     {
-        if (response.Equals(""))
-        {
+        if (string.IsNullOrWhiteSpace(response))
             return default;
-        }
-        return JsonSerializer.Deserialize<T>(response);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        return JsonSerializer.Deserialize<T>(response, options);
     }
 }
 

@@ -10,6 +10,10 @@ public interface IAppSettingsService
     int GetPageSize();
     void SavePageSize(int pageSize);
 
+    bool IsDisplayedNotification();
+    void SaveIsDisplayedNotification(bool displayed);
+
+
     string? GetApiDomainOverride();
     void SaveApiDomainOverride(string domain);
     void ClearApiDomainOverride();

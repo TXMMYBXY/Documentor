@@ -1,5 +1,5 @@
 using System.Windows.Input;
-using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Common;

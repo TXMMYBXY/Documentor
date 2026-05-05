@@ -3,6 +3,7 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                 xmlns:controls="clr-namespace:Documentor.Presentation.Views.Controls"
                  Title="Documentor"
                  Width="1280"
                  Height="800"
@@ -23,7 +24,15 @@
             <ColumnDefinition Width="{Binding IsNavigationPaneExpanded, Converter={StaticResource BoolToGridLengthConverter}}"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
+        
+        <controls:InAppToastHost
+            DataContext="{Binding Toasts}"
+            Grid.Column="1"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            Margin="0,0,16,16"
+            Panel.ZIndex="9999"/>
+        
         <Border Grid.Column="0"
                 Background="{DynamicResource Brush.SidebarBackground}"
                 BorderBrush="{DynamicResource Brush.Border}"
@@ -37,7 +46,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-
+                
                 <!-- Toggle -->
                 <Button Grid.Row="0"
                         Command="{Binding ToggleNavigationPaneCommand}"

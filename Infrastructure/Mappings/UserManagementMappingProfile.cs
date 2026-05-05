@@ -12,30 +12,9 @@ public class UserManagementMappingProfile : Profile
 {
     public UserManagementMappingProfile()
     {
-        CreateMap<GetUserDto, UserListItemModel>()
-            .AfterMap((src, dest) =>
-            {
-                switch (src.RoleEntity.Title)
-                {
-                    case "Admin":
-                        dest.Role = "Администратор";
-                        break;
-                    case "Boss":
-                        dest.Role = "Начальник закупок";
-                        break;
-                    case "Purchaser":
-                        dest.Role = "Сотрудник закупок";
-                        break;
-                    case "Employee":
-                        dest.Role = "Сотрудник";
-                        break;
-                
-                    default:
-                        dest.Role = "Неизвестная роль";
-                        break;
-                }
-                
-            });
+        CreateMap<UserDto, UserListItemModel>()
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Title))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Title));
 
         CreateMap<UserFilterModel, UserFilterDto>();
 

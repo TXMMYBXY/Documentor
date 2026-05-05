@@ -1,6 +1,7 @@
+using System;
 using System.Windows.Input;
 
-namespace DocumentFlowing.Common;
+namespace Documentor.Common;
 
 public class RelayCommand : ICommand
 {

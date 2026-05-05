@@ -40,5 +40,12 @@
     <SolidColorBrush x:Key="Brush.TableRowHover" Color="#EEF4FF"/>
     <SolidColorBrush x:Key="Brush.TableRowSelected" Color="#2563EB"/>
     <SolidColorBrush x:Key="Brush.TableRowSelectedText" Color="#FFFFFF"/>
+    
+    <!-- Toast -->
+    <SolidColorBrush x:Key="Brush.Toast.SuccessBackground" Color="#E8F5E9"/>
+    <SolidColorBrush x:Key="Brush.Toast.SuccessBorder" Color="#B7E1C0"/>
+
+    <SolidColorBrush x:Key="Brush.Toast.ErrorBackground" Color="#FDEAEA"/>
+    <SolidColorBrush x:Key="Brush.Toast.ErrorBorder" Color="#F5C2C7"/>
 
 </ResourceDictionary>

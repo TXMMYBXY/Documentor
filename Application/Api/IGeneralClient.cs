@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Documentor.Application.Api;
 
 public interface IGeneralClient
@@ -31,16 +33,24 @@ public interface IGeneralClient
     /// <typeparam name="TResponse">Тип ответа</typeparam>
     /// <returns>TResponse</returns>
     Task<TResponse?> PostResponseAsync<TRequest, TResponse>(TRequest request, string uri);
-    
+
     /// <summary>
-    /// Базовый метод для эндпоинтов Delete
+    /// Базовый метод для множественного удаления 
     /// </summary>
     /// <param name="request">Запрос</param>
     /// <param name="uri">эндпоинт</param>
     /// <typeparam name="TRequest">Тип запроса</typeparam>
     /// <typeparam name="TResponse">Тип ответа</typeparam>
     /// <returns>TResponse</returns>
-    Task<TResponse?> DeleteResponseAsync<TRequest, TResponse>(TRequest request, string uri);
+    Task<TResponse?> MultipleDeletionResponseAsync<TRequest, TResponse>(TRequest request, string uri);    
+    
+    /// <summary>
+    /// Базовый метод для эндпоинтов Delete
+    /// </summary>
+    /// <param name="uri">эндпоинт с id сущности</param>
+    /// <typeparam name="TResponse">Тип ответа</typeparam>
+    /// <returns>TResponse</returns>
+    Task<TResponse?> DeleteResponseAsync<TResponse>(string uri);
     
     /// <summary>
     /// Базовый метод для эндпоинтов Get

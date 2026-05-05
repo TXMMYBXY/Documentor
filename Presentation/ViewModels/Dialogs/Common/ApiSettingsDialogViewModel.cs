@@ -1,5 +1,5 @@
 using System.Windows.Input;
-using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Presentation.ViewModels.Base;
 
@@ -10,7 +10,7 @@ public class ApiSettingsDialogViewModel : ViewModelBase
     private readonly IApiEndpointProvider _apiEndpointProvider;
     private Action<bool>? _closeAction;
 
-    private string _apiUrl = string.Empty;
+    private string _apiUrl;
     private string _errorMessage = string.Empty;
 
     public string ApiUrl

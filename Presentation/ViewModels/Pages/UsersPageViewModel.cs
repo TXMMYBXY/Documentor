@@ -1,7 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
-using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.User;
@@ -10,6 +10,7 @@ using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.Views.Dialogs;
 using Documentor.Presentation.Views.Dialogs.Common;
+using Documentor.Presentation.Views.Dialogs.User;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 
@@ -18,7 +19,7 @@ public class UsersPageViewModel : PagedListPageViewModel<UserListItemModel, User
     private readonly IUserManagementService _userManagementService;
     private readonly IAppSettingsService _appSettingsService;
 
-    public string Title => "Управление пользователями";
+    public static string Title => "Управление пользователями";
 
     public ObservableCollection<UserListItemModel> Users => Items;
 

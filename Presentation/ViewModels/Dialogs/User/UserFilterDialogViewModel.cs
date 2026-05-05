@@ -1,6 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using DocumentFlowing.Common;
+using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.User;
@@ -78,12 +78,12 @@ public class UserFilterDialogViewModel : DialogViewModelBase
         }
 
         ApplyCommand = new RelayCommand(() => RequestClose(true));
-        ResetCommand = new RelayCommand(Reset);
+        ResetCommand = new RelayCommand(_Reset);
 
-        _ = LoadLookupsAsync(currentFilter);
+        _ = _LoadLookupsAsync(currentFilter);
     }
 
-    private async Task LoadLookupsAsync(UserFilterModel? currentFilter)
+    private async Task _LoadLookupsAsync(UserFilterModel? currentFilter)
     {
         try
         {
@@ -123,7 +123,7 @@ public class UserFilterDialogViewModel : DialogViewModelBase
         }
     }
 
-    private void Reset()
+    private void _Reset()
     {
         FullName = null;
         Email = null;

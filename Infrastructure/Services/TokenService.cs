@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
-using DocumentFlowing.Client.Authorization.Dtos;
 using Documentor.Application.Api.Authorization;
 using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Api.Authorization.Dtos.Requests;
+using Documentor.Application.Api.Authorization.Dtos.Responses;
+using Documentor.Application.Api.Models;
 using Documentor.Application.Services;
+using Documentor.Core.Enums;
 using Microsoft.Win32;
 
 namespace Documentor.Infrastructure.Services;
@@ -14,6 +17,14 @@ public class TokenService : ITokenService
     private readonly IDpapiService _dpapiService;
     private readonly IAuthorizationClient _authorizationClient;
     private readonly IMapper _mapper;
+    
+    private AccessTokenDto _accessToken;
+
+    public AccessTokenDto AccessToken
+    {
+        get => _accessToken;
+        set => _accessToken = value ?? throw new ArgumentNullException(nameof(value));
+    }
 
     public TokenService(
         IDpapiService dpapiService, 
@@ -29,45 +40,32 @@ public class TokenService : ITokenService
     {
         try
         {
-            if (loginResponseDto == null) return;
+            if (loginResponseDto.Access == null && loginResponseDto.Refresh == null) return;
 
+            if (!string.IsNullOrEmpty(loginResponseDto.Access.AccessToken))
+            {
+                _accessToken = loginResponseDto.Access;
+            }
+            
             using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath))
             {
-                if (key == null)
-                {
-                    return;
-                }
+                if (key == null) return;
 
-                if (!string.IsNullOrEmpty(loginResponseDto.AccessToken))
-                {
-                    var encryptedAccessToken = _dpapiService.Encrypt(loginResponseDto.AccessToken);
-                    
-                    key.SetValue("AccessToken", encryptedAccessToken);
-                    key.SetValue("AccessTokenExpires", loginResponseDto.ExpiresAt);
-                }
-
-                if (loginResponseDto.RefreshTokenDto != null && !string.IsNullOrEmpty(loginResponseDto.RefreshTokenDto.Token))
-                {
-                    var encryptedRefreshToken = _dpapiService.Encrypt(loginResponseDto.RefreshTokenDto.Token);
-                    
-                    key.SetValue("RefreshToken", encryptedRefreshToken);
-                    key.SetValue("RefreshTokenExpires", loginResponseDto.RefreshTokenDto.ExpiresAt);
-                }
+                _SaveRefreshToken(loginResponseDto.Refresh);
 
                 if (loginResponseDto.UserInfo != null)
                 {
                     key.SetValue("UserEmail", loginResponseDto.UserInfo.Email);
-                    key.SetValue("UserFullName", loginResponseDto.UserInfo.FullName);
-                    key.SetValue("RoleId", loginResponseDto.UserInfo.RoleId);
-                    key.SetValue("DepartmentId", loginResponseDto.UserInfo.DepartmentId);
+                    key.SetValue("RoleId", loginResponseDto.UserInfo.Role.Id);
+                    key.SetValue("Department", loginResponseDto.UserInfo.Department);
 
-                    if (loginResponseDto.RefreshTokenDto != null)
+                    if (loginResponseDto.Refresh.RefreshToken != null)
                     {
-                        key.SetValue("UserId", loginResponseDto.RefreshTokenDto.UserId);
+                        key.SetValue("UserId", loginResponseDto.UserInfo.Id);
                     }
                 }
 
-                key.SetValue("TokenType", loginResponseDto.TokenType);
+                key.SetValue("TokenType", loginResponseDto.Access.TokenType);
             }
         }
         catch (Exception ex)
@@ -76,54 +74,23 @@ public class TokenService : ITokenService
         }
     }
 
-    public void SaveRefreshToken(RefreshTokenResponseDto refreshTokenResponse)
+    public void SaveTokens(RefreshTokenToLoginResponseDto refreshTokenDto)
     {
         try
         {
-            if (refreshTokenResponse == null) return;
-
-            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath))
+            if (!string.IsNullOrEmpty(refreshTokenDto.Access!.AccessToken))
             {
-                if (key == null)
-                {
-                    return;
-                }
-                
-                if (refreshTokenResponse.Token != null && !string.IsNullOrEmpty(refreshTokenResponse.Token))
-                {
-                    var encryptedRefreshToken = _dpapiService.Encrypt(refreshTokenResponse.Token);
-                    key.SetValue("RefreshToken", encryptedRefreshToken);
-                    key.SetValue("RefreshTokenExpires", refreshTokenResponse.ExpiresAt);
-                }
+                _accessToken = refreshTokenDto.Access;
+            }
+
+            if (!string.IsNullOrEmpty(refreshTokenDto.Refresh.RefreshToken))
+            {
+                _SaveRefreshToken(refreshTokenDto.Refresh);
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error saving tokens: {ex.Message}");
-        }
-    }
-
-    public string ReturnAccessToken()
-    {
-        try
-        {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
-            {
-                if (key == null)
-                {
-                    return null;
-                }
-
-                var encryptedToken = key.GetValue("AccessToken") as string;
-                
-                if (string.IsNullOrEmpty(encryptedToken)) return null;
-
-                return _dpapiService.Decrypt(encryptedToken);
-            }
-        }
-        catch
-        {
-            return null;
         }
     }
 
@@ -163,13 +130,17 @@ public class TokenService : ITokenService
 
                 var roleId = key.GetValue("RoleId") as int?;
                 if (!roleId.HasValue) return null;
-
+                Enum.TryParse<UserRole>(roleId.ToString(), out var role);
+                
                 return new UserInfoDto
                 {
-                    FullName = key.GetValue("UserFullName") as string,
                     Email = key.GetValue("UserEmail") as string,
-                    RoleId = roleId.Value,
-                    DepartmentId = key.GetValue("DepartmentId") as int? ?? 0
+                    Role = new Role
+                    {
+                        Id = roleId.Value,
+                        Title = role.ToString()
+                    },
+                    Department = key.GetValue("Department") as string
                 };
             }
         }
@@ -184,7 +155,6 @@ public class TokenService : ITokenService
         var request = new AccessTokenRequestDto
         {
             RefreshToken = ReturnRefreshToken(),
-            UserId = _GetUserId()
         };
 
         if (string.IsNullOrEmpty(request.RefreshToken))
@@ -192,14 +162,19 @@ public class TokenService : ITokenService
             throw new NullReferenceException("Refresh token is out");
         }
         
-        var token = await _authorizationClient.GetNewAccessTokenAsync(request, "authorization/access");
+        var token = await _authorizationClient.GetNewAccessTokenAsync(request);
 
         if (token == null)
         {
             throw new NullReferenceException("Access token is not got");
         }
+
+        var mapedToken = new LoginResponseDto
+        {
+            Access = _mapper.Map<AccessTokenDto>(token)
+        };
         
-        SaveTokens(_mapper.Map<LoginResponseDto>(token));
+        SaveTokens(mapedToken);
 
         return token.AccessToken;
     }
@@ -208,18 +183,17 @@ public class TokenService : ITokenService
     {
         var request = new RefreshTokenRequestDto
         {
-            UserId = _GetUserId(),
             Token = ReturnRefreshToken()
         };
 
-        if (request.UserId == null && string.IsNullOrEmpty(request.Token))
+        if (string.IsNullOrEmpty(request.Token))
         {
             throw new NullReferenceException("Refresh token is out");
         }
         
-        var token = await _authorizationClient.GetNewRefreshTokenAsync(request, "authorization/refresh");
+        var token = await _authorizationClient.GetNewRefreshTokenAsync(request);
         
-        SaveRefreshToken(token);
+        _SaveRefreshToken(_mapper.Map<RefreshTokenDto>(token));
     }
 
     public bool IsRefreshTokenExpires()
@@ -266,8 +240,7 @@ public class TokenService : ITokenService
     {
         try
         {
-            var token = ReturnAccessToken();
-            if (string.IsNullOrEmpty(token)) return false;
+            if (string.IsNullOrEmpty(AccessToken.AccessToken)) return false;
 
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
             {
@@ -288,7 +261,7 @@ public class TokenService : ITokenService
                     {
                         if (DateTime.TryParse(expiresAtStr, out expiresAt))
                         {
-                            return expiresAt > DateTime.Now.AddMinutes(5);
+                            return expiresAt > DateTime.Now.AddMinutes(15);
                         }
                     }
                 }
@@ -302,44 +275,28 @@ public class TokenService : ITokenService
         }
     }
     
-    public bool IsRefreshTokenValid()
+    public void _SaveRefreshToken(RefreshTokenDto refreshTokenResponse)
     {
         try
         {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
-            {
-                if (key == null) return false;
+            if (refreshTokenResponse == null) return;
 
-                var expiresAtStr = key.GetValue("RefreshTokenExpires") as string;
-                if (!string.IsNullOrEmpty(expiresAtStr) &&
-                    DateTime.TryParse(expiresAtStr, out DateTime expiresAt))
+            using (RegistryKey key = Registry.CurrentUser.CreateSubKey(RegistryPath))
+            {
+                if (key == null) return;
+                
+                if (refreshTokenResponse.RefreshToken != null && !string.IsNullOrEmpty(refreshTokenResponse.RefreshToken))
                 {
-                    return expiresAt > DateTime.UtcNow;
+                    var encryptedRefreshToken = _dpapiService.Encrypt(refreshTokenResponse.RefreshToken);
+                    
+                    key.SetValue("RefreshToken", encryptedRefreshToken);
+                    key.SetValue("RefreshTokenExpires", refreshTokenResponse.ExpiresAt);
                 }
-
-                return false;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            return false;
-        }
-    }
-    
-    private int? _GetUserId()
-    {
-        try
-        {
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryPath))
-            {
-                if (key == null) return null;
-
-                return key.GetValue("UserId") as int?;
-            }
-        }
-        catch
-        {
-            return null;
+            Console.WriteLine($"Error saving token: {ex.Message}");
         }
     }
 }

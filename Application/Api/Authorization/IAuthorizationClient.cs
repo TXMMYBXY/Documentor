@@ -1,4 +1,7 @@
-using DocumentFlowing.Client.Authorization.Dtos;
+using System.Threading.Tasks;
+using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Application.Api.Authorization.Dtos.Requests;
+using Documentor.Application.Api.Authorization.Dtos.Responses;
 
 namespace Documentor.Application.Api.Authorization;
 
@@ -10,7 +13,7 @@ public interface IAuthorizationClient
     /// <param name="request">DTO с почтой и паролем</param>
     /// <param name="uri">эндпоинт</param>
     /// <returns>DTO с информацией о токенах</returns>
-    Task<LoginResponseDto> LoginAsync(LoginRequestDto request, string uri);
+    Task<LoginResponseDto> LoginAsync(LoginRequestDto request);
     
     /// <summary>
     /// Метод для авторизации по рефреш-токену
@@ -18,7 +21,7 @@ public interface IAuthorizationClient
     /// <param name="request">DTO с рефреш-токеном</param>
     /// <param name="uri">эндпоинт</param>
     /// <returns>DTO с допуском или не допуском</returns>
-    Task<RefreshTokenToLoginResponseDto> RequestForAccessAsync(RefreshTokenToLoginRequestDto request, string uri);
+    Task<RefreshTokenToLoginResponseDto> RequestForAccessAsync(RefreshTokenToLoginRequestDto request);
     
     /// <summary>
     /// Метод для получения нового токена доступа по рефреш-токену
@@ -26,7 +29,7 @@ public interface IAuthorizationClient
     /// <param name="requestDto">DTO с рефреш-токеном и ID пользователя</param>
     /// <param name="uri">эндпоинт</param>
     /// <returns>DTO с обновленной информацией о токенах</returns>
-    Task<AccessTokenResponseDto> GetNewAccessTokenAsync(AccessTokenRequestDto requestDto, string uri);
+    Task<AccessTokenResponseDto> GetNewAccessTokenAsync(AccessTokenRequestDto requestDto);
     
     /// <summary>
     /// Метод для обновления рефреш-токена по старому
@@ -34,5 +37,5 @@ public interface IAuthorizationClient
     /// <param name="requestDto">DTO с рефреш-токеном и ID пользователя</param>
     /// <param name="uri">эндпоинт</param>
     /// <returns>DTO с обновленной информацией о рефреш-токене</returns>
-    Task<RefreshTokenResponseDto> GetNewRefreshTokenAsync(RefreshTokenRequestDto requestDto, string uri);
+    Task<RefreshTokenResponseDto> GetNewRefreshTokenAsync(RefreshTokenRequestDto requestDto);
 }

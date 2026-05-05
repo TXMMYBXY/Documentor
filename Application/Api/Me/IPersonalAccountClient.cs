@@ -1,10 +1,12 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Documentor.Application.Api.Me.Dtos;
 
 namespace Documentor.Application.Api.Me;
 
 public interface IPersonalAccountClient
 {
-    Task<GetPersonDto?> GetPersonalInfoAsync(string uri);
-    Task<IReadOnlyList<GetLoginTimeDto>?> GetLoginTimesAsync(string uri);
-    Task ChangePasswordAsync(ChangePasswordDto request, string uri);
+    Task<GetPersonDto?> GetPersonalInfoAsync();
+    Task<IReadOnlyList<GetLoginTimeDto>?> GetLoginTimesAsync();
+    Task ChangePasswordAsync(ChangePasswordDto request);
 }
