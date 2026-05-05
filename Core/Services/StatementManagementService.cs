@@ -23,7 +23,7 @@ public class StatementManagementService : IStatementManagementService
     public async Task<PagedResult<StatementListItemModel>> GetStatementsAsync(StatementFilterModel filter)
     {
         var filterDto = _mapper.Map<StatementFilterDto>(filter);
-        var response = await _statementClient.GetStatementsAsync(filterDto);
+        var response = await _statementClient.GetTemplateAsync(filterDto);
 
         if (response == null)
         {

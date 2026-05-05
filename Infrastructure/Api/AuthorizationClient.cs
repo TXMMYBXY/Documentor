@@ -1,6 +1,6 @@
 using System.Net.Http;
+using System.Threading.Tasks;
 using Documentor.Application.Api.Authorization;
-using Documentor.Application.Api.Authorization.Dtos;
 using Documentor.Application.Api.Authorization.Dtos.Requests;
 using Documentor.Application.Api.Authorization.Dtos.Responses;
 using Documentor.Application.Api.Models;
@@ -11,7 +11,7 @@ namespace Documentor.Infrastructure.Api;
 public class AuthorizationClient : GeneralClient, IAuthorizationClient
 {
     
-    public AuthorizationClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi) : base(httpClient, documentFlowApi)
+    public AuthorizationClient(HttpClient httpClient) : base(httpClient)
     {
     }
 

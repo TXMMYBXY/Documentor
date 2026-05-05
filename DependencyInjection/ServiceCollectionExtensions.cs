@@ -1,3 +1,5 @@
+using System;
+using System.Net.Http;
 using Documentor.Application.Api;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Authorization;
@@ -15,18 +17,19 @@ using Documentor.Infrastructure.Services;
 using Documentor.Presentation.Factories;
 using Documentor.Presentation.Navigation;
 using Documentor.Presentation.Services;
-using Documentor.Presentation.ViewModels.Dialogs;
 using Documentor.Presentation.ViewModels.Dialogs.Common;
+using Documentor.Presentation.ViewModels.Dialogs.Document;
 using Documentor.Presentation.ViewModels.Dialogs.User;
 using Documentor.Presentation.ViewModels.Pages;
 using Documentor.Presentation.ViewModels.Windows;
-using Documentor.Presentation.Views.Dialogs;
 using Documentor.Presentation.Views.Dialogs.Common;
 using Documentor.Presentation.Views.Dialogs.Department;
+using Documentor.Presentation.Views.Dialogs.Document;
 using Documentor.Presentation.Views.Dialogs.User;
 using Documentor.Presentation.Views.Windows;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using INavigationService = Documentor.Presentation.Navigation.INavigationService;
 using NavigationService = Documentor.Presentation.Navigation.NavigationService;
 
@@ -37,24 +40,22 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<DocumentFlowApi>(configuration.GetSection("DocumentFlowApi"));
-
-        services.AddHttpClient<IGeneralClient, GeneralClient>();
-        services.AddHttpClient<IAuthorizationClient, AuthorizationClient>();
         
-        services.AddHttpClient<IPersonalAccountClient, PersonalAccountClient>()
+        services.AddHttpClient("DocumentFlowApi", _ConfigureApiClient);
+        
+        services.AddHttpClient<IGeneralClient, GeneralClient>(_ConfigureApiClient);
+        services.AddHttpClient<IAuthorizationClient, AuthorizationClient>(_ConfigureApiClient);
+        
+        services.AddHttpClient<IPersonalAccountClient, PersonalAccountClient>(_ConfigureApiClient)
             .AddHttpMessageHandler<AuthorizationHandler>();
         
-        services.AddHttpClient<IAdminClient, AdminClient>()
+        services.AddHttpClient<IAdminClient, AdminClient>(_ConfigureApiClient)
             .AddHttpMessageHandler<AuthorizationHandler>();
         
-        services.AddHttpClient<IStatementClient, StatementClient>()
+        services.AddHttpClient<IStatementClient, StatementClient>(_ConfigureApiClient)
             .AddHttpMessageHandler<AuthorizationHandler>();
         
-        services.AddHttpClient<IDocumentClient, DocumentClient>((sp, client) =>
-            {
-                var api = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<DocumentFlowApi>>().Value;
-                client.BaseAddress = new Uri(api.Domain);
-            })
+        services.AddHttpClient<IDocumentClient, DocumentClient>(_ConfigureApiClient)
             .AddHttpMessageHandler<AuthorizationHandler>();
         
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -71,6 +72,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IUserManagementService, UserManagementService>();
         services.AddTransient<IDepartmentManagementService, DepartmentManagementService>();
         services.AddTransient<IStatementManagementService, StatementManagementService>();
+        services.AddTransient<IDocumentManagementService, DocumentManagementService>();
 
         services.AddTransient<IPersonalAccountService, PersonalAccountService>();
         services.AddTransient<IAuthorizationService, AuthorizationService>();
@@ -88,6 +90,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<StatementTemplatesPageViewModel>();
         services.AddTransient<TasksPageViewModel>();
         services.AddTransient<ProfilePageViewModel>();
+        services.AddTransient<DocumentPageViewModel>();
 
         services.AddTransient<LoginWindow>();
         services.AddTransient<MainShellWindow>();
@@ -96,10 +99,12 @@ public static class ServiceCollectionExtensions
         services.AddTransient<UserFilterDialogViewModel>();
         services.AddTransient<EditUserDialogWindow>();
         services.AddTransient<ResetPasswordDialogWindow>();
+        services.AddTransient<DocumentFilterDialogViewModel>();
         
         services.AddTransient<AddDepartmentDialogWindow>();
         services.AddTransient<EditDepartmentDialogWindow>();
         services.AddTransient<DepartmentFilterDialogWindow>();
+        services.AddTransient<DocumentFilterDialogWindow>();
         
         services.AddTransient<AuthorizationHandler>();
         
@@ -124,5 +129,11 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IInAppToastSource>(sp => sp.GetRequiredService<ToastNotificationService>());
 
         return services;
+    }
+    
+    private static void _ConfigureApiClient(IServiceProvider sp, HttpClient client)
+    {
+        var api = sp.GetRequiredService<IOptions<DocumentFlowApi>>().Value;
+        client.BaseAddress = new Uri(api.Domain);
     }
 }

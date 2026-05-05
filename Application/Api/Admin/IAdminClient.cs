@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Documentor.Application.Api.Admin.Dtos;
 using Documentor.Application.Api.Admin.Dtos.Department;
 using Documentor.Application.Api.Admin.Dtos.User;

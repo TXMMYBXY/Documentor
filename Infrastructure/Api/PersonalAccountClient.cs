@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using Documentor.Application.Api.Me;
 using Documentor.Application.Api.Me.Dtos;
 using Documentor.Application.Api.Models;
@@ -8,8 +10,8 @@ namespace Documentor.Infrastructure.Api;
 
 public class PersonalAccountClient : GeneralClient, IPersonalAccountClient
 {
-    public PersonalAccountClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi)
-        : base(httpClient, documentFlowApi)
+    public PersonalAccountClient(HttpClient httpClient)
+        : base(httpClient)
     {
     }
 

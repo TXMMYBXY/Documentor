@@ -1,30 +1,29 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Documentor.Application.Api;
 using Documentor.Application.Api.Models;
-using Microsoft.Extensions.Options;
 
 namespace Documentor.Infrastructure.Api;
 public class GeneralClient : IGeneralClient
 {
     private readonly HttpClient _httpClient;
-    private readonly DocumentFlowApi _documentFlowApi;
 
-    public GeneralClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi)
+    public GeneralClient(HttpClient httpClient)
     {
         _httpClient = httpClient;
         ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
-        _documentFlowApi = documentFlowApi.Value;
     }
 
     public async Task<TResponse?> PatchResponseAsync<TRequest, TResponse>(TRequest request, string uri)
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PatchAsync(_documentFlowApi.Domain + uri, requestContent);
-
+        var response = await _httpClient.PatchAsync(uri, requestContent);
+        
         await _IsSuccessStatusCode(response);
 
         var responseJson = await response.Content.ReadAsStringAsync();
@@ -36,7 +35,7 @@ public class GeneralClient : IGeneralClient
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PutAsync(_documentFlowApi.Domain + uri, requestContent);
+        var response = await _httpClient.PutAsync(uri, requestContent);
 
         await _IsSuccessStatusCode(response);
 
@@ -49,7 +48,7 @@ public class GeneralClient : IGeneralClient
     {
         var requestJson = JsonSerializer.Serialize(request);
         var requestContent = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        var response = await _httpClient.PostAsync(_documentFlowApi.Domain + uri, requestContent);
+        var response = await _httpClient.PostAsync(uri, requestContent);
         
         await _IsSuccessStatusCode(response);
 
@@ -66,7 +65,7 @@ public class GeneralClient : IGeneralClient
         {
             Method = HttpMethod.Delete,
             Content = requestContent,
-            RequestUri = new Uri(_documentFlowApi.Domain + uri)
+            RequestUri = new Uri(uri)
         };
         requestDelete.Headers.Add("accept", "text/plain");
         var response = await _httpClient.SendAsync(requestDelete);
@@ -80,7 +79,7 @@ public class GeneralClient : IGeneralClient
 
     public async Task<TResponse?> DeleteResponseAsync<TResponse>(string uri)
     {
-        var response = await _httpClient.DeleteAsync(_documentFlowApi.Domain + uri);
+        var response = await _httpClient.DeleteAsync(uri);
         
         await _IsSuccessStatusCode(response);
         
@@ -91,7 +90,7 @@ public class GeneralClient : IGeneralClient
 
     public async Task<TResponse?> GetResponseAsync<TResponse>(string uri)
     {
-        var response = await _httpClient.GetAsync(_documentFlowApi.Domain + uri);
+        var response = await _httpClient.GetAsync(uri);
 
         await _IsSuccessStatusCode(response);
         

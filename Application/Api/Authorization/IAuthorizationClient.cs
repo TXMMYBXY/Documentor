@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Documentor.Application.Api.Authorization.Dtos;
 using Documentor.Application.Api.Authorization.Dtos.Requests;
 using Documentor.Application.Api.Authorization.Dtos.Responses;

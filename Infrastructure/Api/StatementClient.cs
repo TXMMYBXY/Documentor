@@ -1,34 +1,33 @@
+using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using Documentor.Application.Api.Models;
+using System.Threading.Tasks;
 using Documentor.Application.Api.Statement;
 using Documentor.Application.Api.Statement.Dtos;
-using Microsoft.Extensions.Options;
 
 namespace Documentor.Infrastructure.Api;
 
 public class StatementClient : GeneralClient, IStatementClient
 {
     private readonly HttpClient _httpClient;
-    private readonly string _baseUrl;
     
-    public StatementClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi) : base(httpClient, documentFlowApi)
+    public StatementClient(HttpClient httpClient) : base(httpClient)
     {
         _httpClient = httpClient;
-        _baseUrl = documentFlowApi.Value.Domain;
     }
 
-    public async Task<PagedStatementDto> GetStatementsAsync(StatementFilterDto filter)
+    public async Task<PagedStatementDto> GetTemplateAsync(StatementFilterDto filter)
     {
         var query = _BuildTemplateQuery(filter);
         
-        return await GetResponseAsync<PagedStatementDto>($"statement-template{query}");
+        return await GetResponseAsync<PagedStatementDto>($"template{query}");
     }
 
     public async Task<bool> ChangeTemplateStatusAsync(int templateId)
     {
-        return await PatchResponseAsync<object, bool>(null, $"statement-template/{templateId}/change-template-status");
+        return await PatchResponseAsync<object, bool>(null, $"template/{templateId}/change-template-status");
     }
 
     public async Task UpdateTemplateAsync(int templateId, UpdateTemplateDto templateDto)
@@ -55,7 +54,7 @@ public class StatementClient : GeneralClient, IStatementClient
             form.Add(streamContent, "file", Path.GetFileName(templateDto.FilePath));
         }
 
-        var url = $"{_baseUrl.TrimEnd('/')}/statement-template/{templateId}/update-template";
+        var url = $"template/{templateId}/update-template";
 
         using var request = new HttpRequestMessage(HttpMethod.Patch, url)
         {
@@ -83,24 +82,24 @@ public class StatementClient : GeneralClient, IStatementClient
 
         form.Add(streamContent, "file", Path.GetFileName(templateDto.FilePath));
 
-        var response = await _httpClient.PostAsync($"{_baseUrl}statement-template", form);
+        var response = await _httpClient.PostAsync("template", form);
         
         response.EnsureSuccessStatusCode();
     }
 
     public async Task DeleteTemplateAsync(int templateId)
     {
-        await DeleteResponseAsync<object>( $"statement-template/{templateId}");
+        await DeleteResponseAsync<object>( $"template/{templateId}");
     }
 
     public async Task DeleteManyTemplateAsync(DeleteManyTemplatesDto manyTemplatesDto)
     {
-        await MultipleDeletionResponseAsync<DeleteManyTemplatesDto, object>(manyTemplatesDto, "statement-template");
+        await MultipleDeletionResponseAsync<DeleteManyTemplatesDto, object>(manyTemplatesDto, "template");
     }
 
     public async Task<Stream> DownloadTemplateAsync(int templateId)
     {
-        var response = await _httpClient.GetAsync($"{_baseUrl}statement-template/{templateId}/download");
+        var response = await _httpClient.GetAsync($"template/{templateId}/download");
         response.EnsureSuccessStatusCode();
 
         return await response.Content.ReadAsStreamAsync();
@@ -108,7 +107,7 @@ public class StatementClient : GeneralClient, IStatementClient
 
     public async Task<IReadOnlyList<DynamicFieldInfoDto>> ExtractFieldsAsync(int templateId)
     {
-        return await GetResponseAsync<IReadOnlyList<DynamicFieldInfoDto>>( $"statement-template/{templateId}/extract-fields");
+        return await GetResponseAsync<IReadOnlyList<DynamicFieldInfoDto>>( $"template/{templateId}/extract-fields");
     }
 
     public async Task  CreateTask(CreateTaskRequestDto dto)

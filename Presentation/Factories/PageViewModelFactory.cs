@@ -26,6 +26,7 @@ public class PageViewModelFactory : IPageViewModelFactory
             PageKey.Tasks => _serviceProvider.GetRequiredService<TasksPageViewModel>(),
             PageKey.Profile => _serviceProvider.GetRequiredService<ProfilePageViewModel>(),
             PageKey.Settings => _serviceProvider.GetRequiredService<SettingsPageViewModel>(),
+            PageKey.Archive => _serviceProvider.GetRequiredService<DocumentPageViewModel>(),
             _ => throw new NotSupportedException($"Page {pageKey} is not supported")
         };
     }

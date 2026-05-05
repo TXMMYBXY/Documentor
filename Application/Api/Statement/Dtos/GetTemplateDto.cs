@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Documentor.Application.Api.Admin.Dtos.User;
+using Documentor.Core.Enums;
 
 namespace Documentor.Application.Api.Statement.Dtos;
 
@@ -19,4 +20,7 @@ public class GetTemplateDto
 
     [JsonPropertyName("isActive")]
     public bool IsActive { get; set; }
+    
+    [JsonPropertyName("type")]
+    public TemplateType Type { get; set; }
 }

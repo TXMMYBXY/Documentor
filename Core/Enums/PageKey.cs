@@ -9,5 +9,6 @@ public enum PageKey
     StatementTemplates,
     Tasks,
     Profile,
-    Settings
+    Settings,
+    Archive
 }

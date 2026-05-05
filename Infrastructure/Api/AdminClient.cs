@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos;
@@ -12,7 +15,7 @@ namespace Documentor.Infrastructure.Api;
 public class AdminClient : GeneralClient, IAdminClient
 {
     public AdminClient(HttpClient httpClient, IOptions<DocumentFlowApi> documentFlowApi)
-        : base(httpClient, documentFlowApi)
+        : base(httpClient)
     {
     }
 

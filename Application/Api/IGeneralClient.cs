@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Documentor.Application.Api;
 
 public interface IGeneralClient
