@@ -8,6 +8,7 @@ namespace Documentor.Presentation.ViewModels.Base;
 public abstract class PagedListPageViewModel<TItem, TFilter> : ViewModelBase
 {
     private TItem? _selectedItem;
+    
     private string _errorMessage = string.Empty;
     private bool _isLoading;
 

@@ -1,8 +1,10 @@
+using Documentor.Core.Models.Document;
+
 namespace Documentor.Application.Api.Document.Dtos;
 
 public class DocumentFilterDto
 {
-    public string? SortByField { get; set; }
+    public DocumentSortField? SortBy { get; set; }
     public bool Descending { get; set; }
     
     public string? Title { get; set; }

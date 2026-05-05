@@ -2,7 +2,7 @@ namespace Documentor.Core.Models.Document;
 
 public class DocumentFilterModel
 {
-    public string? SortByField { get; set; }
+    public DocumentSortField SortBy { get; set; }
     public bool Descending { get; set; }
     
     public string? Title { get; set; }

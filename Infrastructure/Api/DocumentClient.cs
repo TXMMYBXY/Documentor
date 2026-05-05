@@ -65,8 +65,8 @@ public class DocumentClient : GeneralClient, IDocumentClient
     {
         var parameters = new List<string>();
         
-        if (!string.IsNullOrWhiteSpace(filter.SortByField))
-            parameters.Add($"SortByField={Uri.EscapeDataString(filter.SortByField)}");
+        if (filter.SortBy.HasValue)
+            parameters.Add($"SortBy={filter.SortBy}");
         
         if (filter.Descending)
             parameters.Add($"Descending=true");

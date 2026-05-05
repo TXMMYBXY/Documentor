@@ -62,6 +62,23 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
 
         _ = LoadAsync();
     }
+    
+    public void ApplySorting(string sortMemberPath, bool descending)
+    {
+        CurrentFilter.SortBy = sortMemberPath switch
+        {
+            nameof(DocumentListItemModel.Title) => DocumentSortField.Title,
+            nameof(DocumentListItemModel.CreatedAt) => DocumentSortField.CreatedAt,
+            nameof(DocumentListItemModel.TypeDisplay) => DocumentSortField.Type,
+            nameof(DocumentListItemModel.TemplateTitle) => DocumentSortField.TemplateId,
+            _ => DocumentSortField.CreatedAt
+        };
+
+        CurrentFilter.Descending = descending;
+        CurrentPage = 1;
+
+        _ = LoadAsync();
+    }
 
     protected override void ApplyPagingToFilter()
     {

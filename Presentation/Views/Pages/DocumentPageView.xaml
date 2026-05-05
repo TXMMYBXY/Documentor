@@ -144,26 +144,31 @@
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           SelectionMode="Single"
+                          Sorting="DocumentsGrid_Sorting"
                           Style="{StaticResource AppDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Название"
                                             Binding="{Binding Title}"
                                             Width="212"
+                                            SortMemberPath="Title"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Создан"
                                             Binding="{Binding CreatedAt}"
                                             Width="260"
+                                            SortMemberPath="CreatedAt"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Тип документа"
                                             Binding="{Binding TypeDisplay}"
                                             Width="140"
+                                            SortMemberPath="Type"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Шаблон"
                                             Binding="{Binding TemplateTitle}"
                                             Width="220"
+                                            SortMemberPath="TemplateId"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
                         <DataGridTemplateColumn Header=""
                                                 Width="54">
