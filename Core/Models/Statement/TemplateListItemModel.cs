@@ -2,7 +2,7 @@ using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Core.Models.Statement;
 
-public class StatementListItemModel : ViewModelBase
+public class TemplateListItemModel : ViewModelBase
 {
     private int _id;
     private string _title;

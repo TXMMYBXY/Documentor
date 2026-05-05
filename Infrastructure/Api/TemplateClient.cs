@@ -9,11 +9,11 @@ using Documentor.Application.Api.Statement.Dtos;
 
 namespace Documentor.Infrastructure.Api;
 
-public class StatementClient : GeneralClient, IStatementClient
+public class TemplateClient : GeneralClient, ITemplateClient
 {
     private readonly HttpClient _httpClient;
     
-    public StatementClient(HttpClient httpClient) : base(httpClient)
+    public TemplateClient(HttpClient httpClient) : base(httpClient)
     {
         _httpClient = httpClient;
     }
@@ -108,6 +108,11 @@ public class StatementClient : GeneralClient, IStatementClient
     public async Task<IReadOnlyList<DynamicFieldInfoDto>> ExtractFieldsAsync(int templateId)
     {
         return await GetResponseAsync<IReadOnlyList<DynamicFieldInfoDto>>( $"template/{templateId}/extract-fields");
+    }
+
+    public async Task<IReadOnlyList<GetTemplateDto>> GetTemplatesForFilterAsync()
+    {
+        return await GetResponseAsync<IReadOnlyList<GetTemplateDto>>("template/unique");
     }
 
     public async Task  CreateTask(CreateTaskRequestDto dto)

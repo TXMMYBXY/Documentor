@@ -1,6 +1,7 @@
 using AutoMapper;
 using Documentor.Application.Api.Document;
 using Documentor.Application.Api.Document.Dtos;
+using Documentor.Application.Api.Statement;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.Document;
@@ -10,13 +11,16 @@ namespace Documentor.Core.Services;
 public class DocumentManagementService : IDocumentManagementService
 {
     private readonly IDocumentClient _documentClient;
+    private readonly ITemplateClient _templateClient;
     private readonly IMapper _mapper;
 
     public DocumentManagementService(
         IDocumentClient documentClient,
+        ITemplateClient templateClient,
         IMapper mapper)
     {
         _documentClient = documentClient;
+        _templateClient = templateClient;
         _mapper = mapper;
     }
     

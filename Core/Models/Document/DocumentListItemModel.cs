@@ -1,5 +1,6 @@
 using Documentor.Application.Api.Statement.Dtos;
 using Documentor.Core.Enums;
+using Documentor.Core.Extensions;
 using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Core.Models.Document;
@@ -35,6 +36,8 @@ public class DocumentListItemModel : ViewModelBase
         get => _type;
         set => SetProperty(ref _type, value);
     }
+    
+    public string TypeDisplay => Type.GetDisplayName();
 
     public string TemplateTitle
     {

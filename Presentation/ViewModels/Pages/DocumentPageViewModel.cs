@@ -19,6 +19,7 @@ namespace Documentor.Presentation.ViewModels.Pages;
 public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemModel, DocumentFilterModel>
 {
     private readonly IDocumentManagementService _documentManagementService;
+    private readonly ITemplateManagementService _templateManagementService;
     private readonly IAppSettingsService _appSettingsService;
 
     public static string Title => "Архив документов";
@@ -40,9 +41,11 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
 
     public DocumentPageViewModel(
         IDocumentManagementService documentManagementService,
+        ITemplateManagementService templateManagementService,
         IAppSettingsService appSettingsService)
     {
         _documentManagementService = documentManagementService;
+        _templateManagementService = templateManagementService;
         _appSettingsService = appSettingsService;
 
         InitializePageSize(_appSettingsService.GetPageSize());
@@ -55,7 +58,7 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
 
         OpenFilterCommand = new RelayCommand(_OpenFilter);
         DeleteDocumentCommand = new AsyncRelayCommand(_DeleteDocumentAsync, () => SelectedDocument != null);
-        DownloadDocumentCommand = new AsyncRelayCommand(_DownloadDocumentAsync, () => SelectedDocument != null);
+        DownloadDocumentCommand = new AsyncRelayCommand(_DownloadDocumentAsync);
 
         _ = LoadAsync();
     }
@@ -105,7 +108,8 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
     {
         DocumentFilterDialogWindow? dialog = null;
 
-        var vm = new DocumentFilterDialogViewModel(new DocumentFilterModel
+        var vm = new DocumentFilterDialogViewModel(_templateManagementService, 
+            new DocumentFilterModel
         {
             Title = CurrentFilter.Title,
             CreatedAtEarlier = CurrentFilter.CreatedAtEarlier,

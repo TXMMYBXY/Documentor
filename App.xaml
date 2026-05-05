@@ -44,12 +44,8 @@
                 <views:ContractTemplatesPageView />
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type vm:StatementTemplatesPageViewModel}">
-                <views:StatementTemplatesPageView />
-            </DataTemplate>
-
-            <DataTemplate DataType="{x:Type vm:TasksPageViewModel}">
-                <views:TasksPageView />
+            <DataTemplate DataType="{x:Type vm:TemplatesPageViewModel}">
+                <views:TemplatesPageView />
             </DataTemplate>
 
             <DataTemplate DataType="{x:Type vm:ProfilePageViewModel}">

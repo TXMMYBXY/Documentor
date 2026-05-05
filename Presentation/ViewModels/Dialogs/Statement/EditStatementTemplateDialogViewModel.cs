@@ -12,7 +12,7 @@ namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
 public class EditStatementTemplateDialogViewModel : DialogViewModelBase
 {
-    private readonly IStatementManagementService _statementManagementService;
+    private readonly ITemplateManagementService _templateManagementService;
     private readonly int _templateId;
 
     private readonly string _originalTitle;
@@ -38,11 +38,11 @@ public class EditStatementTemplateDialogViewModel : DialogViewModelBase
     public ICommand SaveCommand { get; }
 
     public EditStatementTemplateDialogViewModel(
-        IStatementManagementService statementManagementService,
+        ITemplateManagementService templateManagementService,
         int templateId,
-        StatementListItemModel template)
+        TemplateListItemModel template)
     {
-        _statementManagementService = statementManagementService;
+        _templateManagementService = templateManagementService;
         _templateId = templateId;
 
         _originalTitle = template.Title;
@@ -97,7 +97,7 @@ public class EditStatementTemplateDialogViewModel : DialogViewModelBase
                 return;
             }
 
-            await _statementManagementService.UpdateStatementTemplateAsync(
+            await _templateManagementService.UpdateStatementTemplateAsync(
                 _templateId,
                 hasNewTitle ? Title.Trim() : null,
                 hasNewFile ? FilePath : null);

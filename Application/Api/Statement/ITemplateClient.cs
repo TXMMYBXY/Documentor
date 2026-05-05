@@ -5,7 +5,7 @@ using Documentor.Application.Api.Statement.Dtos;
 
 namespace Documentor.Application.Api.Statement;
 
-public interface IStatementClient
+public interface ITemplateClient
 {
     Task<PagedStatementDto> GetTemplateAsync(StatementFilterDto filter);
     Task<bool> ChangeTemplateStatusAsync(int templateId);
@@ -15,6 +15,8 @@ public interface IStatementClient
     Task DeleteManyTemplateAsync(DeleteManyTemplatesDto manyTemplatesDto);
     Task<Stream> DownloadTemplateAsync(int templateId);
     Task<IReadOnlyList<DynamicFieldInfoDto>> ExtractFieldsAsync(int templateId);
+    
+    Task<IReadOnlyList<GetTemplateDto>?> GetTemplatesForFilterAsync();
 
     Task CreateTask(CreateTaskRequestDto dto);
 }

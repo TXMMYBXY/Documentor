@@ -130,12 +130,15 @@ public class GeneralClient : IGeneralClient
 
     private static T? _ConvertResponse<T>(string response)
     {
-        
         if (string.IsNullOrWhiteSpace(response))
-        {
             return default;
-        }
-        return JsonSerializer.Deserialize<T>(response);
+
+        var options = new JsonSerializerOptions
+        {
+            PropertyNameCaseInsensitive = true
+        };
+
+        return JsonSerializer.Deserialize<T>(response, options);
     }
 }
 

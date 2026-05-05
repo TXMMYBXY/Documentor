@@ -14,16 +14,16 @@ using Microsoft.Win32;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 
-public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementListItemModel, StatementFilterModel>
+public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemModel, StatementFilterModel>
 {
-    private readonly IStatementManagementService _statementManagementService;
+    private readonly ITemplateManagementService _templateManagementService;
     private readonly IAppSettingsService _appSettingsService;
 
     public static string Title => "Шаблоны заявлений";
 
-    public ObservableCollection<StatementListItemModel> Statements => Items;
+    public ObservableCollection<TemplateListItemModel> Statements => Items;
 
-    public StatementListItemModel? SelectedStatement
+    public TemplateListItemModel? SelectedStatement
     {
         get => SelectedItem;
         set => SelectedItem = value;
@@ -40,11 +40,11 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
     public ICommand EditStatementCommand { get; }
     
 
-    public StatementTemplatesPageViewModel(
-        IStatementManagementService statementManagementService,
+    public TemplatesPageViewModel(
+        ITemplateManagementService templateManagementService,
         IAppSettingsService appSettingsService)
     {
-        _statementManagementService = statementManagementService;
+        _templateManagementService = templateManagementService;
         _appSettingsService = appSettingsService;
 
         InitializePageSize(_appSettingsService.GetPageSize());
@@ -72,9 +72,9 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         CurrentFilter.PageSize = PageSize;
     }
 
-    protected override async Task<PagedResult<StatementListItemModel>> LoadPageAsync()
+    protected override async Task<PagedResult<TemplateListItemModel>> LoadPageAsync()
     {
-        return await _statementManagementService.GetStatementsAsync(CurrentFilter);
+        return await _templateManagementService.GetTemplatesAsync(CurrentFilter);
     }
 
     protected override async Task ClearFilterAsync()
@@ -151,7 +151,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
     {
         AddStatementTemplateDialogWindow? dialog = null;
 
-        var vm = new AddStatementTemplateDialogViewModel(_statementManagementService);
+        var vm = new AddStatementTemplateDialogViewModel(_templateManagementService);
         vm.CloseRequested = result => dialog!.DialogResult = result;
 
         dialog = new AddStatementTemplateDialogWindow
@@ -175,7 +175,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         EditStatementTemplateDialogWindow? dialog = null;
 
         var vm = new EditStatementTemplateDialogViewModel(
-            _statementManagementService,
+            _templateManagementService,
             SelectedStatement.Id,
             SelectedStatement);
 
@@ -202,7 +202,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
             IsLoading = true;
             ErrorMessage = string.Empty;
 
-            var newStatus = await _statementManagementService.ChangeStatusAsync(SelectedStatement.Id);
+            var newStatus = await _templateManagementService.ChangeStatusAsync(SelectedStatement.Id);
             SelectedStatement.IsActive = newStatus;
 
             RaiseSelectionCommands();
@@ -246,7 +246,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
             IsLoading = true;
             ErrorMessage = string.Empty;
 
-            await _statementManagementService.DeleteStatementAsync(SelectedStatement.Id);
+            await _templateManagementService.DeleteStatementAsync(SelectedStatement.Id);
 
             if (Statements.Count == 1 && CurrentPage > 1)
             {
@@ -273,7 +273,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
         FillStatementTemplateDialogWindow? dialog = null;
 
         var vm = new FillStatementTemplateDialogViewModel(
-            _statementManagementService,
+            _templateManagementService,
             SelectedStatement.Id,
             SelectedStatement.Title);
 
@@ -306,7 +306,7 @@ public class StatementTemplatesPageViewModel : PagedListPageViewModel<StatementL
             if (dialog.ShowDialog() != true)
                 return;
 
-            await _statementManagementService.DownloadStatementTemplateAsync(SelectedStatement.Id, dialog.FileName);
+            await _templateManagementService.DownloadStatementTemplateAsync(SelectedStatement.Id, dialog.FileName);
 
             MessageBox.Show("Шаблон успешно сохранён.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }

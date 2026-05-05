@@ -9,30 +9,30 @@ using Documentor.Core.Models.Statement;
 
 namespace Documentor.Core.Services;
 
-public class StatementManagementService : IStatementManagementService
+public class TemplateManagementService : ITemplateManagementService
 {
-    private readonly IStatementClient _statementClient;
+    private readonly ITemplateClient _templateClient;
     private readonly IMapper _mapper;
 
-    public StatementManagementService(IStatementClient statementClient, IMapper mapper)
+    public TemplateManagementService(ITemplateClient templateClient, IMapper mapper)
     {
-        _statementClient = statementClient;
+        _templateClient = templateClient;
         _mapper = mapper;
     }
 
-    public async Task<PagedResult<StatementListItemModel>> GetStatementsAsync(StatementFilterModel filter)
+    public async Task<PagedResult<TemplateListItemModel>> GetTemplatesAsync(StatementFilterModel filter)
     {
         var filterDto = _mapper.Map<StatementFilterDto>(filter);
-        var response = await _statementClient.GetTemplateAsync(filterDto);
+        var response = await _templateClient.GetTemplateAsync(filterDto);
 
         if (response == null)
         {
-            return new PagedResult<StatementListItemModel>();
+            return new PagedResult<TemplateListItemModel>();
         }
 
-        return new PagedResult<StatementListItemModel>
+        return new PagedResult<TemplateListItemModel>
         {
-            Items = _mapper.Map<IReadOnlyList<StatementListItemModel>>(response.Templates),
+            Items = _mapper.Map<IReadOnlyList<TemplateListItemModel>>(response.Templates),
             TotalCount = response.TotalCount,
             PageSize = response.PageSize,
             CurrentPage = response.CurrentPage,
@@ -42,17 +42,17 @@ public class StatementManagementService : IStatementManagementService
 
     public async Task<bool> ChangeStatusAsync(int statementId)
     {
-        return await _statementClient.ChangeTemplateStatusAsync(statementId);
+        return await _templateClient.ChangeTemplateStatusAsync(statementId);
     }
 
     public async Task DeleteStatementAsync(int statementId)
     {
-        await _statementClient.DeleteTemplateAsync(statementId);
+        await _templateClient.DeleteTemplateAsync(statementId);
     }
 
     public async Task UpdateStatementTemplateAsync(int templateId, string? title, string? filePath)
     {
-        await _statementClient.UpdateTemplateAsync(templateId, new UpdateTemplateDto
+        await _templateClient.UpdateTemplateAsync(templateId, new UpdateTemplateDto
         {
             Title = title,
             FilePath = filePath
@@ -62,25 +62,34 @@ public class StatementManagementService : IStatementManagementService
     public async Task CreateStatementAsync(CreateStatementTemplateModel templateModel)
     {
         var dto = _mapper.Map<CreateTemplateDto>(templateModel);
-        await _statementClient.CreateTemplateAsync(dto);
+        await _templateClient.CreateTemplateAsync(dto);
     }
 
     public async Task DownloadStatementTemplateAsync(int templateId, string savePath)
     {
-        await using var stream = await _statementClient.DownloadTemplateAsync(templateId);
+        await using var stream = await _templateClient.DownloadTemplateAsync(templateId);
         await using var fileStream = File.Create(savePath);
         await stream.CopyToAsync(fileStream);
     }
     
     public async Task<IReadOnlyList<DynamicFieldInfoModel>> ExtractFieldsAsync(int templateId)
     {
-        var result = await _statementClient.ExtractFieldsAsync(templateId);
+        var result = await _templateClient.ExtractFieldsAsync(templateId);
         return _mapper.Map<IReadOnlyList<DynamicFieldInfoModel>>(result);
     }
-    
+
+    public async Task<IReadOnlyList<LookupItemModel>> GetTemplatesAsync()
+    {
+        var result = await _templateClient.GetTemplatesForFilterAsync();
+        
+        return result == null
+            ? Array.Empty<LookupItemModel>()
+            : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
+    }
+
     public async Task CreateTaskAsync(int templateId, Dictionary<string, object> data)
     {
-        await _statementClient.CreateTask(new CreateTaskRequestDto
+        await _templateClient.CreateTask(new CreateTaskRequestDto
         {
             TemplateId = templateId,
             TemplateType = TemplateType.Statement,

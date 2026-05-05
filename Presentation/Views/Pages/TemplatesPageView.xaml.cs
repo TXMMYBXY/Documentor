@@ -6,9 +6,9 @@ using System.Windows.Media;
 
 namespace Documentor.Presentation.Views.Pages
 {
-    public partial class StatementTemplatesPageView : UserControl
+    public partial class TemplatesPageView : UserControl
     {
-        public StatementTemplatesPageView()
+        public TemplatesPageView()
         {
             InitializeComponent();
         }

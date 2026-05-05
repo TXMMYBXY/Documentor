@@ -8,7 +8,7 @@ namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
 public class FillStatementTemplateDialogViewModel : DialogViewModelBase
 {
-    private readonly IStatementManagementService _statementManagementService;
+    private readonly ITemplateManagementService _templateManagementService;
     private readonly int _templateId;
     private readonly string _templateTitle;
 
@@ -19,11 +19,11 @@ public class FillStatementTemplateDialogViewModel : DialogViewModelBase
     public ICommand SubmitCommand { get; }
 
     public FillStatementTemplateDialogViewModel(
-        IStatementManagementService statementManagementService,
+        ITemplateManagementService templateManagementService,
         int templateId,
         string templateTitle)
     {
-        _statementManagementService = statementManagementService;
+        _templateManagementService = templateManagementService;
         _templateId = templateId;
         _templateTitle = templateTitle;
 
@@ -39,7 +39,7 @@ public class FillStatementTemplateDialogViewModel : DialogViewModelBase
             IsBusy = true;
             ErrorMessage = string.Empty;
 
-            var fields = await _statementManagementService.ExtractFieldsAsync(_templateId);
+            var fields = await _templateManagementService.ExtractFieldsAsync(_templateId);
 
             Fields.Clear();
             foreach (var field in fields)
@@ -89,7 +89,7 @@ public class FillStatementTemplateDialogViewModel : DialogViewModelBase
             // 3) Отправка
             IsBusy = true;
 
-            await _statementManagementService.CreateTaskAsync(_templateId, data);
+            await _templateManagementService.CreateTaskAsync(_templateId, data);
 
             RequestClose(true);
         }

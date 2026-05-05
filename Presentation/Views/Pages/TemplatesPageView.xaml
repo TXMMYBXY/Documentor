@@ -1,4 +1,4 @@
-<UserControl x:Class="Documentor.Presentation.Views.Pages.StatementTemplatesPageView"
+<UserControl x:Class="Documentor.Presentation.Views.Pages.TemplatesPageView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -186,8 +186,8 @@
                 Style="{StaticResource CardBorderStyle}">
             <Grid>
                 <DataGrid x:Name="StatementsGrid"
-                          ItemsSource="{Binding Documents}"
-                          SelectedItem="{Binding SelectedDocument}"
+                          ItemsSource="{Binding Statements}"
+                          SelectedItem="{Binding SelectedStatement}"
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           SelectionMode="Single"

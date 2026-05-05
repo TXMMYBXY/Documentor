@@ -52,7 +52,7 @@ public static class ServiceCollectionExtensions
         services.AddHttpClient<IAdminClient, AdminClient>(_ConfigureApiClient)
             .AddHttpMessageHandler<AuthorizationHandler>();
         
-        services.AddHttpClient<IStatementClient, StatementClient>(_ConfigureApiClient)
+        services.AddHttpClient<ITemplateClient, TemplateClient>(_ConfigureApiClient)
             .AddHttpMessageHandler<AuthorizationHandler>();
         
         services.AddHttpClient<IDocumentClient, DocumentClient>(_ConfigureApiClient)
@@ -71,7 +71,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IAppStartupService, AppStartupService>();
         services.AddTransient<IUserManagementService, UserManagementService>();
         services.AddTransient<IDepartmentManagementService, DepartmentManagementService>();
-        services.AddTransient<IStatementManagementService, StatementManagementService>();
+        services.AddTransient<ITemplateManagementService, TemplateManagementService>();
         services.AddTransient<IDocumentManagementService, DocumentManagementService>();
 
         services.AddTransient<IPersonalAccountService, PersonalAccountService>();
@@ -87,8 +87,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<UsersPageViewModel>();
         services.AddTransient<DepartmentsPageViewModel>();
         services.AddTransient<ContractTemplatesPageViewModel>();
-        services.AddTransient<StatementTemplatesPageViewModel>();
-        services.AddTransient<TasksPageViewModel>();
+        services.AddTransient<TemplatesPageViewModel>();
         services.AddTransient<ProfilePageViewModel>();
         services.AddTransient<DocumentPageViewModel>();
 

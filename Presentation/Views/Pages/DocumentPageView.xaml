@@ -157,7 +157,7 @@
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Тип документа"
-                                            Binding="{Binding Type}"
+                                            Binding="{Binding TypeDisplay}"
                                             Width="140"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 

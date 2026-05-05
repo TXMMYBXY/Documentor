@@ -10,7 +10,7 @@ namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
 public class AddStatementTemplateDialogViewModel : DialogViewModelBase
 {
-    private readonly IStatementManagementService _statementManagementService;
+    private readonly ITemplateManagementService _templateManagementService;
 
     private string _title = string.Empty;
     private string _filePath = string.Empty;
@@ -37,9 +37,9 @@ public class AddStatementTemplateDialogViewModel : DialogViewModelBase
     public ICommand BrowseFileCommand { get; }
     public ICommand SaveCommand { get; }
 
-    public AddStatementTemplateDialogViewModel(IStatementManagementService statementManagementService)
+    public AddStatementTemplateDialogViewModel(ITemplateManagementService templateManagementService)
     {
-        _statementManagementService = statementManagementService;
+        _templateManagementService = templateManagementService;
 
         BrowseFileCommand = new RelayCommand(BrowseFile);
         SaveCommand = new AsyncRelayCommand(SaveAsync);
@@ -85,7 +85,7 @@ public class AddStatementTemplateDialogViewModel : DialogViewModelBase
                 return;
             }
 
-            await _statementManagementService.CreateStatementAsync(new CreateStatementTemplateModel
+            await _templateManagementService.CreateStatementAsync(new CreateStatementTemplateModel
             {
                 Title = Title,
                 IsActive = IsActive,
