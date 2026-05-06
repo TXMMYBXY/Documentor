@@ -20,6 +20,4 @@ public interface IAdminClient
     Task CreateNewDepartmentAsync(CreateDepartmentDto createDepartmentDto);
     Task DeleteDepartmentByIdAsync(int departmentId);
     Task UpdateDepartmentAsync(int departmentId, UpdateDepartmentDto updateDepartmentDto);
-    
-    Task<List<GetRoleDto>> GetAllRolesAsync();
 }

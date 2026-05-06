@@ -18,7 +18,6 @@ public class PageViewModelFactory : IPageViewModelFactory
     {
         return pageKey switch
         {
-            PageKey.Dashboard => _serviceProvider.GetRequiredService<DashboardPageViewModel>(),
             PageKey.Users => _serviceProvider.GetRequiredService<UsersPageViewModel>(),
             PageKey.Departments => _serviceProvider.GetRequiredService<DepartmentsPageViewModel>(),
             PageKey.ContractTemplates => _serviceProvider.GetRequiredService<ContractTemplatesPageViewModel>(),

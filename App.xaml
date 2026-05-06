@@ -28,10 +28,6 @@
             <converters:InverseBooleanToVisibilityConverter x:Key="InverseBoolToVisibilityConverter"/>
             <converters:SidebarToggleAlignmentConverter x:Key="SidebarToggleAlignmentConverter"/>
             
-            <DataTemplate DataType="{x:Type vm:DashboardPageViewModel}">
-                <views:DashboardPageView />
-            </DataTemplate>
-
             <DataTemplate DataType="{x:Type vm:UsersPageViewModel}">
                 <views:UsersPageView />
             </DataTemplate>

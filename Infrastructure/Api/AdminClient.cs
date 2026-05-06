@@ -82,11 +82,6 @@ public class AdminClient : GeneralClient, IAdminClient
         await PutResponseAsync<UpdateDepartmentDto, object>(updateDepartmentDto, $"department/{departmentId}");
     }
 
-    public async Task<List<GetRoleDto>> GetAllRolesAsync()
-    {
-        return await GetResponseAsync<List<GetRoleDto>>("role");
-    }
-
     private static string _BuildUsersQuery(UserFilterDto filter)
     {
         var parameters = new List<string>();

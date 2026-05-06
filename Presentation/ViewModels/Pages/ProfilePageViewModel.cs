@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 using Documentor.Common;
+using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.Profile;
@@ -15,7 +16,7 @@ public class ProfilePageViewModel : ViewModelBase
     private string _fullName = string.Empty;
     private string _email = string.Empty;
     private string _department = string.Empty;
-    private string _role = string.Empty;
+    private Role _role;
     private string _errorMessage = string.Empty;
     private bool _isLoading;
 
@@ -43,7 +44,7 @@ public class ProfilePageViewModel : ViewModelBase
         set => SetProperty(ref _department, value);
     }
 
-    public string Role
+    public Role Role
     {
         get => _role;
         set => SetProperty(ref _role, value);
@@ -132,7 +133,7 @@ public class ProfilePageViewModel : ViewModelBase
                 FullName = profile.FullName;
                 Email = profile.Email;
                 Department = profile.Department;
-                Role = profile.RoleTitle;
+                Role = profile.Role;
             }
 
             var history = await _personalAccountService.GetLoginHistoryAsync();

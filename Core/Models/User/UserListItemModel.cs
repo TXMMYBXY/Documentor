@@ -1,3 +1,5 @@
+using Documentor.Core.Enums;
+using Documentor.Core.Extensions;
 using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Core.Models.User;
@@ -9,7 +11,7 @@ public class UserListItemModel : ViewModelBase
     private string _fullName = string.Empty;
     private bool _isActive;
     private string _department = string.Empty;
-    private string _role = string.Empty;
+    private Role _role;
 
     public int Id
     {
@@ -41,9 +43,11 @@ public class UserListItemModel : ViewModelBase
         set => SetProperty(ref _department, value);
     }
 
-    public string Role
+    public Role Role
     {
         get => _role;
         set => SetProperty(ref _role, value);
     }
+
+    public string RoleDisplay => Role.GetDisplayName();
 }

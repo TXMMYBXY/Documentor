@@ -206,7 +206,7 @@
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Роль"
-                                            Binding="{Binding Role}"
+                                            Binding="{Binding RoleDisplay}"
                                             Width="140"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 

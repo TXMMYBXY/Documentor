@@ -1,6 +1,9 @@
 using AutoMapper;
 using Documentor.Application.Api.Admin;
 using Documentor.Application.Api.Admin.Dtos.User;
+using Documentor.Application.Api.Models;
+using Documentor.Core.Enums;
+using Documentor.Core.Extensions;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.User;
@@ -59,11 +62,18 @@ public class UserManagementService : IUserManagementService
 
     public async Task<IReadOnlyList<LookupItemModel>> GetRolesAsync()
     {
-        var result = await _adminClient.GetAllRolesAsync();
+        var list = new List<LookupItemModel>();
         
-        return result == null
-            ? Array.Empty<LookupItemModel>()
-            : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
+        foreach (var role in Enum.GetValues<Role>())
+        {
+            list.Add(new LookupItemModel
+            {
+                Id = (int)role,
+                Title = role.GetDisplayName()
+            });
+        }
+        
+        return list;
     }
 
     public async Task CreateUserAsync(CreateUserModel model)

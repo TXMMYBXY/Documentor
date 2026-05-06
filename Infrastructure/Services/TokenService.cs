@@ -7,6 +7,7 @@ using Documentor.Application.Api.Models;
 using Documentor.Application.Services;
 using Documentor.Core.Enums;
 using Microsoft.Win32;
+using Role = Documentor.Core.Enums.Role;
 
 namespace Documentor.Infrastructure.Services;
 
@@ -56,7 +57,7 @@ public class TokenService : ITokenService
                 if (loginResponseDto.UserInfo != null)
                 {
                     key.SetValue("UserEmail", loginResponseDto.UserInfo.Email);
-                    key.SetValue("RoleId", loginResponseDto.UserInfo.Role.Id);
+                    key.SetValue("Role", loginResponseDto.UserInfo.Role);
                     key.SetValue("Department", loginResponseDto.UserInfo.Department);
 
                     if (loginResponseDto.Refresh.RefreshToken != null)
@@ -128,18 +129,13 @@ public class TokenService : ITokenService
                     return null;
                 }
 
-                var roleId = key.GetValue("RoleId") as int?;
-                if (!roleId.HasValue) return null;
-                Enum.TryParse<UserRole>(roleId.ToString(), out var role);
+                var roleId = key.GetValue("Role");
+                Enum.TryParse<Role>(roleId.ToString(), out var role);
                 
                 return new UserInfoDto
                 {
                     Email = key.GetValue("UserEmail") as string,
-                    Role = new Role
-                    {
-                        Id = roleId.Value,
-                        Title = role.ToString()
-                    },
+                    Role = role,
                     Department = key.GetValue("Department") as string
                 };
             }

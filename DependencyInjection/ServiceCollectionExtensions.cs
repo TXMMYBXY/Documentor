@@ -83,7 +83,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<LoginWindowViewModel>();
         services.AddTransient<MainShellViewModel>();
 
-        services.AddTransient<DashboardPageViewModel>();
         services.AddTransient<UsersPageViewModel>();
         services.AddTransient<DepartmentsPageViewModel>();
         services.AddTransient<ContractTemplatesPageViewModel>();

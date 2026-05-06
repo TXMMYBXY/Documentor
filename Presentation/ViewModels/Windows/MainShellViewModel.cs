@@ -23,10 +23,10 @@ public class MainShellViewModel : ViewModelBase
 
     public string Title => _userSession.Role switch
     {
-        UserRole.Admin => "Админ панель",
-        UserRole.Boss => "Панель начальника",
-        UserRole.Purchaser => "Панель сотрудника отдела закупок",
-        UserRole.User => "Панель сотрудника",
+        Role.Admin => "Админ панель",
+        Role.Boss => "Панель начальника",
+        Role.Purchaser => "Панель сотрудника отдела закупок",
+        Role.User => "Панель сотрудника",
         _ => "ошибка"
     };
 
@@ -96,7 +96,6 @@ public class MainShellViewModel : ViewModelBase
     {
         return viewModel switch
         {
-            DashboardPageViewModel => PageKey.Dashboard,
             UsersPageViewModel => PageKey.Users,
             DepartmentsPageViewModel => PageKey.Departments,
             TemplatesPageViewModel => PageKey.StatementTemplates,
@@ -107,15 +106,15 @@ public class MainShellViewModel : ViewModelBase
         };
     }
 
-    private static PageKey GetDefaultPage(UserRole role)
+    private static PageKey GetDefaultPage(Role role)
     {
         return role switch
         {
-            UserRole.Admin => PageKey.Users,
-            UserRole.Boss => PageKey.ContractTemplates,
-            UserRole.Purchaser => PageKey.ContractTemplates,
-            UserRole.User => PageKey.StatementTemplates,
-            _ => PageKey.Dashboard
+            Role.Admin => PageKey.Users,
+            Role.Boss => PageKey.ContractTemplates,
+            Role.Purchaser => PageKey.StatementTemplates,
+            Role.User => PageKey.Archive,
+            _ => PageKey.Settings
         };
     }
 }

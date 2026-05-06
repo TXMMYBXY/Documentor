@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using Documentor.Application.Api.Models;
+using Documentor.Core.Enums;
 
 namespace Documentor.Application.Api.Authorization.Dtos;
 public class UserInfoDto
