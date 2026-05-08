@@ -85,8 +85,15 @@ public class AdminClient : GeneralClient, IAdminClient
     private static string _BuildUsersQuery(UserFilterDto filter)
     {
         var parameters = new List<string>();
-
+        
+        if(filter.SortBy.HasValue)
+            parameters.Add($"SortBy={filter.SortBy.Value}");
+        
+        if (filter.Descending)
+            parameters.Add($"Descending=true");      
+        
         if (!string.IsNullOrWhiteSpace(filter.FullName))
+            
             parameters.Add($"FullName={Uri.EscapeDataString(filter.FullName)}");
 
         if (!string.IsNullOrWhiteSpace(filter.Email))
@@ -113,6 +120,12 @@ public class AdminClient : GeneralClient, IAdminClient
     private static string _BuildDepartmentsQuery(DepartmentFilterDto filter)
     {
         var parameters = new List<string>();
+        
+        if (filter.SortBy.HasValue)
+            parameters.Add($"SortBy={filter.SortBy}");
+        
+        if (filter.Descending)
+            parameters.Add($"Descending=true");
 
         if (!string.IsNullOrWhiteSpace(filter.Title))
             parameters.Add($"Title={Uri.EscapeDataString(filter.Title)}");

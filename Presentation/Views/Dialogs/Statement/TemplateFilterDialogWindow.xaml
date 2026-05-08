@@ -1,4 +1,4 @@
-<mah:MetroWindow x:Class="Documentor.Presentation.Views.Dialogs.Statement.StatementFilterDialogWindow"
+<mah:MetroWindow x:Class="Documentor.Presentation.Views.Dialogs.Statement.TemplateFilterDialogWindow"
                  xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
@@ -33,7 +33,7 @@
 
                     <TextBlock Text="Создатель ID"
                                Style="{StaticResource FormLabelTextStyle}"/>
-                    <TextBox Text="{Binding Owner, UpdateSourceTrigger=PropertyChanged}"
+                    <TextBox Text="{Binding CreatedBy, UpdateSourceTrigger=PropertyChanged}"
                              Style="{StaticResource InputTextBoxStyle}"
                              Margin="0,0,0,12"/>
 

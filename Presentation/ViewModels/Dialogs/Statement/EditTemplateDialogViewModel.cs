@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Documentor.Common;
 using Documentor.Core.Interfaces;
-using Documentor.Core.Models.Statement;
+using Documentor.Core.Models.Template;
 using Documentor.Presentation.ViewModels.Base;
 using Microsoft.Win32;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
-public class EditStatementTemplateDialogViewModel : DialogViewModelBase
+public class EditTemplateDialogViewModel : DialogViewModelBase
 {
     private readonly ITemplateManagementService _templateManagementService;
     private readonly int _templateId;
@@ -37,7 +37,7 @@ public class EditStatementTemplateDialogViewModel : DialogViewModelBase
     public ICommand ClearFileCommand { get; }
     public ICommand SaveCommand { get; }
 
-    public EditStatementTemplateDialogViewModel(
+    public EditTemplateDialogViewModel(
         ITemplateManagementService templateManagementService,
         int templateId,
         TemplateListItemModel template)

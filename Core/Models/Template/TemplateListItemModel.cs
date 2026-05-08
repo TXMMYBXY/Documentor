@@ -1,12 +1,12 @@
 using Documentor.Presentation.ViewModels.Base;
 
-namespace Documentor.Core.Models.Statement;
+namespace Documentor.Core.Models.Template;
 
 public class TemplateListItemModel : ViewModelBase
 {
     private int _id;
     private string _title;
-    private string _owner;
+    private string _createdBy;
     private DateTime _createdAt;
     private bool _isActive;
     
@@ -22,10 +22,10 @@ public class TemplateListItemModel : ViewModelBase
         set => SetProperty(ref _title, value);
     }
 
-    public string Owner
+    public string CreatedBy
     {
-        get => _owner;
-        set => SetProperty(ref _owner, value);
+        get => _createdBy;
+        set => SetProperty(ref _createdBy, value);
     }
 
     public DateTime CreatedAt

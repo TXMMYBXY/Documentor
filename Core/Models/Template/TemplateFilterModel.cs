@@ -1,9 +1,12 @@
 using Documentor.Core.Enums;
 
-namespace Documentor.Application.Api.Statement.Dtos;
+namespace Documentor.Core.Models.Template;
 
-public class StatementFilterDto
+public class TemplateFilterModel
 {
+    public TemplateSortField? SortBy { get; set; }
+    public bool Descending { get; set; }
+    
     public TemplateType Type { get; set; }
     
     public string? Title { get; set; }

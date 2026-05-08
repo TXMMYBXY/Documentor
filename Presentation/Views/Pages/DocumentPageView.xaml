@@ -144,7 +144,7 @@
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           SelectionMode="Single"
-                          Sorting="DocumentsGrid_Sorting"
+                          Sorting="DocumentsGrid_OnSorting"
                           Style="{StaticResource AppDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Название"
@@ -154,7 +154,7 @@
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Создан"
-                                            Binding="{Binding CreatedAt}"
+                                            Binding="{Binding CreatedAt, StringFormat=dd.MM.yyyy HH:mm}"
                                             Width="260"
                                             SortMemberPath="CreatedAt"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>

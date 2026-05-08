@@ -18,7 +18,7 @@ public class TemplateClient : GeneralClient, ITemplateClient
         _httpClient = httpClient;
     }
 
-    public async Task<PagedStatementDto> GetTemplateAsync(StatementFilterDto filter)
+    public async Task<PagedStatementDto> GetTemplateAsync(TemplateFilterDto filter)
     {
         var query = _BuildTemplateQuery(filter);
         
@@ -70,8 +70,9 @@ public class TemplateClient : GeneralClient, ITemplateClient
     {
         using var form = new MultipartFormDataContent();
 
-        form.Add(new StringContent(templateDto.Title), "title");
-        form.Add(new StringContent(templateDto.IsActive.ToString().ToLowerInvariant()), "isActive");
+        form.Add(new StringContent(templateDto.Title), "Title");
+        form.Add(new StringContent(((int)templateDto.Type).ToString()), "Type");
+        form.Add(new StringContent(templateDto.IsActive.ToString().ToLowerInvariant()), "IsActive");
 
         await using var fileStream = File.OpenRead(templateDto.FilePath);
         
@@ -120,9 +121,15 @@ public class TemplateClient : GeneralClient, ITemplateClient
         await PostResponseAsync<CreateTaskRequestDto, object>(dto, "issue/generate");
     }
 
-    private static string _BuildTemplateQuery(StatementFilterDto filter)
+    private static string _BuildTemplateQuery(TemplateFilterDto filter)
     {
         var parameters = new List<string>();
+        
+        if (filter.SortBy.HasValue)
+            parameters.Add($"SortBy={filter.SortBy}");
+        
+        if (filter.Descending)
+            parameters.Add($"Descending=true");
 
         if (!string.IsNullOrWhiteSpace(filter.Title))
             parameters.Add($"Title={Uri.EscapeDataString(filter.Title)}");
@@ -141,7 +148,7 @@ public class TemplateClient : GeneralClient, ITemplateClient
             var toDate = filter.CreatedAtEarlier.Value.Date.AddDays(1).AddTicks(-1);
             parameters.Add($"CreatedAtEarlier={Uri.EscapeDataString(toDate.ToString("O"))}");
         }
-
+        
         if (filter.PageSize.HasValue)
             parameters.Add($"PageSize={filter.PageSize.Value}");
 
@@ -151,6 +158,8 @@ public class TemplateClient : GeneralClient, ITemplateClient
         if (parameters.Count == 0)
             return string.Empty;
 
+        parameters.Add($"Type={filter.Type}");
+        
         return "?" + string.Join("&", parameters);
     }
 }
