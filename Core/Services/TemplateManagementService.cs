@@ -5,7 +5,7 @@ using Documentor.Application.Api.Statement.Dtos;
 using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
-using Documentor.Core.Models.Statement;
+using Documentor.Core.Models.Template;
 
 namespace Documentor.Core.Services;
 
@@ -20,9 +20,9 @@ public class TemplateManagementService : ITemplateManagementService
         _mapper = mapper;
     }
 
-    public async Task<PagedResult<TemplateListItemModel>> GetTemplatesAsync(StatementFilterModel filter)
+    public async Task<PagedResult<TemplateListItemModel>> GetTemplatesAsync(TemplateFilterModel filter)
     {
-        var filterDto = _mapper.Map<StatementFilterDto>(filter);
+        var filterDto = _mapper.Map<TemplateFilterDto>(filter);
         var response = await _templateClient.GetTemplateAsync(filterDto);
 
         if (response == null)
@@ -45,7 +45,7 @@ public class TemplateManagementService : ITemplateManagementService
         return await _templateClient.ChangeTemplateStatusAsync(statementId);
     }
 
-    public async Task DeleteStatementAsync(int statementId)
+    public async Task DeleteTemplateAsync(int statementId)
     {
         await _templateClient.DeleteTemplateAsync(statementId);
     }
@@ -59,13 +59,14 @@ public class TemplateManagementService : ITemplateManagementService
         });
     }
 
-    public async Task CreateStatementAsync(CreateStatementTemplateModel templateModel)
+    public async Task CreateStatementAsync(CreateTemplateModel templateModel)
     {
         var dto = _mapper.Map<CreateTemplateDto>(templateModel);
+        
         await _templateClient.CreateTemplateAsync(dto);
     }
 
-    public async Task DownloadStatementTemplateAsync(int templateId, string savePath)
+    public async Task DownloadTemplateAsync(int templateId, string savePath)
     {
         await using var stream = await _templateClient.DownloadTemplateAsync(templateId);
         await using var fileStream = File.Create(savePath);
@@ -75,7 +76,16 @@ public class TemplateManagementService : ITemplateManagementService
     public async Task<IReadOnlyList<DynamicFieldInfoModel>> ExtractFieldsAsync(int templateId)
     {
         var result = await _templateClient.ExtractFieldsAsync(templateId);
+        
         return _mapper.Map<IReadOnlyList<DynamicFieldInfoModel>>(result);
+    }
+
+    public async Task DeleteTemplatesAsync(List<int> templateIds)
+    {
+        await _templateClient.DeleteManyTemplateAsync(new DeleteManyTemplatesDto
+        {
+            TemplateIds = templateIds
+        });
     }
 
     public async Task<IReadOnlyList<LookupItemModel>> GetTemplatesAsync()

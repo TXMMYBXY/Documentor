@@ -7,7 +7,7 @@ public class DocumentDto
 {
     public int Id { get; set; }
     public string Title { get; set; }
-    public DateTimeOffset CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
     public TemplateType Type { get; set; }
     public TemplateClearDto Template { get; set; }
 }

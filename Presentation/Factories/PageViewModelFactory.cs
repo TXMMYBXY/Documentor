@@ -18,14 +18,33 @@ public class PageViewModelFactory : IPageViewModelFactory
     {
         return pageKey switch
         {
-            PageKey.Users => _serviceProvider.GetRequiredService<UsersPageViewModel>(),
-            PageKey.Departments => _serviceProvider.GetRequiredService<DepartmentsPageViewModel>(),
-            PageKey.ContractTemplates => _serviceProvider.GetRequiredService<ContractTemplatesPageViewModel>(),
-            PageKey.StatementTemplates => _serviceProvider.GetRequiredService<TemplatesPageViewModel>(),
-            PageKey.Profile => _serviceProvider.GetRequiredService<ProfilePageViewModel>(),
-            PageKey.Settings => _serviceProvider.GetRequiredService<SettingsPageViewModel>(),
-            PageKey.Archive => _serviceProvider.GetRequiredService<DocumentPageViewModel>(),
+            PageKey.StatementTemplates =>
+                _CreateTemplatesPage(TemplateType.Statement, PageKey.StatementTemplates),
+
+            PageKey.ContractTemplates =>
+                _CreateTemplatesPage(TemplateType.Contract, PageKey.ContractTemplates),
+
+            PageKey.Users =>
+                _serviceProvider.GetRequiredService<UsersPageViewModel>(),
+
+            PageKey.Departments =>
+                _serviceProvider.GetRequiredService<DepartmentsPageViewModel>(),
+
+            PageKey.Profile =>
+                _serviceProvider.GetRequiredService<ProfilePageViewModel>(),
+
+            PageKey.Settings =>
+                _serviceProvider.GetRequiredService<SettingsPageViewModel>(),
+
+            PageKey.Archive =>
+                _serviceProvider.GetRequiredService<DocumentPageViewModel>(),
+
             _ => throw new NotSupportedException($"Page {pageKey} is not supported")
         };
+    }
+    
+    private TemplatesPageViewModel _CreateTemplatesPage(TemplateType type, PageKey pageKey)
+    {
+        return ActivatorUtilities.CreateInstance<TemplatesPageViewModel>(_serviceProvider, type, pageKey);
     }
 }

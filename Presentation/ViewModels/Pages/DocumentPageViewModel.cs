@@ -5,7 +5,6 @@ using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.Document;
-using Documentor.Core.Models.Statement;
 using Documentor.Presentation.ViewModels.Base;
 using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.Document;

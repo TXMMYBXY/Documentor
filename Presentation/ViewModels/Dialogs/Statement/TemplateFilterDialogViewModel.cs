@@ -1,11 +1,11 @@
 using System.Windows.Input;
 using Documentor.Common;
-using Documentor.Core.Models.Statement;
+using Documentor.Core.Models.Template;
 using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
-public class StatementFilterDialogViewModel : DialogViewModelBase
+public class TemplateFilterDialogViewModel : DialogViewModelBase
 {
     private string _title = string.Empty;
     private string _createdBy = string.Empty;
@@ -43,12 +43,12 @@ public class StatementFilterDialogViewModel : DialogViewModelBase
         set => SetProperty(ref _pageSize, value);
     }
 
-    public StatementFilterModel ResultFilter { get; private set; } = new();
+    public TemplateFilterModel ResultFilter { get; private set; } = new();
 
     public ICommand ApplyCommand { get; }
     public ICommand ResetCommand { get; }
 
-    public StatementFilterDialogViewModel(StatementFilterModel filter)
+    public TemplateFilterDialogViewModel(TemplateFilterModel filter)
     {
         Title = filter.Title ?? string.Empty;
         CreatedBy = filter.CreatedBy?.ToString() ?? string.Empty;
@@ -66,7 +66,7 @@ public class StatementFilterDialogViewModel : DialogViewModelBase
         if (int.TryParse(CreatedBy, out var parsed))
             createdBy = parsed;
 
-        ResultFilter = new StatementFilterModel
+        ResultFilter = new TemplateFilterModel
         {
             Title = string.IsNullOrWhiteSpace(Title) ? null : Title,
             CreatedBy = createdBy,
