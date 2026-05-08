@@ -6,7 +6,7 @@ using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
-public class FillStatementTemplateDialogViewModel : DialogViewModelBase
+public class FillTemplateDialogViewModel : DialogViewModelBase
 {
     private readonly ITemplateManagementService _templateManagementService;
     private readonly int _templateId;
@@ -18,7 +18,7 @@ public class FillStatementTemplateDialogViewModel : DialogViewModelBase
 
     public ICommand SubmitCommand { get; }
 
-    public FillStatementTemplateDialogViewModel(
+    public FillTemplateDialogViewModel(
         ITemplateManagementService templateManagementService,
         int templateId,
         string templateTitle)

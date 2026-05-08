@@ -1,19 +1,21 @@
 using System.IO;
 using System.Windows.Input;
 using Documentor.Common;
+using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
-using Documentor.Core.Models.Statement;
+using Documentor.Core.Models.Template;
 using Documentor.Presentation.ViewModels.Base;
 using Microsoft.Win32;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
-public class AddStatementTemplateDialogViewModel : DialogViewModelBase
+public class AddTemplateDialogViewModel : DialogViewModelBase
 {
     private readonly ITemplateManagementService _templateManagementService;
 
     private string _title = string.Empty;
     private string _filePath = string.Empty;
+    private TemplateType _type;
     private bool _isActive = true;
 
     public string Title
@@ -37,8 +39,9 @@ public class AddStatementTemplateDialogViewModel : DialogViewModelBase
     public ICommand BrowseFileCommand { get; }
     public ICommand SaveCommand { get; }
 
-    public AddStatementTemplateDialogViewModel(ITemplateManagementService templateManagementService)
+    public AddTemplateDialogViewModel(TemplateType type, ITemplateManagementService templateManagementService)
     {
+        _type = type;
         _templateManagementService = templateManagementService;
 
         BrowseFileCommand = new RelayCommand(BrowseFile);
@@ -85,11 +88,12 @@ public class AddStatementTemplateDialogViewModel : DialogViewModelBase
                 return;
             }
 
-            await _templateManagementService.CreateStatementAsync(new CreateStatementTemplateModel
+            await _templateManagementService.CreateStatementAsync(new CreateTemplateModel
             {
                 Title = Title,
                 IsActive = IsActive,
-                FilePath = FilePath
+                Type = _type,
+                FilePath = FilePath,
             });
 
             RequestClose(true);

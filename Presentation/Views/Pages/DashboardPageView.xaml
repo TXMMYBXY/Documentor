@@ -1,9 +1,0 @@
-<UserControl x:Class="Documentor.Presentation.Views.Pages.DashboardPageView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid>
-        <TextBlock Text="{Binding Title}"
-                   FontSize="28"
-                   FontWeight="Bold"/>
-    </Grid>
-</UserControl>

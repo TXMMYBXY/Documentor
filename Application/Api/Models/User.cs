@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Documentor.Core.Enums;
 
 namespace Documentor.Application.Api.Models;
 
@@ -13,8 +14,7 @@ public class User
     [JsonPropertyName("department")]
     public string Department { get; set; }
     [JsonPropertyName("role")]
-    public Role RoleEntity { get; set; }
+    public Role Role { get; set; }
     [JsonPropertyName("id")]
     public int UserId { get; set; }
-    public string RoleTitle => RoleEntity.Title;
 }

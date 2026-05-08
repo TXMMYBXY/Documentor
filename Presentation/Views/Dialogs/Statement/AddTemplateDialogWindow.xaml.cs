@@ -2,9 +2,9 @@ using MahApps.Metro.Controls;
 
 namespace Documentor.Presentation.Views.Dialogs.Statement;
 
-public partial class StatementFilterDialogWindow : MetroWindow
+public partial class AddTemplateDialogWindow : MetroWindow
 {
-    public StatementFilterDialogWindow()
+    public AddTemplateDialogWindow()
     {
         InitializeComponent();
     }

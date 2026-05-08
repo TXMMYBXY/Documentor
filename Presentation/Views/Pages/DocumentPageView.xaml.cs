@@ -11,7 +11,7 @@ public partial class DocumentPageView : UserControl
         InitializeComponent();
     }
     
-    private void DocumentsGrid_Sorting(object sender, DataGridSortingEventArgs e)
+    private void DocumentsGrid_OnSorting(object sender, DataGridSortingEventArgs e)
     {
         e.Handled = true;
 

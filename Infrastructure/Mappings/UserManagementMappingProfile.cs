@@ -13,15 +13,10 @@ public class UserManagementMappingProfile : Profile
     public UserManagementMappingProfile()
     {
         CreateMap<UserDto, UserListItemModel>()
-            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Title))
-            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.Title));
-
+            .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Title));
         CreateMap<UserFilterModel, UserFilterDto>();
 
         CreateMap<GetDepartmentDto, LookupItemModel>()
-            .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
-
-        CreateMap<GetRoleDto, LookupItemModel>()
             .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title));
 
         CreateMap<EditUserModel, UpdateUserDto>();

@@ -66,7 +66,7 @@ public class AuthorizationService :  IAuthorizationService
             {
                 _tokenService.SaveTokens(response);
 
-                return _tokenService.GetUserInfo().Role.Id;
+                return (int)_tokenService.GetUserInfo().Role;
             }
 
             return null;

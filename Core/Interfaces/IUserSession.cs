@@ -11,7 +11,7 @@ public interface IUserSession
     string FullName { get; }
     string Email { get; }
     string Department { get; }
-    UserRole Role { get; }
+    Role Role { get; }
     string RoleTitle { get; }
 
     void Set(UserInfoModel userInfo);

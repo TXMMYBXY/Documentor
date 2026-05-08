@@ -20,12 +20,6 @@ public class AuthorizationMappingProfile : Profile
         
         CreateMap<UserInfoDto, UserInfoModel>()
             .ForMember(
-                dest => dest.Role,
-                opt => opt.MapFrom(src => (UserRole)src.Role.Id))
-            .ForMember(
-                dest => dest.RoleTitle,
-                opt => opt.MapFrom(src => ((UserRole)src.Role.Id).ToString()))
-            .ForMember(
                 dest => dest.Department,
                 opt => opt.MapFrom(src => src.Department));
     }

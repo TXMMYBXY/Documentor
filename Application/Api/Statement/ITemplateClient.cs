@@ -7,7 +7,7 @@ namespace Documentor.Application.Api.Statement;
 
 public interface ITemplateClient
 {
-    Task<PagedStatementDto> GetTemplateAsync(StatementFilterDto filter);
+    Task<PagedStatementDto> GetTemplateAsync(TemplateFilterDto filter);
     Task<bool> ChangeTemplateStatusAsync(int templateId);
     Task UpdateTemplateAsync(int templateId, UpdateTemplateDto templateDto);
     Task CreateTemplateAsync(CreateTemplateDto templateDto);

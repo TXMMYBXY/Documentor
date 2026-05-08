@@ -137,7 +137,7 @@ public class AddUserViewModel : DialogViewModelBase
                 Email = Email,
                 FullName = FullName,
                 Password = Password,
-                RoleId = SelectedRole!.Id,
+                Role = SelectedRole!.Id,
                 DepartmentId = SelectedDepartment!.Id
             };
 

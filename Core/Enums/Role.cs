@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace Documentor.Core.Enums;
 
-public enum UserRole
+public enum Role
 {
     [Display(Name = "Администратор")]
     Admin = 1,

@@ -13,5 +13,5 @@ public interface IMenuFactory
     /// </summary>
     /// <param name="role">Перечисление UserRole</param>
     /// <returns></returns>
-    IEnumerable<NavigationMenuItem> CreateForRole(UserRole role);
+    IEnumerable<NavigationMenuItem> CreateForRole(Role role);
 }

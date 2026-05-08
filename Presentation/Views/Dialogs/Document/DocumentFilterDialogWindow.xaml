@@ -36,7 +36,7 @@
 
                     <TextBlock Text="Шаблон"
                                Style="{StaticResource FormLabelTextStyle}"/>
-                    <ComboBox Text="{Binding Owner, UpdateSourceTrigger=PropertyChanged}"
+                    <ComboBox Text="{Binding CreatedBy, UpdateSourceTrigger=PropertyChanged}"
                               ItemsSource="{Binding Templates}"
                               Style="{StaticResource ComboBoxStyle}"
                               SelectedItem="{Binding SelectedTitle}"

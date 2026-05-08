@@ -12,6 +12,6 @@ public class CreateUserDto
     public string FullName { get; set; }
     [JsonPropertyName("departmentId")]
     public int DepartmentId { get; set; }
-    [JsonPropertyName("roleId")]
-    public int RoleId { get; set; }
+    [JsonPropertyName("role")]
+    public int Role { get; set; }
 }

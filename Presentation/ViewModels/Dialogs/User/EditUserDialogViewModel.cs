@@ -82,7 +82,7 @@ public class EditUserDialogViewModel : DialogViewModelBase
                 Roles.Add(item);
 
             SelectedDepartment = Departments.FirstOrDefault(x => x.Title == user.Department);
-            SelectedRole = Roles.FirstOrDefault(x => x.Title == user.Role);
+            SelectedRole = Roles.FirstOrDefault(x => x.Id == (int)user.Role);
         }
         catch (Exception ex)
         {
@@ -115,7 +115,7 @@ public class EditUserDialogViewModel : DialogViewModelBase
                 FullName = FullName,
                 Email = Email,
                 DepartmentId = SelectedDepartment.Id,
-                RoleId = SelectedRole.Id
+                Role = SelectedRole.Id
             });
 
             RequestClose(true);

@@ -15,24 +15,15 @@ public class MenuFactory : IMenuFactory
         _navigationService = navigationService;
     }
 
-    public IEnumerable<NavigationMenuItem> CreateForRole(UserRole role)
+    public IEnumerable<NavigationMenuItem> CreateForRole(Role role)
     {
         var items = new List<NavigationMenuItem>();
 
         switch (role)
         {
-            case UserRole.Admin:
-                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+            case Role.Admin:
                 items.Add(Create("Пользователи", PageKey.Users, PackIconMaterialKind.AccountGroupOutline));
                 items.Add(Create("Отделы", PageKey.Departments, PackIconMaterialKind.Domain));
-                items.Add(Create("Заявления", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
-                items.Add(Create("Архив", PageKey.Archive, PackIconMaterialKind.Archive));
-                items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
-                items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
-                break;
-
-            case UserRole.Boss:
-                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
                 items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates, PackIconMaterialKind.FileDocumentOutline));
                 items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
                 items.Add(Create("Архив", PageKey.Archive, PackIconMaterialKind.Archive));
@@ -40,8 +31,7 @@ public class MenuFactory : IMenuFactory
                 items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
 
-            case UserRole.Purchaser:
-                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+            case Role.Boss:
                 items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates, PackIconMaterialKind.FileDocumentOutline));
                 items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
                 items.Add(Create("Архив", PageKey.Archive, PackIconMaterialKind.Archive));
@@ -49,8 +39,15 @@ public class MenuFactory : IMenuFactory
                 items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
                 break;
 
-            case UserRole.User:
-                items.Add(Create("Панель", PageKey.Dashboard, PackIconMaterialKind.ViewDashboardOutline));
+            case Role.Purchaser:
+                items.Add(Create("Шаблоны договоров", PageKey.ContractTemplates, PackIconMaterialKind.FileDocumentOutline));
+                items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
+                items.Add(Create("Архив", PageKey.Archive, PackIconMaterialKind.Archive));
+                items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));
+                items.Add(Create("Настройки", PageKey.Settings, PackIconMaterialKind.CogOutline));
+                break;
+
+            case Role.User:
                 items.Add(Create("Шаблоны заявлений", PageKey.StatementTemplates, PackIconMaterialKind.FileEditOutline));
                 items.Add(Create("Архив", PageKey.Archive, PackIconMaterialKind.Archive));
                 items.Add(Create("Профиль", PageKey.Profile, PackIconMaterialKind.AccountCircleOutline));

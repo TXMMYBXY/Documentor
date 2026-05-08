@@ -1,4 +1,4 @@
-namespace Documentor.Core.Models.Statement;
+namespace Documentor.Core.Models.Template;
 
 public class DynamicFieldInfoModel
 {

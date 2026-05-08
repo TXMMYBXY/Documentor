@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using Documentor.Application.Api.Admin.Dtos.Department;
 using Documentor.Application.Api.Authorization.Dtos;
+using Documentor.Core.Enums;
 
 namespace Documentor.Application.Api.Admin.Dtos.User;
 
@@ -22,5 +23,5 @@ public class UserDto
     public DepartmentCleanDto Department { get; set; }
     
     [JsonPropertyName("role")]
-    public RoleDto Role { get; set; }
+    public Role Role { get; set; }
 }

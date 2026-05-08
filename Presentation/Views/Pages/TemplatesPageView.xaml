@@ -25,7 +25,7 @@
             </Grid.ColumnDefinitions>
 
             <StackPanel>
-                <TextBlock Text="Шаблоны заявлений"
+                <TextBlock Text="{Binding PageTitle}"
                            Style="{StaticResource PageTitleTextStyle}"/>
                 <TextBlock Text="{Binding ActiveFilterSummary}"
                            Style="{StaticResource SectionHintTextStyle}"
@@ -60,7 +60,7 @@
 
                     <!-- Добавить -->
                     <Button Grid.Column="0"
-                            Command="{Binding AddStatementCommand}"
+                            Command="{Binding AddTemplateCommand}"
                             Style="{StaticResource PrimaryButtonStyle}"
                             ToolTip="Добавить шаблон"
                             Width="42"
@@ -127,7 +127,7 @@
 
                 <!-- Вторая строка -->
                 <WrapPanel Grid.Row="2">
-                    <Button Command="{Binding FillStatementCommand}"
+                    <Button Command="{Binding FillTemplateCommand}"
                             Style="{StaticResource PrimaryButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial Kind="FileDocumentEditOutline"
@@ -151,7 +151,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Command="{Binding EditStatementCommand}"
+                    <Button Command="{Binding EditTemplateCommand}"
                             Style="{StaticResource SecondaryButtonStyle}">
                         <StackPanel Orientation="Horizontal">
                             <iconPacks:PackIconMaterial Kind="FileDocumentRefreshOutline"
@@ -163,7 +163,7 @@
                         </StackPanel>
                     </Button>
 
-                    <Button Command="{Binding DeleteStatementCommand}"
+                    <Button Command="{Binding DeleteTemplateCommand}"
                             Background="#C62828"
                             Foreground="White"
                             BorderBrush="#C62828"
@@ -187,36 +187,43 @@
             <Grid>
                 <DataGrid x:Name="StatementsGrid"
                           ItemsSource="{Binding Statements}"
-                          SelectedItem="{Binding SelectedStatement}"
+                          SelectedItem="{Binding SelectedTemplate}"
                           AutoGenerateColumns="False"
+                          SelectionMode="Extended"
+                          SelectionUnit="FullRow"
+                          Sorting="StatementsGrid_OnSorting"
+                          SelectionChanged="StatementsGrid_OnSelectionChanged"
                           IsReadOnly="True"
-                          SelectionMode="Single"
                           Style="{StaticResource AppDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Название"
                                             Binding="{Binding Title}"
                                             Width="320"
+                                            SortMemberPath="Title"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Владелец"
-                                            Binding="{Binding Owner}"
+                                            Binding="{Binding CreatedBy}"
                                             Width="240"
+                                            SortMemberPath="CreatedBy"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Создан"
                                             Binding="{Binding CreatedAt, StringFormat=dd.MM.yyyy HH:mm}"
                                             Width="170"
+                                            SortMemberPath="CreatedAt"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridCheckBoxColumn Header="Активен"
                                                 Binding="{Binding IsActive}"
+                                                SortMemberPath="IsActive"
                                                 Width="90"/>
 
                         <DataGridTemplateColumn Header=""
                                                 Width="54">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Command="{Binding DataContext.DownloadStatementCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                    <Button Command="{Binding DataContext.DownloadTemplateCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}"
                                             CommandParameter="{Binding}"
                                             IsEnabled="{Binding IsActive}"
                                             Width="28"
@@ -261,7 +268,7 @@
                         </Style>
                     </Border.Style>
 
-                    <TextBlock Text="Шаблоны заявлений не найдены"
+                    <TextBlock Text="{Binding PageTitle, StringFormat={}{0} не найдены}" 
                                FontWeight="Bold"
                                FontSize="14"
                                Foreground="{DynamicResource Brush.TextPrimary}"/>
