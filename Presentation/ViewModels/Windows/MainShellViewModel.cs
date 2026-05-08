@@ -98,7 +98,7 @@ public class MainShellViewModel : ViewModelBase
         {
             UsersPageViewModel => PageKey.Users,
             DepartmentsPageViewModel => PageKey.Departments,
-            TemplatesPageViewModel templates => templates.PageKey,
+            TemplatesPageViewModel => PageKey.StatementTemplates,
             DocumentPageViewModel => PageKey.Archive,
             ProfilePageViewModel => PageKey.Profile,
             SettingsPageViewModel => PageKey.Settings,

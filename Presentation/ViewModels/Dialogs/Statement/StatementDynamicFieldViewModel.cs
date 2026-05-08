@@ -1,5 +1,5 @@
 using System.Collections.ObjectModel;
-using Documentor.Core.Models.Template;
+using Documentor.Core.Models.Statement;
 using Documentor.Presentation.ViewModels.Base;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Statement;

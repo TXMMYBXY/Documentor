@@ -62,24 +62,6 @@ public class UsersPageViewModel : PagedListPageViewModel<UserListItemModel, User
 
         _ = LoadAsync();
     }
-    
-    public void ApplySorting(string sortMemberPath, bool descending)
-    {
-        CurrentFilter.SortBy = sortMemberPath switch
-        {
-            nameof(UserListItemModel.Email) => UserSortField.Email,
-            nameof(UserListItemModel.FullName) => UserSortField.FullName,
-            nameof(UserListItemModel.Role) => UserSortField.Role,
-            nameof(UserListItemModel.Department) => UserSortField.Department,
-            nameof(UserListItemModel.IsActive) => UserSortField.IsActive,
-            _ => UserSortField.Role
-        };
-
-        CurrentFilter.Descending = descending;
-        CurrentPage = 1;
-
-        _ = LoadAsync();
-    }
 
     protected override void ApplyPagingToFilter()
     {

@@ -193,36 +193,30 @@
                           AutoGenerateColumns="False"
                           IsReadOnly="True"
                           SelectionMode="Single"
-                          Sorting="UsersGrid_OnSorting"
                           Style="{StaticResource AppDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Email"
                                             Binding="{Binding Email}"
                                             Width="212"
-                                            SortMemberPath="Email"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="ФИО"
                                             Binding="{Binding FullName}"
                                             Width="260"
-                                            SortMemberPath="FullName"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Роль"
                                             Binding="{Binding RoleDisplay}"
                                             Width="140"
-                                            SortMemberPath="Role"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Отдел"
                                             Binding="{Binding Department}"
                                             Width="220"
-                                            SortMemberPath="Department"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
                         
                         <DataGridCheckBoxColumn Header="Активен"
                                                 Binding="{Binding IsActive}"
-                                                SortMemberPath="IsActive"
                                                 Width="90"/>
                     </DataGrid.Columns>
                 </DataGrid>

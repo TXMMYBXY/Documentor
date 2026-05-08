@@ -1,7 +1,7 @@
 using AutoMapper;
 using Documentor.Application.Api.Statement.Dtos;
 using Documentor.Core.Models;
-using Documentor.Core.Models.Template;
+using Documentor.Core.Models.Statement;
 
 namespace Documentor.Infrastructure.Mappings;
 
@@ -9,13 +9,13 @@ public class StatementManagementMappingProfile : Profile
 {
     public StatementManagementMappingProfile()
     {
-        CreateMap<TemplateFilterModel, TemplateFilterDto>();
+        CreateMap<StatementFilterModel, StatementFilterDto>();
 
         CreateMap<GetTemplateDto, TemplateListItemModel>()
-            .ForMember(dest => dest.CreatedBy,
+            .ForMember(dest => dest.Owner,
                 opt => opt.MapFrom(src => src.CreatedBy != null ? src.CreatedBy.FullName : string.Empty));
 
-        CreateMap<CreateTemplateModel, CreateTemplateDto>();
+        CreateMap<CreateStatementTemplateModel, CreateTemplateDto>();
         
         CreateMap<DynamicFieldInfoDto, DynamicFieldInfoModel>();
         

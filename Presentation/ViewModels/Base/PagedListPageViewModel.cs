@@ -109,14 +109,9 @@ public abstract class PagedListPageViewModel<TItem, TFilter> : ViewModelBase
             }
 
             TotalCount = result.TotalCount;
-
-            PageSize = result.PageSize > 0 ? result.PageSize : PageSize;
-
-            CurrentPage = result.CurrentPage > 0 ? result.CurrentPage : 1;
-
-            TotalPages = result.TotalPages > 0
-                ? result.TotalPages
-                : Math.Max(1, (int)Math.Ceiling((double)TotalCount / PageSize));
+            TotalPages = result.TotalPages;
+            CurrentPage = result.CurrentPage == 0 ? 1 : result.CurrentPage;
+            PageSize = result.PageSize == 0 ? PageSize : result.PageSize;
 
             OnPropertyChanged(nameof(IsEmpty));
             OnPropertyChanged(nameof(ActiveFilterSummary));

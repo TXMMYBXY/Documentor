@@ -1,13 +1,16 @@
 using System.Text.Json.Serialization;
-using Documentor.Core.Enums;
 
 namespace Documentor.Application.Api.Statement.Dtos;
 
 public class CreateTemplateDto
 {
+    [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
-    public string FilePath { get; set; } = string.Empty;
-    public TemplateType Type { get; set; }
+
+    [JsonPropertyName("isActive")]
     public bool IsActive { get; set; }
+    
+    [JsonPropertyName("filePath")]
+    public string FilePath { get; set; } = string.Empty;
 
 }

@@ -9,7 +9,7 @@ public class DocumentListItemModel : ViewModelBase
 {
     private int _id;
     private string _title;
-    private DateTime _createdAt;
+    private DateTimeOffset _createdAt;
     private TemplateType _type;
     private string _templateTitle;
 
@@ -25,9 +25,9 @@ public class DocumentListItemModel : ViewModelBase
         set => SetProperty(ref _title, value);
     }
 
-    public DateTime CreatedAt
+    public DateTimeOffset CreatedAt
     {
-        get => _createdAt.ToLocalTime();
+        get => _createdAt;
         set => SetProperty(ref _createdAt, value);
     }
 

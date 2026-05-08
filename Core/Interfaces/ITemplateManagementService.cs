@@ -1,19 +1,18 @@
 using Documentor.Application.Api.Statement.Dtos;
 using Documentor.Core.Models;
-using Documentor.Core.Models.Template;
+using Documentor.Core.Models.Statement;
 
 namespace Documentor.Core.Interfaces;
 
 public interface ITemplateManagementService
 {
-    Task<PagedResult<TemplateListItemModel>> GetTemplatesAsync(TemplateFilterModel filter);
+    Task<PagedResult<TemplateListItemModel>> GetTemplatesAsync(StatementFilterModel filter);
     Task<bool> ChangeStatusAsync(int statementId);
-    Task DeleteTemplateAsync(int statementId);
+    Task DeleteStatementAsync(int statementId);
     Task UpdateStatementTemplateAsync(int templateId, string? title, string? filePath);
-    Task CreateStatementAsync(CreateTemplateModel templateModel);
-    Task DownloadTemplateAsync(int templateId, string savePath);
+    Task CreateStatementAsync(CreateStatementTemplateModel templateModel);
+    Task DownloadStatementTemplateAsync(int templateId, string savePath);
     Task<IReadOnlyList<DynamicFieldInfoModel>> ExtractFieldsAsync(int templateId);
-    Task DeleteTemplatesAsync(List<int> templateIds);
 
     Task<IReadOnlyList<LookupItemModel>> GetTemplatesAsync();
     

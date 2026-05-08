@@ -56,21 +56,6 @@ public class DepartmentsPageViewModel : PagedListPageViewModel<DepartmentListIte
 
         _ = LoadAsync();
     }
-    
-    public void ApplySorting(string sortMemberPath, bool descending)
-    {
-        CurrentFilter.SortBy = sortMemberPath switch
-        {
-            nameof(DepartmentListItemModel.Title) => DepartmentSortField.Title,
-            nameof(DepartmentListItemModel.EmployeesCount) => DepartmentSortField.EmployeesCount,
-            _ => DepartmentSortField.Title
-        };
-
-        CurrentFilter.Descending = descending;
-        CurrentPage = 1;
-
-        _ = LoadAsync();
-    }
 
     protected override void ApplyPagingToFilter()
     {

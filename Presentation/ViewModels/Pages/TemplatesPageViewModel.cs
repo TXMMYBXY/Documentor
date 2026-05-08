@@ -2,10 +2,9 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
 using Documentor.Common;
-using Documentor.Core.Enums;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
-using Documentor.Core.Models.Template;
+using Documentor.Core.Models.Statement;
 using Documentor.Presentation.ViewModels.Base;
 using Documentor.Presentation.ViewModels.Dialogs.Common;
 using Documentor.Presentation.ViewModels.Dialogs.Statement;
@@ -15,127 +14,60 @@ using Microsoft.Win32;
 
 namespace Documentor.Presentation.ViewModels.Pages;
 
-public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemModel, TemplateFilterModel>
+public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemModel, StatementFilterModel>
 {
     private readonly ITemplateManagementService _templateManagementService;
     private readonly IAppSettingsService _appSettingsService;
-    
-    private readonly TemplateType _templateType;
-    private List<TemplateListItemModel> _selectedTemplates = new();
-    
-    public IReadOnlyList<TemplateListItemModel> SelectedTemplates => _selectedTemplates;
 
-    public bool IsMultipleSelection => _selectedTemplates.Count > 1;
-
-    public bool IsSingleSelection => _selectedTemplates.Count == 1;
+    public static string Title => "Шаблоны заявлений";
 
     public ObservableCollection<TemplateListItemModel> Statements => Items;
 
-    public TemplateListItemModel? SelectedTemplate
+    public TemplateListItemModel? SelectedStatement
     {
         get => SelectedItem;
         set => SelectedItem = value;
     }
-    
-    public string PageTitle => _templateType switch
-    {
-        TemplateType.Statement => "Шаблоны заявлений",
-        TemplateType.Contract => "Шаблоны договоров",
-        _ => "Шаблоны"
-    };
-    
-    public PageKey PageKey { get; }
 
     public override string ActiveFilterSummary => _BuildFilterSummary();
 
     public ICommand OpenFilterCommand { get; }
-    public ICommand AddTemplateCommand { get; }
+    public ICommand AddStatementCommand { get; }
     public ICommand ChangeStatusCommand { get; }
-    public ICommand DeleteTemplateCommand { get; }
-    public ICommand FillTemplateCommand { get; }
-    public ICommand DownloadTemplateCommand { get; }
-    public ICommand EditTemplateCommand { get; }
+    public ICommand DeleteStatementCommand { get; }
+    public ICommand FillStatementCommand { get; }
+    public ICommand DownloadStatementCommand { get; }
+    public ICommand EditStatementCommand { get; }
     
 
     public TemplatesPageViewModel(
-        TemplateType templateType,
-        PageKey pageKey,
         ITemplateManagementService templateManagementService,
         IAppSettingsService appSettingsService)
     {
-        _templateType = templateType;
-        PageKey = pageKey;
         _templateManagementService = templateManagementService;
         _appSettingsService = appSettingsService;
 
         InitializePageSize(_appSettingsService.GetPageSize());
 
-        CurrentFilter = new TemplateFilterModel
+        CurrentFilter = new StatementFilterModel
         {
             PageNumber = 1,
-            PageSize = PageSize,
-            Type = _templateType
+            PageSize = PageSize
         };
 
         OpenFilterCommand = new RelayCommand(_OpenFilter);
-
-        AddTemplateCommand = new RelayCommand(_AddTemplate);
-        
-        ChangeStatusCommand = new AsyncRelayCommand(
-            _ChangeStatusAsync,
-            () => IsSingleSelection);
-
-        DeleteTemplateCommand = new AsyncRelayCommand(
-            _DeleteTemplatesAsync,
-            () => _selectedTemplates.Count > 0);
-
-        FillTemplateCommand = new RelayCommand(
-            _FillTemplate,
-            () => IsSingleSelection && _selectedTemplates[0].IsActive);
-
-        DownloadTemplateCommand = new AsyncRelayCommand(
-            _DownloadAsync,
-            () => IsSingleSelection && _selectedTemplates[0].IsActive);
-
-        EditTemplateCommand = new RelayCommand(
-            _EditTemplate,
-            () => IsSingleSelection);
-
-        _ = LoadAsync();
-    }
-    
-    public void UpdateSelection(List<TemplateListItemModel> selected)
-    {
-        _selectedTemplates = selected;
-
-        SelectedTemplate = IsSingleSelection ? _selectedTemplates[0] : null;
-
-        OnPropertyChanged(nameof(IsMultipleSelection));
-        OnPropertyChanged(nameof(IsSingleSelection));
-
-        RaiseSelectionCommands();
-    }
-    
-    public void ApplySorting(string sortMemberPath, bool descending)
-    {
-        CurrentFilter.SortBy = sortMemberPath switch
-        {
-            nameof(TemplateListItemModel.Title) => TemplateSortField.Title,
-            nameof(TemplateListItemModel.CreatedBy) => TemplateSortField.CreatedBy,
-            nameof(TemplateListItemModel.CreatedAt) => TemplateSortField.CreatedAt,
-            nameof(TemplateListItemModel.IsActive) => TemplateSortField.IsActive,
-            _ => TemplateSortField.CreatedAt
-        };
-
-        CurrentFilter.Descending = descending;
-        CurrentPage = 1;
+        AddStatementCommand = new RelayCommand(_AddStatement);
+        ChangeStatusCommand = new AsyncRelayCommand(_ChangeStatusAsync, () => SelectedStatement != null);
+        DeleteStatementCommand = new AsyncRelayCommand(_DeleteStatementAsync, () => SelectedStatement != null);
+        FillStatementCommand = new RelayCommand(_FillStatement, () => SelectedStatement != null && SelectedStatement.IsActive);
+        DownloadStatementCommand = new AsyncRelayCommand(_DownloadStatementAsync, () => SelectedStatement != null);
+        EditStatementCommand = new RelayCommand(_EditStatement, () => SelectedStatement != null);
 
         _ = LoadAsync();
     }
 
     protected override void ApplyPagingToFilter()
     {
-        CurrentFilter.Type = _templateType;
         CurrentFilter.PageNumber = CurrentPage;
         CurrentFilter.PageSize = PageSize;
     }
@@ -149,11 +81,10 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
     {
         var pageSize = _appSettingsService.GetPageSize();
 
-        CurrentFilter = new TemplateFilterModel
+        CurrentFilter = new StatementFilterModel
         {
             PageNumber = 1,
-            PageSize = pageSize,
-            Type = _templateType
+            PageSize = pageSize
         };
 
         CurrentPage = 1;
@@ -167,16 +98,16 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         if (ChangeStatusCommand is AsyncRelayCommand changeStatus)
             changeStatus.RaiseCanExecuteChanged();
 
-        if (DeleteTemplateCommand is AsyncRelayCommand delete)
+        if (DeleteStatementCommand is AsyncRelayCommand delete)
             delete.RaiseCanExecuteChanged();
 
-        if (FillTemplateCommand is RelayCommand fill)
+        if (FillStatementCommand is RelayCommand fill)
             fill.RaiseCanExecuteChanged();
 
-        if (DownloadTemplateCommand is AsyncRelayCommand download)
+        if (DownloadStatementCommand is AsyncRelayCommand download)
             download.RaiseCanExecuteChanged();
         
-        if (EditTemplateCommand is RelayCommand edit)
+        if (EditStatementCommand is RelayCommand edit)
             edit.RaiseCanExecuteChanged();
     }
 
@@ -187,21 +118,20 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
 
     private void _OpenFilter()
     {
-        TemplateFilterDialogWindow? dialog = null;
+        StatementFilterDialogWindow? dialog = null;
 
-        var vm = new TemplateFilterDialogViewModel(new TemplateFilterModel
+        var vm = new StatementFilterDialogViewModel(new StatementFilterModel
         {
             Title = CurrentFilter.Title,
             CreatedBy = CurrentFilter.CreatedBy,
             CreatedAtEarlier = CurrentFilter.CreatedAtEarlier,
             CreatedAtLater = CurrentFilter.CreatedAtLater,
-            PageSize = CurrentFilter.PageSize,
-            Type = _templateType
+            PageSize = CurrentFilter.PageSize
         });
 
         vm.CloseRequested = result => dialog!.DialogResult = result;
 
-        dialog = new TemplateFilterDialogWindow
+        dialog = new StatementFilterDialogWindow
         {
             DataContext = vm,
             Owner = System.Windows.Application.Current.MainWindow
@@ -211,24 +141,20 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         if (result == true)
         {
             CurrentFilter = vm.ResultFilter;
-            CurrentFilter.Type = _templateType;
             CurrentPage = 1;
             PageSize = CurrentFilter.PageSize ?? _appSettingsService.GetPageSize();
-
             _ = LoadAsync();
         }
     }
 
-    private void _AddTemplate()
+    private void _AddStatement()
     {
-        AddTemplateDialogWindow? dialog = null;
+        AddStatementTemplateDialogWindow? dialog = null;
 
-        var vm = new AddTemplateDialogViewModel(
-            _templateType,
-            _templateManagementService);
+        var vm = new AddStatementTemplateDialogViewModel(_templateManagementService);
         vm.CloseRequested = result => dialog!.DialogResult = result;
 
-        dialog = new AddTemplateDialogWindow
+        dialog = new AddStatementTemplateDialogWindow
         {
             DataContext = vm,
             Owner = System.Windows.Application.Current.MainWindow
@@ -241,23 +167,21 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         }
     }
     
-    private void _EditTemplate()
+    private void _EditStatement()
     {
-        if (!IsSingleSelection)
+        if (SelectedStatement == null)
             return;
 
-        var selected = _selectedTemplates[0];
+        EditStatementTemplateDialogWindow? dialog = null;
 
-        EditTemplateDialogWindow? dialog = null;
-
-        var vm = new EditTemplateDialogViewModel(
+        var vm = new EditStatementTemplateDialogViewModel(
             _templateManagementService,
-            selected.Id,
-            selected);
+            SelectedStatement.Id,
+            SelectedStatement);
 
         vm.CloseRequested = result => dialog!.DialogResult = result;
 
-        dialog = new EditTemplateDialogWindow
+        dialog = new EditStatementTemplateDialogWindow
         {
             DataContext = vm,
             Owner = System.Windows.Application.Current.MainWindow
@@ -270,21 +194,22 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
 
     private async Task _ChangeStatusAsync()
     {
-        if (!IsSingleSelection)
+        if (SelectedStatement == null)
             return;
-
-        var selected = _selectedTemplates[0];
 
         try
         {
             IsLoading = true;
+            ErrorMessage = string.Empty;
 
-            var newStatus = await _templateManagementService
-                .ChangeStatusAsync(selected.Id);
-
-            selected.IsActive = newStatus;
+            var newStatus = await _templateManagementService.ChangeStatusAsync(SelectedStatement.Id);
+            SelectedStatement.IsActive = newStatus;
 
             RaiseSelectionCommands();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Ошибка изменения статуса: {ex.Message}";
         }
         finally
         {
@@ -292,20 +217,16 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         }
     }
 
-    private async Task _DeleteTemplatesAsync()
+    private async Task _DeleteStatementAsync()
     {
-        if (_selectedTemplates.Count == 0)
+        if (SelectedStatement == null)
             return;
 
         ConfirmationDialogWindow? dialog = null;
 
-        var message = _selectedTemplates.Count == 1
-            ? $"Удалить шаблон \"{_selectedTemplates[0].Title}\"?"
-            : $"Удалить выбранные шаблоны ({_selectedTemplates.Count})?";
-
         var vm = new ConfirmationDialogViewModel(
-            "Удаление шаблона",
-            message,
+            "Удаление шаблона заявления",
+            $"Удалить шаблон \"{SelectedStatement.Title}\"?",
             result => dialog!.DialogResult = result,
             "Удалить",
             "Отмена");
@@ -325,17 +246,18 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
             IsLoading = true;
             ErrorMessage = string.Empty;
 
-            var ids = _selectedTemplates
-                .Select(t => t.Id)
-                .ToList();
+            await _templateManagementService.DeleteStatementAsync(SelectedStatement.Id);
 
-            await _templateManagementService.DeleteTemplatesAsync(ids);
+            if (Statements.Count == 1 && CurrentPage > 1)
+            {
+                CurrentPage--;
+            }
 
             await LoadAsync();
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Ошибка удаления: {ex.Message}";
+            ErrorMessage = $"Ошибка удаления шаблона: {ex.Message}";
         }
         finally
         {
@@ -343,21 +265,21 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         }
     }
 
-    private void _FillTemplate()
+    private void _FillStatement()
     {
-        if (SelectedTemplate == null)
+        if (SelectedStatement == null)
             return;
 
-        FillTemplateDialogWindow? dialog = null;
+        FillStatementTemplateDialogWindow? dialog = null;
 
-        var vm = new FillTemplateDialogViewModel(
+        var vm = new FillStatementTemplateDialogViewModel(
             _templateManagementService,
-            SelectedTemplate.Id,
-            SelectedTemplate.Title);
+            SelectedStatement.Id,
+            SelectedStatement.Title);
 
         vm.CloseRequested = result => dialog!.DialogResult = result;
 
-        dialog = new FillTemplateDialogWindow
+        dialog = new FillStatementTemplateDialogWindow
         {
             DataContext = vm,
             Owner = System.Windows.Application.Current.MainWindow
@@ -366,26 +288,27 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         dialog.ShowDialog();
     }
 
-    private async Task _DownloadAsync()
+    private async Task _DownloadStatementAsync()
     {
-        if (!IsSingleSelection)
+        if (SelectedStatement == null)
             return;
-
-        var selected = _selectedTemplates[0];
 
         try
         {
+            ErrorMessage = string.Empty;
+
             var dialog = new SaveFileDialog
             {
                 Filter = "Word Document (*.docx)|*.docx",
-                FileName = $"{selected.Title}.docx"
+                FileName = $"{SelectedStatement.Title}.docx"
             };
 
             if (dialog.ShowDialog() != true)
                 return;
 
-            await _templateManagementService
-                .DownloadTemplateAsync(selected.Id, dialog.FileName);
+            await _templateManagementService.DownloadStatementTemplateAsync(SelectedStatement.Id, dialog.FileName);
+
+            MessageBox.Show("Шаблон успешно сохранён.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {

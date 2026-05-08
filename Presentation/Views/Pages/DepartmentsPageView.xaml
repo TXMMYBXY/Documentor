@@ -179,13 +179,11 @@
                           ItemsSource="{Binding Departments}"
                           SelectedItem="{Binding SelectedDepartment}"
                           IsReadOnly="True"
-                          Sorting="DepartmentsGrid_OnSorting"
                           Style="{StaticResource AppDataGridStyle}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Название"
                                             Binding="{Binding Title}"
                                             Width="220"
-                                            SortMemberPath="Title"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTextColumn Header="Описание"
@@ -196,7 +194,6 @@
                         <DataGridTextColumn Header="Кол-во сотрудников"
                                             Binding="{Binding EmployeesCount}"
                                             Width="150"
-                                            SortMemberPath="EmployeesCount"
                                             ElementStyle="{StaticResource AppDataGridTextStyle}"/>
 
                         <DataGridTemplateColumn Header="Сотрудники"
