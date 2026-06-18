@@ -5,6 +5,7 @@ using Documentor.Application.Api.Statement;
 using Documentor.Core.Interfaces;
 using Documentor.Core.Models;
 using Documentor.Core.Models.Document;
+using System.IO;
 
 namespace Documentor.Core.Services;
 
@@ -48,6 +49,9 @@ public class DocumentManagementService : IDocumentManagementService
 
     public async Task DownloadDocumentAsync(int selectedDocumentId, string dialogFileName)
     {
-        throw new NotImplementedException();
+        await using var file = await _documentClient.DownloadDocumentAsync(selectedDocumentId);
+
+        await using var outStream = File.Create(dialogFileName);
+        await file.ContentStream.CopyToAsync(outStream);
     }
 }
