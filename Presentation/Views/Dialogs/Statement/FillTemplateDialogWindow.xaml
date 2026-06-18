@@ -53,7 +53,9 @@
                                         <TextBlock Grid.Column="0"
                                                    Text="{Binding Title}"
                                                    Style="{StaticResource FormLabelTextStyle}"
-                                                   TextWrapping="Wrap"/>
+                                                   TextWrapping="Wrap"
+                                                   TextTrimming="None"
+                                                   ToolTip="{Binding Title}"/>
 
                                         <TextBlock Grid.Column="1"
                                                    Text=" *"
