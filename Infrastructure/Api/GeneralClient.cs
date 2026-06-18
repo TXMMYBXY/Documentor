@@ -65,7 +65,7 @@ public class GeneralClient : IGeneralClient
         {
             Method = HttpMethod.Delete,
             Content = requestContent,
-            RequestUri = new Uri(uri)
+            RequestUri = new Uri(uri, UriKind.Relative)
         };
         requestDelete.Headers.Add("accept", "text/plain");
         var response = await _httpClient.SendAsync(requestDelete);
