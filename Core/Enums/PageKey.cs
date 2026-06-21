@@ -6,6 +6,8 @@ public enum PageKey
     Departments,
     ContractTemplates,
     StatementTemplates,
+    ReportTemplates,
+    ApprovalTemplates,
     Profile,
     Settings,
     Archive

@@ -1,4 +1,5 @@
 using Documentor.Application.Api.Statement.Dtos;
+using Documentor.Core.Enums;
 using Documentor.Core.Models;
 using Documentor.Core.Models.Template;
 
@@ -17,5 +18,5 @@ public interface ITemplateManagementService
 
     Task<IReadOnlyList<LookupItemModel>> GetTemplatesAsync();
     
-    Task CreateTaskAsync(int templateId, Dictionary<string, object> data);
+    Task CreateTaskAsync(int templateId, TemplateType templateType, Dictionary<string, object> data);
 }

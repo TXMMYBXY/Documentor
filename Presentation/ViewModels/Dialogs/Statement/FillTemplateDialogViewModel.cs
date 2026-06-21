@@ -5,6 +5,7 @@ using System.Windows.Input;
 using Documentor.Common;
 using Documentor.Core.Interfaces;
 using Documentor.Presentation.ViewModels.Base;
+using Documentor.Core.Enums;
 
 namespace Documentor.Presentation.ViewModels.Dialogs.Statement;
 
@@ -13,6 +14,7 @@ public class FillTemplateDialogViewModel : DialogViewModelBase
     private readonly ITemplateManagementService _templateManagementService;
     private readonly int _templateId;
     private readonly string _templateTitle;
+    private readonly TemplateType _templateType;
 
     public string TitleText => $"Заполнение шаблона: {_templateTitle}";
 
@@ -27,11 +29,13 @@ public class FillTemplateDialogViewModel : DialogViewModelBase
     public FillTemplateDialogViewModel(
         ITemplateManagementService templateManagementService,
         int templateId,
-        string templateTitle)
+        string templateTitle,
+        TemplateType templateType)
     {
         _templateManagementService = templateManagementService;
         _templateId = templateId;
         _templateTitle = templateTitle;
+        _templateType = templateType;
 
         SubmitCommand = new RelayCommand(_Submit);
 
@@ -145,7 +149,7 @@ public class FillTemplateDialogViewModel : DialogViewModelBase
             // 3) Отправка
             IsBusy = true;
 
-            await _templateManagementService.CreateTaskAsync(_templateId, data);
+            await _templateManagementService.CreateTaskAsync(_templateId, _templateType, data);
 
             RequestClose(true);
         }

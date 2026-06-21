@@ -117,7 +117,7 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
 
     protected override string BuildLoadErrorMessage(Exception ex)
     {
-        return $"Ошибка загрузки шаблонов заявлений: {ex.Message}";
+        return $"Ошибка загрузки архива: {ex.Message}";
     }
 
     private void _OpenFilter()
@@ -159,8 +159,8 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
         ConfirmationDialogWindow? dialog = null;
 
         var vm = new ConfirmationDialogViewModel(
-            "Удаление шаблона заявления",
-            $"Удалить шаблон \"{SelectedDocument.Title}\"?",
+            "Удаление документа",
+            $"Удалить документ \"{SelectedDocument.Title}\"?",
             result => dialog!.DialogResult = result,
             "Удалить",
             "Отмена");
@@ -219,11 +219,11 @@ public class DocumentPageViewModel : PagedListPageViewModel<DocumentListItemMode
 
             await _documentManagementService.DownloadDocumentAsync(SelectedDocument.Id, dialog.FileName);
 
-            MessageBox.Show("Шаблон успешно сохранён.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+            MessageBox.Show("Документ успешно сохранён.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
         }
         catch (Exception ex)
         {
-            ErrorMessage = $"Ошибка скачивания шаблона: {ex.Message}";
+            ErrorMessage = $"Ошибка скачивания документа: {ex.Message}";
         }
     }
 

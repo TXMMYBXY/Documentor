@@ -50,7 +50,6 @@ public class DocumentManagementService : IDocumentManagementService
     public async Task DownloadDocumentAsync(int selectedDocumentId, string dialogFileName)
     {
         await using var file = await _documentClient.DownloadDocumentAsync(selectedDocumentId);
-
         await using var outStream = File.Create(dialogFileName);
         await file.ContentStream.CopyToAsync(outStream);
     }

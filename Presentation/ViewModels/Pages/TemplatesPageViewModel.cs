@@ -41,6 +41,8 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
     {
         TemplateType.Statement => "Шаблоны заявлений",
         TemplateType.Contract => "Шаблоны договоров",
+        TemplateType.Report => "Шаблоны рапортов",
+        TemplateType.Approval => "Шаблоны согласий",
         _ => "Шаблоны"
     };
     
@@ -182,7 +184,7 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
 
     protected override string BuildLoadErrorMessage(Exception ex)
     {
-        return $"Ошибка загрузки шаблонов заявлений: {ex.Message}";
+        return $"Ошибка загрузки шаблонов: {ex.Message}";
     }
 
     private void _OpenFilter()
@@ -353,7 +355,8 @@ public class TemplatesPageViewModel : PagedListPageViewModel<TemplateListItemMod
         var vm = new FillTemplateDialogViewModel(
             _templateManagementService,
             SelectedTemplate.Id,
-            SelectedTemplate.Title);
+            SelectedTemplate.Title,
+            _templateType);
 
         vm.CloseRequested = result => dialog!.DialogResult = result;
 

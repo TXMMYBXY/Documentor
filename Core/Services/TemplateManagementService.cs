@@ -97,12 +97,12 @@ public class TemplateManagementService : ITemplateManagementService
             : _mapper.Map<IReadOnlyList<LookupItemModel>>(result);
     }
 
-    public async Task CreateTaskAsync(int templateId, Dictionary<string, object> data)
+    public async Task CreateTaskAsync(int templateId, TemplateType templateType, Dictionary<string, object> data)
     {
         await _templateClient.CreateTask(new CreateTaskRequestDto
         {
             TemplateId = templateId,
-            TemplateType = TemplateType.Statement,
+            TemplateType = templateType,
             Data = data
         });
     }
