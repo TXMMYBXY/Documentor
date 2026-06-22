@@ -23,6 +23,12 @@ public class PageViewModelFactory : IPageViewModelFactory
 
             PageKey.ContractTemplates =>
                 _CreateTemplatesPage(TemplateType.Contract, PageKey.ContractTemplates),
+            
+            PageKey.ReportTemplates => 
+                _CreateTemplatesPage(TemplateType.Report, PageKey.ReportTemplates),
+            
+            PageKey.ApprovalTemplates =>
+                _CreateTemplatesPage(TemplateType.Approval, PageKey.ApprovalTemplates),
 
             PageKey.Users =>
                 _serviceProvider.GetRequiredService<UsersPageViewModel>(),

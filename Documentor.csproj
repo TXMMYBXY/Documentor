@@ -54,6 +54,7 @@
 
     <PropertyGroup>
         <ApplicationIcon>Resources\documentor.ico</ApplicationIcon>
+		<InterceptorsNamespaces>$(InterceptorsNamespaces);Microsoft.Extensions.Configuration.Binder.SourceGeneration</InterceptorsNamespaces>
     </PropertyGroup>
 
 </Project>

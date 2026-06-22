@@ -44,11 +44,11 @@ public class AddTemplateDialogViewModel : DialogViewModelBase
         _type = type;
         _templateManagementService = templateManagementService;
 
-        BrowseFileCommand = new RelayCommand(BrowseFile);
+        BrowseFileCommand = new RelayCommand(_BrowseFile);
         SaveCommand = new AsyncRelayCommand(SaveAsync);
     }
 
-    private void BrowseFile()
+    private void _BrowseFile()
     {
         var dialog = new OpenFileDialog
         {

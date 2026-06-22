@@ -9,5 +9,11 @@ public enum TemplateType
     Statement,
     
     [Display(Name = "Договор")]
-    Contract
+    Contract,
+    
+    [Display(Name = "Рапорт")]
+    Report,
+    
+    [Display(Name = "Согласие")]
+    Approval,
 }

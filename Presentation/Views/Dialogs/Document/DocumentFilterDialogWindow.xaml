@@ -36,10 +36,10 @@
 
                     <TextBlock Text="Шаблон"
                                Style="{StaticResource FormLabelTextStyle}"/>
-                    <ComboBox Text="{Binding CreatedBy, UpdateSourceTrigger=PropertyChanged}"
-                              ItemsSource="{Binding Templates}"
+                    <ComboBox
+                              ItemsSource="{Binding Documents}"
                               Style="{StaticResource ComboBoxStyle}"
-                              SelectedItem="{Binding SelectedTitle}"
+                              SelectedItem="{Binding SelectedDocument}"
                               DisplayMemberPath="Title"
                               Margin="0,0,0,12"/>
 

@@ -271,7 +271,7 @@ public class TokenService : ITokenService
         }
     }
     
-    public void _SaveRefreshToken(RefreshTokenDto refreshTokenResponse)
+    private void _SaveRefreshToken(RefreshTokenDto refreshTokenResponse)
     {
         try
         {
